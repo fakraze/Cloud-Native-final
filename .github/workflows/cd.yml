@@ -5,6 +5,7 @@ on:
     workflows: ["CI - Build & Push Images"]
     types:
       - completed
+  workflow_dispatch:
 
 jobs:
   deploy-and-test:
