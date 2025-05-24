@@ -15,7 +15,11 @@ Meal Provider
 ├── test/  
 │   | cypress/  
 │     | e2e/  
-│       ├── employee-order.cy.js    # 員工點餐流程測試案例  
+│       ├── employee-order.cy.js  # 員工點餐流程測試案例  
+│       ├── employee-order.cy.js  # 員工下單流程
+│       ├── employee-checkout.cy.js  # 結帳測試
+│       ├── employee-rate-order.cy.js  # 餐點評價流程
+│       ├── employee-history.cy.js  # 歷史訂單查詢與篩選
 │   ├──  package.json             # Cypress 相依與指令  
 │   ├── cypress.config.js        # 測試設定檔  
 ```
