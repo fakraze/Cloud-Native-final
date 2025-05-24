@@ -1,0 +1,16 @@
+# Ignore Cypress-generated downloads
+cypress/downloads/
+
+# Ignore node_modules inside test/
+node_modules/
+
+# Ignore any logs or temporary files
+*.log
+
+# Ignore screenshots/videos (if recording during test)
+cypress/screenshots/
+cypress/videos/
+
+# Optional: Ignore environment/config files
+.env
+.env.local

@@ -1,0 +1,46 @@
+name: CD - Deploy & Cypress E2E
+
+on:
+  workflow_run:
+    workflows: ["CI - Build & Push Images"]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  deploy-and-test:
+    runs-on: ubuntu-latest
+    env:
+      NAMESPACE: devops-demo
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
+          export KUBECONFIG=$PWD/kubeconfig
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/frontend-deployment.yaml
+          kubectl apply -f k8s/frontend-service.yaml
+          kubectl apply -f k8s/backend-deployment.yaml
+          kubectl apply -f k8s/backend-service.yaml
+
+      - name: Wait for services to be ready
+        run: |
+          kubectl wait --for=condition=available --timeout=60s deployment/frontend -n $NAMESPACE
+          kubectl wait --for=condition=available --timeout=60s deployment/backend -n $NAMESPACE
+
+      - name: Install Cypress
+        run: |
+          cd test
+          npm ci
+
+      - name: Run Cypress
+        run: |
+          cd test
+          npx cypress run
