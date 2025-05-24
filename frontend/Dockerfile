@@ -1,2 +1,2 @@
-FROM alpine
-CMD echo "Frontend image placeholder"
+FROM nginx:alpine
+COPY public/index.html /usr/share/nginx/html/index.html

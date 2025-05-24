@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-deployment
+  name: backend
+  namespace: devops-demo
 spec:
   replicas: 1
   selector:
@@ -14,6 +15,6 @@ spec:
     spec:
       containers:
         - name: backend
-          image: backend:latest
+          image: ghcr.io/fakraze/cloud-meal-backend:latest
           ports:
             - containerPort: 3000
