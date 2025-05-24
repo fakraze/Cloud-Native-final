@@ -1,7 +1,10 @@
 name: CD - Deploy & Cypress E2E
 
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["CI - Build & Push Images"]
+    types:
+      - completed
 
 jobs:
   deploy-and-test:
