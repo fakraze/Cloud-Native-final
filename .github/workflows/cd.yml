@@ -1,4 +1,4 @@
-name: CD - Deploy & Cypress E2E
+name: CD - Cypress E2E Only
 
 on:
   workflow_run:
@@ -8,32 +8,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-and-test:
+  cypress-e2e-test:
     runs-on: ubuntu-latest
-    env:
-      NAMESPACE: devops-demo
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Set up Kubeconfig
-        run: |
-          echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
-          export KUBECONFIG=$PWD/kubeconfig
-
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl apply -f k8s/namespace.yaml
-          kubectl apply -f k8s/frontend-deployment.yaml
-          kubectl apply -f k8s/frontend-service.yaml
-          kubectl apply -f k8s/backend-deployment.yaml
-          kubectl apply -f k8s/backend-service.yaml
-
-      - name: Wait for services to be ready
-        run: |
-          kubectl wait --for=condition=available --timeout=60s deployment/frontend -n $NAMESPACE
-          kubectl wait --for=condition=available --timeout=60s deployment/backend -n $NAMESPACE
 
       - name: Install Cypress
         run: |
