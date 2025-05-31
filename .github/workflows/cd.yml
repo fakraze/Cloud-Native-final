@@ -17,27 +17,33 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H 54.167.106.86 >> ~/.ssh/known_hosts
 
-      - name: SSH and deploy from current branch
-        run: |
-          BRANCH=$(echo "${GITHUB_REF##*/}")
-          ssh -i ~/.ssh/id_ed25519 ubuntu@54.167.106.86 << EOF
-            set -e
-            cd /home/ubuntu || exit 1
-            if [ ! -d "my-app" ]; then
-              git clone https://github.com/${GITHUB_REPOSITORY}.git my-app
-            fi
-            cd my-app
-            git fetch origin
-            git checkout $BRANCH
-            git pull origin $BRANCH
+          - name: SSH and deploy from current branch
+          run: |
+            BRANCH=$(echo "${GITHUB_REF##*/}")
+            ssh -i ~/.ssh/id_ed25519 ubuntu@54.167.106.86 << EOF
+              set -e
 
-            echo "✅ Deployed branch: $BRANCH"
+              # 安裝 Node.js 18 LTS（含 npm）
+              if ! command -v npm &> /dev/null; then
+                curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+                sudo apt-get install -y nodejs
+              fi
 
-            # ✅ 安裝 Cypress 並執行 E2E 測試
-            cd test
-            npm ci
-            npx cypress run
-          EOF
+              cd /home/ubuntu || exit 1
+              if [ ! -d "my-app" ]; then
+                git clone https://github.com/${GITHUB_REPOSITORY}.git my-app
+              fi
+              cd my-app
+              git fetch origin
+              git checkout $BRANCH
+              git pull origin $BRANCH
+
+              echo "✅ Deployed branch: $BRANCH"
+
+              cd test
+              npm ci
+              npx cypress run
+            EOF
 
 # name: CD - Deploy to EC2 on Same Branch
 
