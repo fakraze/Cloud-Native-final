@@ -1,10 +1,14 @@
 name: CD - Deploy to EC2 on Same Branch
 
+# on:
+#   workflow_run:
+#     workflows: ["CI - Build & Push Images"]
+#     types:
+#       - completed
 on:
-  workflow_run:
-    workflows: ["CI - Build & Push Images"]
-    types:
-      - completed
+  push:
+    branches:
+      - ci-cd
 
 jobs:
   deploy:
