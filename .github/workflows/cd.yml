@@ -1,14 +1,19 @@
-name: CD - Deploy to EC2 on Same Branch
+name: CD - Deploy after CI
 
 on:
-  push:
-    branches:
-      - ci-cd
+  workflow_run:
+    workflows: ["CI - Build & Push Images"]
+    types:
+      - completed
 
 jobs:
   deploy:
+    if: >
+      ${{
+        github.event.workflow_run.conclusion == 'success' &&
+        (github.event.workflow_run.head_branch == 'main' || github.event.workflow_run.head_branch == 'develop')
+      }}
     runs-on: ubuntu-latest
-
     steps:
       - name: Set up SSH
         run: |
@@ -19,77 +24,43 @@ jobs:
 
       - name: SSH and deploy to K3s
         run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@ec2-3-89-254-174.compute-1.amazonaws.com << EOF
+          ssh -i ~/.ssh/id_rsa ubuntu@ec2-3-89-254-174.compute-1.amazonaws.com << 'EOF'
             set -e
 
-            echo "📁 確認 Cloud-Native-final 專案資料夾"
+            BRANCH_NAME="${{ github.event.workflow_run.head_branch }}"
+            if [ "$BRANCH_NAME" = "main" ]; then
+              NAMESPACE="cloudnative"
+              IMAGE_TAG="latest"
+              NAMESPACE_FILE="k8s/namespace-prod.yaml"
+              INGRESS_FILE="k8s/ingress-prod.yaml"
+            else
+              NAMESPACE="cloudnative-dev"
+              IMAGE_TAG="dev"
+              NAMESPACE_FILE="k8s/namespace-dev.yaml"
+              INGRESS_FILE="k8s/ingress-dev.yaml"
+            fi
+
+            echo "📁 確認專案"
             if [ ! -d ~/Cloud-Native-final ]; then
               git clone https://github.com/${{ github.repository }}.git ~/Cloud-Native-final
             fi
 
-            echo "📁 切換到專案資料夾"
             cd ~/Cloud-Native-final
-
-            echo "🌐 更新程式碼 (${{ github.ref_name }})"
             git fetch origin
-            git checkout ${{ github.ref_name }}
-            git pull origin ${{ github.ref_name }}
+            git checkout $BRANCH_NAME
+            git pull origin $BRANCH_NAME
 
-            echo "🚀 部署前後端到 K3s"
-            sudo k3s kubectl apply -f k8s/namespace.yaml
-            sudo k3s kubectl apply -n cloudnative -f k8s/backend-deployment.yaml
-            sudo k3s kubectl apply -n cloudnative -f k8s/backend-service.yaml
-            sudo k3s kubectl apply -n cloudnative -f k8s/frontend-deployment.yaml
-            sudo k3s kubectl apply -n cloudnative -f k8s/frontend-service.yaml
+            echo "📦 注入正確 GHCR image tag ($IMAGE_TAG)"
+            sed -i "s|ghcr.io/fakraze/cloud-meal-frontend:.*|ghcr.io/fakraze/cloud-meal-frontend:$IMAGE_TAG|" k8s/frontend-deployment.yaml
+            sed -i "s|ghcr.io/fakraze/cloud-meal-backend:.*|ghcr.io/fakraze/cloud-meal-backend:$IMAGE_TAG|" k8s/backend-deployment.yaml
 
-            echo "🧪 執行 Cypress 測試"
-            cd test
-            npm install
-            npm run test
+            echo "🚀 Deploying to $NAMESPACE"
+            sudo k3s kubectl apply -f $NAMESPACE_FILE
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-deployment.yaml
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-service.yaml
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-deployment.yaml
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-service.yaml
+            sudo k3s kubectl apply -f $INGRESS_FILE
 
-            echo "✅ 完成部署與測試"
+            echo "✅ Done."
           EOF
-
-#
-# name: CD - Deploy to EC2 on Same Branch
-
-# on:
-#   workflow_run:
-#     workflows: ["CI - Build & Push Images"]
-#     types:
-#       - completed
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-#     if: github.event.workflow_run.conclusion == 'success' &&
-#       (github.event.workflow_run.head_branch == 'main' || github.event.workflow_run.head_branch == 'test' || github.event.workflow_run.head_branch == 'ci-cd')
-
-#     steps:
-#       - name: Set up SSH
-#         run: |
-#           mkdir -p ~/.ssh
-#           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
-#           chmod 600 ~/.ssh/id_ed25519
-#           ssh-keyscan -H 54.167.106.86 >> ~/.ssh/known_hosts
-
-#       - name: SSH and deploy from correct branch
-#         run: |
-#           ssh -i ~/.ssh/id_ed25519 ubuntu@54.167.106.86 << 'EOF'
-#             set -e
-#             cd /home/ubuntu/my-app
-#             git fetch origin
-#             git checkout ${{ github.event.workflow_run.head_branch }}
-#             git pull origin ${{ github.event.workflow_run.head_branch }}
-#             echo "✅ Deployed branch: ${{ github.event.workflow_run.head_branch }}"
-#           EOF
-
-#       # - name: Install Cypress
-#       #   run: |
-#       #     cd test
-#       #     npm ci
-
-#       # - name: Run Cypress E2E
-#       #   run: |
-#       #     cd test
-#       #     npx cypress run
