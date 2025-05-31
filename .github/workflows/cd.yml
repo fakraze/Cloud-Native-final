@@ -1,32 +1,42 @@
-name: CD - SSH Deploy to EC2
+name: CD - Deploy to EC2 on Same Branch
 
 on:
-  workflow_dispatch:
   workflow_run:
     workflows: ["CI - Build & Push Images"]
     types:
       - completed
 
 jobs:
-  deploy-to-ec2:
+  deploy:
     runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success' &&
+      (github.event.workflow_run.head_branch == 'main' || github.event.workflow_run.head_branch == 'test' || github.event.workflow_run.head_branch == 'ci-cd')
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Set up SSH key
+      - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H 54.167.106.86 >> ~/.ssh/known_hosts
 
-      - name: SSH into EC2 and run commands
+      - name: SSH and deploy from correct branch
         run: |
           ssh -i ~/.ssh/id_ed25519 ubuntu@54.167.106.86 << 'EOF'
-            echo "✅ Connected to EC2"
-            hostname
-            uptime
-            # 你可以在這裡加上 git pull / docker compose / kubectl 等等
+            set -e
+            cd /home/ubuntu/my-app
+            git fetch origin
+            git checkout ${{ github.event.workflow_run.head_branch }}
+            git pull origin ${{ github.event.workflow_run.head_branch }}
+            echo "✅ Deployed branch: ${{ github.event.workflow_run.head_branch }}"
           EOF
+
+      # - name: Install Cypress
+      #   run: |
+      #     cd test
+      #     npm ci
+
+      # - name: Run Cypress E2E
+      #   run: |
+      #     cd test
+      #     npx cypress run
