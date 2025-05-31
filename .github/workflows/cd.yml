@@ -22,11 +22,15 @@ jobs:
           BRANCH=$(echo "${GITHUB_REF##*/}")
           ssh -i ~/.ssh/id_ed25519 ubuntu@54.167.106.86 << EOF
             set -e
-            cd /home/ubuntu/my-app
+            cd /home/ubuntu || exit 1
+            if [ ! -d "my-app" ]; then
+              git clone https://github.com/${GITHUB_REPOSITORY}.git my-app
+            fi
+            cd my-app
             git fetch origin
-            git checkout \$BRANCH
-            git pull origin \$BRANCH
-            echo "✅ Deployed branch: \$BRANCH"
+            git checkout $BRANCH
+            git pull origin $BRANCH
+            echo "✅ Deployed branch: $BRANCH"
           EOF
 
 # name: CD - Deploy to EC2 on Same Branch
