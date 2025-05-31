@@ -1,10 +1,5 @@
 name: CD - Deploy to EC2 on Same Branch
 
-# on:
-#   workflow_run:
-#     workflows: ["CI - Build & Push Images"]
-#     types:
-#       - completed
 on:
   push:
     branches:
@@ -13,8 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success' &&
-      (github.event.workflow_run.head_branch == 'main' || github.event.workflow_run.head_branch == 'test' || github.event.workflow_run.head_branch == 'ci-cd')
 
     steps:
       - name: Set up SSH
@@ -24,24 +17,58 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H 54.167.106.86 >> ~/.ssh/known_hosts
 
-      - name: SSH and deploy from correct branch
+      - name: SSH and deploy from current branch
         run: |
-          ssh -i ~/.ssh/id_ed25519 ubuntu@54.167.106.86 << 'EOF'
+          BRANCH=$(echo "${GITHUB_REF##*/}")
+          ssh -i ~/.ssh/id_ed25519 ubuntu@54.167.106.86 << EOF
             set -e
             cd /home/ubuntu/my-app
             git fetch origin
-            git checkout ${{ github.event.workflow_run.head_branch }}
-            git pull origin ${{ github.event.workflow_run.head_branch }}
-            echo "✅ Deployed branch: ${{ github.event.workflow_run.head_branch }}"
+            git checkout \$BRANCH
+            git pull origin \$BRANCH
+            echo "✅ Deployed branch: \$BRANCH"
           EOF
 
-      #
-      # - name: Install Cypress
-      #   run: |
-      #     cd test
-      #     npm ci
+# name: CD - Deploy to EC2 on Same Branch
 
-      # - name: Run Cypress E2E
-      #   run: |
-      #     cd test
-      #     npx cypress run
+# on:
+#   workflow_run:
+#     workflows: ["CI - Build & Push Images"]
+#     types:
+#       - completed
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     if: github.event.workflow_run.conclusion == 'success' &&
+#       (github.event.workflow_run.head_branch == 'main' || github.event.workflow_run.head_branch == 'test' || github.event.workflow_run.head_branch == 'ci-cd')
+
+#     steps:
+#       - name: Set up SSH
+#         run: |
+#           mkdir -p ~/.ssh
+#           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
+#           chmod 600 ~/.ssh/id_ed25519
+#           ssh-keyscan -H 54.167.106.86 >> ~/.ssh/known_hosts
+
+#       - name: SSH and deploy from correct branch
+#         run: |
+#           ssh -i ~/.ssh/id_ed25519 ubuntu@54.167.106.86 << 'EOF'
+#             set -e
+#             cd /home/ubuntu/my-app
+#             git fetch origin
+#             git checkout ${{ github.event.workflow_run.head_branch }}
+#             git pull origin ${{ github.event.workflow_run.head_branch }}
+#             echo "✅ Deployed branch: ${{ github.event.workflow_run.head_branch }}"
+#           EOF
+
+#       #
+#       # - name: Install Cypress
+#       #   run: |
+#       #     cd test
+#       #     npm ci
+
+#       # - name: Run Cypress E2E
+#       #   run: |
+#       #     cd test
+#       #     npx cypress run
