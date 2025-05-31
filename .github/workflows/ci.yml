@@ -2,7 +2,7 @@ name: CI - Build & Push Images
 
 on:
   push:
-    branches: [main, test]
+    branches: [main, test, ci-cd]
 
 jobs:
   build-and-push:

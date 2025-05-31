@@ -1,4 +1,4 @@
-name: CD - Cypress E2E Only
+name: CD - Cypress E2E + Deploy to EC2
 
 on:
   workflow_run:
@@ -15,12 +15,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H 54.167.106.86 >> ~/.ssh/known_hosts
+
+      - name: Deploy to EC2
+        run: |
+          ssh -i ~/.ssh/id_ed25519 ubuntu@54.167.106.86 << 'EOF'
+          cd /home/ubuntu/my-app
+          git pull origin main
+          docker-compose down
+          docker-compose up -d --build
+          EOF
+
       - name: Install Cypress
         run: |
           cd test
           npm ci
 
-      - name: Run Cypress
+      - name: Run Cypress E2E Test
         run: |
           cd test
           npx cypress run
