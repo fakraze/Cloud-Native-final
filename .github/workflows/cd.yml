@@ -3,7 +3,7 @@ name: CD - Deploy to EC2 on Same Branch
 on:
   push:
     branches:
-      - ci-cd # 根據你的實際部署分支調整
+      - ci-cd
 
 jobs:
   deploy:
@@ -18,25 +18,22 @@ jobs:
           ssh-keyscan -H ec2-3-89-254-174.compute-1.amazonaws.com >> ~/.ssh/known_hosts
 
       - name: SSH and deploy to K3s
-        env:
-          BRANCH: ${{ github.ref_name }}
-          REPO: ${{ github.repository }}
         run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@ec2-3-89-254-174.compute-1.amazonaws.com << "EOF"
+          ssh -i ~/.ssh/id_rsa ubuntu@ec2-3-89-254-174.compute-1.amazonaws.com << EOF
             set -e
 
             echo "📁 確認 Cloud-Native-final 專案資料夾"
             if [ ! -d ~/Cloud-Native-final ]; then
-              git clone https://github.com/${REPO}.git ~/Cloud-Native-final
+              git clone https://github.com/${{ github.repository }}.git ~/Cloud-Native-final
             fi
 
             echo "📁 切換到專案資料夾"
             cd ~/Cloud-Native-final
 
-            echo "🌐 更新程式碼 (\$BRANCH)"
+            echo "🌐 更新程式碼 (${{ github.ref_name }})"
             git fetch origin
-            git checkout \$BRANCH
-            git pull origin \$BRANCH
+            git checkout ${{ github.ref_name }}
+            git pull origin ${{ github.ref_name }}
 
             echo "🚀 部署前後端到 K3s"
             sudo k3s kubectl apply -f k8s/namespace.yaml
@@ -45,7 +42,7 @@ jobs:
             sudo k3s kubectl apply -n cloudnative -f k8s/frontend-deployment.yaml
             sudo k3s kubectl apply -n cloudnative -f k8s/frontend-service.yaml
 
-            echo "📦 安裝並執行 Cypress 測試"
+            echo "🧪 執行 Cypress 測試"
             cd test
             npm ci
             npx cypress run
@@ -53,7 +50,6 @@ jobs:
             echo "✅ 完成部署與測試"
           EOF
 
-#
 # name: CD - Deploy to EC2 on Same Branch
 
 # on:
