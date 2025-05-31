@@ -49,9 +49,6 @@ jobs:
     if: ${{ success() && (github.ref_name == 'main' || github.ref_name == 'develop') }}
 
     steps:
-      - name: Echo branch for debugging
-        run: echo "Triggered by branch: ${{ github.ref_name }}"
-
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
