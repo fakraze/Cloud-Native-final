@@ -30,7 +30,13 @@ jobs:
             git fetch origin
             git checkout $BRANCH
             git pull origin $BRANCH
+
             echo "✅ Deployed branch: $BRANCH"
+
+            # ✅ 安裝 Cypress 並執行 E2E 測試
+            cd test
+            npm ci
+            npx cypress run
           EOF
 
 # name: CD - Deploy to EC2 on Same Branch
@@ -66,7 +72,6 @@ jobs:
 #             echo "✅ Deployed branch: ${{ github.event.workflow_run.head_branch }}"
 #           EOF
 
-#       #
 #       # - name: Install Cypress
 #       #   run: |
 #       #     cd test
