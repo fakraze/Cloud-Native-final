@@ -1,4 +1,4 @@
-name: CD - Cypress E2E + Deploy to EC2
+name: CD - Deploy to K3s + Run Cypress E2E
 
 on:
   workflow_run:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  cypress-e2e-test:
+  deploy-and-e2e:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,13 +22,15 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H 54.167.106.86 >> ~/.ssh/known_hosts
 
-      - name: Deploy to EC2
+      - name: SSH to EC2 and Deploy to K3s
         run: |
           ssh -i ~/.ssh/id_ed25519 ubuntu@54.167.106.86 << 'EOF'
+          set -e
           cd /home/ubuntu/my-app
           git pull origin main
-          docker-compose down
-          docker-compose up -d --build
+          kubectl apply -f k8s/
+          kubectl rollout status deployment/backend -n default
+          kubectl rollout status deployment/frontend -n default
           EOF
 
       - name: Install Cypress
@@ -36,7 +38,7 @@ jobs:
           cd test
           npm ci
 
-      - name: Run Cypress E2E Test
+      - name: Run Cypress E2E
         run: |
           cd test
           npx cypress run
