@@ -31,6 +31,7 @@ jobs:
             echo "✅ Deployed branch: ${{ github.event.workflow_run.head_branch }}"
           EOF
 
+      #
       # - name: Install Cypress
       #   run: |
       #     cd test
