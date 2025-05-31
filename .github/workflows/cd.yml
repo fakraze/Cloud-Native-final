@@ -3,7 +3,7 @@ name: CD - Deploy to EC2 on Same Branch
 on:
   push:
     branches:
-      - ci-cd  # 可改成 main、test 或其他測試分支
+      - ci-cd # 可改成 main、test 或其他測試分支
 
 jobs:
   deploy:
@@ -18,22 +18,22 @@ jobs:
           ssh-keyscan -H 54.167.106.86 >> ~/.ssh/known_hosts
 
       - name: SSH and deploy from current branch
-        run: |
-          BRANCH=$(echo "${GITHUB_REF##*/}")
-          ssh -i ~/.ssh/id_ed25519 ubuntu@54.167.106.86 bash -s <<EOF
+        env:
+          BRANCH: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+        run: >-
+          ssh -i ~/.ssh/id_ed25519 ubuntu@54.167.106.86 bash -c "
             set -e
 
-            # 安裝 Node.js（如果沒裝）
-            if ! command -v npm &> /dev/null; then
+            if ! command -v npm &>/dev/null; then
               curl -fsSL https://deb.nodesource.com/setup_18.x -o nodesource.sh
               sudo bash nodesource.sh
               sudo apt-get install -y nodejs
             fi
 
-            # 進入 /home/ubuntu 並 clone 專案（如果不存在）
-            cd /home/ubuntu || exit 1
-            if [ ! -d "my-app" ]; then
-              git clone https://github.com/${GITHUB_REPOSITORY}.git my-app
+            cd /home/ubuntu
+            if [ ! -d my-app ]; then
+              git clone https://github.com/$REPO.git my-app
             fi
 
             cd my-app
@@ -41,13 +41,12 @@ jobs:
             git checkout $BRANCH
             git pull origin $BRANCH
 
-            echo "✅ Deployed branch: $BRANCH"
+            echo '✅ Deployed branch: $BRANCH'
 
-            # 安裝並執行 Cypress 測試
             cd test
             npm ci
             npx cypress run
-EOF
+          "
 
 # name: CD - Deploy to EC2 on Same Branch
 
