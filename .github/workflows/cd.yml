@@ -44,8 +44,8 @@ jobs:
 
             echo "🧪 執行 Cypress 測試"
             cd test
-            npm ci
-            npx cypress run
+            npm install
+            npm run test
 
             echo "✅ 完成部署與測試"
           EOF
