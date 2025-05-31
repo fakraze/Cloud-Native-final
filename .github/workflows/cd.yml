@@ -1,46 +1,66 @@
-name: CD - Deploy & Cypress E2E
+name: CD - Deploy after CI
 
 on:
   workflow_run:
     workflows: ["CI - Build & Push Images"]
     types:
       - completed
-  workflow_dispatch:
 
 jobs:
-  deploy-and-test:
+  deploy:
+    if: >
+      ${{
+        github.event.workflow_run.conclusion == 'success' &&
+        (github.event.workflow_run.head_branch == 'main' || github.event.workflow_run.head_branch == 'develop')
+      }}
     runs-on: ubuntu-latest
-    env:
-      NAMESPACE: devops-demo
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Set up Kubeconfig
+      - name: Set up SSH
         run: |
-          echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
-          export KUBECONFIG=$PWD/kubeconfig
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ec2-3-89-254-174.compute-1.amazonaws.com >> ~/.ssh/known_hosts
 
-      - name: Deploy to Kubernetes
+      - name: SSH and deploy to K3s
         run: |
-          kubectl apply -f k8s/namespace.yaml
-          kubectl apply -f k8s/frontend-deployment.yaml
-          kubectl apply -f k8s/frontend-service.yaml
-          kubectl apply -f k8s/backend-deployment.yaml
-          kubectl apply -f k8s/backend-service.yaml
+          ssh -i ~/.ssh/id_rsa ubuntu@ec2-3-89-254-174.compute-1.amazonaws.com << 'EOF'
+            set -e
 
-      - name: Wait for services to be ready
-        run: |
-          kubectl wait --for=condition=available --timeout=60s deployment/frontend -n $NAMESPACE
-          kubectl wait --for=condition=available --timeout=60s deployment/backend -n $NAMESPACE
+            BRANCH_NAME="${{ github.event.workflow_run.head_branch }}"
+            if [ "$BRANCH_NAME" = "main" ]; then
+              NAMESPACE="cloudnative"
+              IMAGE_TAG="latest"
+              NAMESPACE_FILE="k8s/namespace-prod.yaml"
+              INGRESS_FILE="k8s/ingress-prod.yaml"
+            else
+              NAMESPACE="cloudnative-dev"
+              IMAGE_TAG="dev"
+              NAMESPACE_FILE="k8s/namespace-dev.yaml"
+              INGRESS_FILE="k8s/ingress-dev.yaml"
+            fi
 
-      - name: Install Cypress
-        run: |
-          cd test
-          npm ci
+            echo "📁 確認專案"
+            if [ ! -d ~/Cloud-Native-final ]; then
+              git clone https://github.com/${{ github.repository }}.git ~/Cloud-Native-final
+            fi
 
-      - name: Run Cypress
-        run: |
-          cd test
-          npx cypress run
+            cd ~/Cloud-Native-final
+            git fetch origin
+            git checkout $BRANCH_NAME
+            git pull origin $BRANCH_NAME
+
+            echo "📦 注入正確 GHCR image tag ($IMAGE_TAG)"
+            sed -i "s|ghcr.io/fakraze/cloud-meal-frontend:.*|ghcr.io/fakraze/cloud-meal-frontend:$IMAGE_TAG|" k8s/frontend-deployment.yaml
+            sed -i "s|ghcr.io/fakraze/cloud-meal-backend:.*|ghcr.io/fakraze/cloud-meal-backend:$IMAGE_TAG|" k8s/backend-deployment.yaml
+
+            echo "🚀 Deploying to $NAMESPACE"
+            sudo k3s kubectl apply -f $NAMESPACE_FILE
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-deployment.yaml
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-service.yaml
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-deployment.yaml
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-service.yaml
+            sudo k3s kubectl apply -f $INGRESS_FILE
+
+            echo "✅ Done."
+          EOF

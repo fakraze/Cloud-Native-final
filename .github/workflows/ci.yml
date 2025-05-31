@@ -2,7 +2,7 @@ name: CI - Build & Push Images
 
 on:
   push:
-    branches: [main, test]
+    branches: [main, develop, test, ci-cd]
 
 jobs:
   build-and-push:
@@ -18,12 +18,24 @@ jobs:
       - name: Login to GHCR
         run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u fakraze --password-stdin
 
+      # 設定 TAG 名稱（main → latest、develop → dev、其他 → ci-shortsha）
+      - name: Set image tag
+        run: |
+          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+            echo "IMAGE_TAG=latest" >> $GITHUB_ENV
+          elif [[ "${GITHUB_REF_NAME}" == "develop" ]]; then
+            echo "IMAGE_TAG=dev" >> $GITHUB_ENV
+          else
+            SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+            echo "IMAGE_TAG=ci-${SHORT_SHA}" >> $GITHUB_ENV
+          fi
+
       - name: Build & Push Frontend
         run: |
-          docker build -t ghcr.io/fakraze/cloud-meal-frontend:latest ./frontend
-          docker push ghcr.io/fakraze/cloud-meal-frontend:latest
+          docker build -t ghcr.io/fakraze/cloud-meal-frontend:${{ env.IMAGE_TAG }} ./frontend
+          docker push ghcr.io/fakraze/cloud-meal-frontend:${{ env.IMAGE_TAG }}
 
       - name: Build & Push Backend
         run: |
-          docker build -t ghcr.io/fakraze/cloud-meal-backend:latest ./backend
-          docker push ghcr.io/fakraze/cloud-meal-backend:latest
+          docker build -t ghcr.io/fakraze/cloud-meal-backend:${{ env.IMAGE_TAG }} ./backend
+          docker push ghcr.io/fakraze/cloud-meal-backend:${{ env.IMAGE_TAG }}
