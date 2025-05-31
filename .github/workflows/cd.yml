@@ -1,14 +1,14 @@
-name: CD - Deploy to K3s + Run Cypress E2E
+name: CD - SSH Deploy to EC2
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["CI - Build & Push Images"]
     types:
       - completed
-  workflow_dispatch:
 
 jobs:
-  deploy-and-e2e:
+  deploy-to-ec2:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,28 +22,11 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H 54.167.106.86 >> ~/.ssh/known_hosts
 
-      - name: SSH into EC2 and Deploy to K3s
+      - name: SSH into EC2 and run commands
         run: |
           ssh -i ~/.ssh/id_ed25519 ubuntu@54.167.106.86 << 'EOF'
-          set -e
-          export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-          cd /home/ubuntu/my-app
-          git pull origin main
-          kubectl apply -f k8s/namespace.yaml
-          kubectl apply -f k8s/frontend-deployment.yaml
-          kubectl apply -f k8s/frontend-service.yaml
-          kubectl apply -f k8s/backend-deployment.yaml
-          kubectl apply -f k8s/backend-service.yaml
-          kubectl rollout status deployment/frontend -n devops-demo
-          kubectl rollout status deployment/backend -n devops-demo
+            echo "✅ Connected to EC2"
+            hostname
+            uptime
+            # 你可以在這裡加上 git pull / docker compose / kubectl 等等
           EOF
-
-      # - name: Install Cypress
-      #   run: |
-      #     cd test
-      #     npm ci
-
-      # - name: Run Cypress E2E
-      #   run: |
-      #     cd test
-      #     npx cypress run
