@@ -84,8 +84,8 @@ jobs:
             git reset --hard origin/$BRANCH_NAME
 
             echo "📦 注入正確 GHCR image tag ($IMAGE_TAG)"
-            sed -i "s|ghcr.io/fakraze/cloud-meal-frontend:.*|ghcr.io/fakraze/cloud-meal-frontend:$IMAGE_TAG|" k8s/frontend-deployment.yaml
-            sed -i "s|ghcr.io/fakraze/cloud-meal-backend:.*|ghcr.io/fakraze/cloud-meal-backend:$IMAGE_TAG|" k8s/backend-deployment.yaml
+            sed -i "s|image: cloud-meal-frontend:local|image: ghcr.io/fakraze/cloud-meal-frontend:$IMAGE_TAG|" k8s/frontend-deployment.yaml
+            sed -i "s|image: cloud-meal-backend:local|image: ghcr.io/fakraze/cloud-meal-backend:$IMAGE_TAG|" k8s/backend-deployment.yaml
 
             echo "🚀 Deploying to $NAMESPACE"
             sudo k3s kubectl apply -f $NAMESPACE_FILE
@@ -94,6 +94,10 @@ jobs:
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-deployment.yaml
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-service.yaml
             sudo k3s kubectl apply -f $INGRESS_FILE
+            
+            # ✨ 強制 frontend 拉最新 image
+            sudo k3s kubectl rollout restart deployment frontend -n $NAMESPACE
+            sudo k3s kubectl rollout restart deployment backend -n $NAMESPACE
 
             echo "✅ Done."
           EOF
