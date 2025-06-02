@@ -113,6 +113,12 @@ jobs:
             sed -i "s|image: cloud-meal-backend:local|image: ghcr.io/fakraze/cloud-meal-backend:$IMAGE_TAG|" k8s/backend-deployment.yaml
 
             echo "🚀 Deploying to $NAMESPACE"
+            
+            # ⬇️ 新增 middleware 套用（放 ingress 前）
+            if [ "$NAMESPACE" = "cloudnative-dev" ]; then
+                sudo k3s kubectl apply -f k8s/frontend-stripprefix.yaml
+            fi
+            
             sudo k3s kubectl apply -f $NAMESPACE_FILE
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-deployment.yaml
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-service.yaml
