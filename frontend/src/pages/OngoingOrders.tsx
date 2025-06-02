@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, Eye, X, CheckCircle, AlertCircle, Package, Utensils, MapPin } from 'lucide-react';
+import { Clock, Eye, X, AlertCircle} from 'lucide-react';
 import { useOngoingOrders, useCancelOrder } from '../hooks/useOrder';
 
 const OngoingOrders: React.FC = () => {
@@ -69,20 +69,20 @@ const OngoingOrders: React.FC = () => {
     }
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return <Clock className="h-4 w-4" />;
-      case 'confirmed':
-        return <CheckCircle className="h-4 w-4" />;
-      case 'preparing':
-        return <Utensils className="h-4 w-4" />;
-      case 'ready':
-        return <Package className="h-4 w-4" />;
-      default:
-        return <Clock className="h-4 w-4" />;
-    }
-  };
+  // const getStatusIcon = (status: string) => {
+  //   switch (status) {
+  //     case 'pending':
+  //       return <Clock className="h-4 w-4" />;
+  //     case 'confirmed':
+  //       return <CheckCircle className="h-4 w-4" />;
+  //     case 'preparing':
+  //       return <Utensils className="h-4 w-4" />;
+  //     case 'ready':
+  //       return <Package className="h-4 w-4" />;
+  //     default:
+  //       return <Clock className="h-4 w-4" />;
+  //   }
+  // };
 
   const handleCancelOrder = (orderId: string) => {
     if (window.confirm('Are you sure you want to cancel this order?')) {

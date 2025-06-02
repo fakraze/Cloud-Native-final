@@ -1,5 +1,5 @@
 import api from './api';
-import { LoginRequest, LoginResponse, User } from '../types/auth';
+import { LoginRequest, LoginResponse} from '../types/auth';
 import { ApiResponse } from '../types/common';
 import { mockAuthService } from './mockAuthService';
 

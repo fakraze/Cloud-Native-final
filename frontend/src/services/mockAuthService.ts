@@ -1,5 +1,5 @@
 // Mock authentication service for frontend testing
-import { LoginRequest, LoginResponse, User } from '../types/auth';
+import { LoginRequest, LoginResponse} from '../types/auth';
 
 // Mock users for testing
 const MOCK_USERS = {
