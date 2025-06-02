@@ -39,31 +39,31 @@ export const authService = {
     }
   },
 
-  getCurrentUser: async (): Promise<User> => {
-    if (shouldUseMock()) {
-      return mockAuthService.getCurrentUser();
-    }
+  // getCurrentUser: async (): Promise<User> => {
+  //   if (shouldUseMock()) {
+  //     return mockAuthService.getCurrentUser();
+  //   }
     
-    try {
-      const response = await api.get<ApiResponse<User>>('/auth/me');
-      return response.data.data;
-    } catch (error) {
-      console.warn('API call failed, falling back to mock user data');
-      return mockAuthService.getCurrentUser();
-    }
-  },
+  //   try {
+  //     const response = await api.get<ApiResponse<User>>('/auth/me');
+  //     return response.data.data;
+  //   } catch (error) {
+  //     console.warn('API call failed, falling back to mock user data');
+  //     return mockAuthService.getCurrentUser();
+  //   }
+  // },
 
-  refreshToken: async (): Promise<LoginResponse> => {
-    if (shouldUseMock()) {
-      return mockAuthService.refreshToken();
-    }
+  // refreshToken: async (): Promise<LoginResponse> => {
+  //   if (shouldUseMock()) {
+  //     return mockAuthService.refreshToken();
+  //   }
     
-    try {
-      const response = await api.post<ApiResponse<LoginResponse>>('/auth/refresh');
-      return response.data.data;
-    } catch (error) {
-      console.warn('API call failed, falling back to mock refresh');
-      return mockAuthService.refreshToken();
-    }
-  },
+  //   try {
+  //     const response = await api.post<ApiResponse<LoginResponse>>('/auth/refresh');
+  //     return response.data.data;
+  //   } catch (error) {
+  //     console.warn('API call failed, falling back to mock refresh');
+  //     return mockAuthService.refreshToken();
+  //   }
+  // },
 };

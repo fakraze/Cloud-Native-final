@@ -47,33 +47,33 @@ export const mockAuthService = {
     localStorage.removeItem('auth');
   },
 
-  getCurrentUser: async (): Promise<User> => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+  // getCurrentUser: async (): Promise<User> => {
+  //   // Simulate API delay
+  //   await new Promise(resolve => setTimeout(resolve, 500));
     
-    const authData = localStorage.getItem('auth');
-    if (!authData) {
-      throw new Error('Not authenticated');
-    }
+  //   const authData = localStorage.getItem('auth');
+  //   if (!authData) {
+  //     throw new Error('Not authenticated');
+  //   }
     
-    const { user } = JSON.parse(authData);
-    return user;
-  },
+  //   const { user } = JSON.parse(authData);
+  //   return user;
+  // },
 
-  refreshToken: async (): Promise<LoginResponse> => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+  // refreshToken: async (): Promise<LoginResponse> => {
+  //   // Simulate API delay
+  //   await new Promise(resolve => setTimeout(resolve, 500));
     
-    const authData = localStorage.getItem('auth');
-    if (!authData) {
-      throw new Error('Not authenticated');
-    }
+  //   const authData = localStorage.getItem('auth');
+  //   if (!authData) {
+  //     throw new Error('Not authenticated');
+  //   }
     
-    const { user } = JSON.parse(authData);
-    return {
-      user,
-      token: `mock-token-${user.id}-${Date.now()}`,
-      refreshToken: `mock-refresh-token-${user.id}-${Date.now()}`
-    };
-  },
+  //   const { user } = JSON.parse(authData);
+  //   return {
+  //     user,
+  //     token: `mock-token-${user.id}-${Date.now()}`,
+  //     refreshToken: `mock-refresh-token-${user.id}-${Date.now()}`
+  //   };
+  // },
 };

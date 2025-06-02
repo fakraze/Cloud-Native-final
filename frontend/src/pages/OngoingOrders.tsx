@@ -1,40 +1,86 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, Eye, X } from 'lucide-react';
+import { Clock, Eye, X, CheckCircle, AlertCircle, Package, Utensils, MapPin } from 'lucide-react';
 import { useOngoingOrders, useCancelOrder } from '../hooks/useOrder';
 
 const OngoingOrders: React.FC = () => {
   const { data: orders, isLoading, error } = useOngoingOrders();
   const cancelOrderMutation = useCancelOrder();
-
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        <div className="max-w-6xl mx-auto p-6">
+          <div className="space-y-6">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="glass-card">
+                <div className="animate-pulse">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center space-x-4">
+                      <div className="h-6 bg-gray-200 rounded w-32"></div>
+                      <div className="h-6 bg-gray-200 rounded-full w-20"></div>
+                    </div>
+                    <div className="h-8 bg-gray-200 rounded w-24"></div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
-
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <p className="text-red-600">Failed to load ongoing orders. Please try again.</p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        <div className="max-w-6xl mx-auto p-6">
+          <div className="glass-card text-center p-12">
+            <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertCircle className="h-12 w-12 text-red-500" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Unable to Load Orders</h2>
+            <p className="text-gray-600 mb-6">Failed to load ongoing orders. Please try again.</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="btn-primary"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'badge-warning';
       case 'confirmed':
-        return 'bg-blue-100 text-blue-800';
+        return 'badge-info';
       case 'preparing':
-        return 'bg-orange-100 text-orange-800';
+        return 'badge-orange';
       case 'ready':
-        return 'bg-green-100 text-green-800';
+        return 'badge-success';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'badge-secondary';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return <Clock className="h-4 w-4" />;
+      case 'confirmed':
+        return <CheckCircle className="h-4 w-4" />;
+      case 'preparing':
+        return <Utensils className="h-4 w-4" />;
+      case 'ready':
+        return <Package className="h-4 w-4" />;
+      default:
+        return <Clock className="h-4 w-4" />;
     }
   };
 

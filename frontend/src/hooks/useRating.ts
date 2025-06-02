@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ratingService } from '../services/otherServices';
-import { CreateRatingRequest } from '../types/rating';
+import { ratingService, dishRatingService } from '../services/otherServices';
+import { CreateRatingRequest, CreateDishRatingRequest } from '../types/rating';
 
 export const useRatings = (restaurantId: string) => {
   return useQuery({
@@ -42,9 +42,40 @@ export const useDeleteRating = () => {  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ ratingId }: { ratingId: string; restaurantId: string }) =>
       ratingService.deleteRating(ratingId),
-    onSuccess: (_, { restaurantId }) => {
-      queryClient.invalidateQueries({ queryKey: ['ratings', restaurantId] });
+    onSuccess: (_, { restaurantId }) => {      queryClient.invalidateQueries({ queryKey: ['ratings', restaurantId] });
       queryClient.invalidateQueries({ queryKey: ['restaurant', restaurantId] });
+    },
+  });
+};
+
+// Dish rating hooks
+export const useDishRatings = (dishId: string) => {
+  return useQuery({
+    queryKey: ['dishRatings', dishId],
+    queryFn: () => dishRatingService.getDishRatings(dishId),
+    enabled: !!dishId,
+  });
+};
+
+export const useDishAverageRating = (dishId: string) => {
+  return useQuery({
+    queryKey: ['dishAverageRating', dishId],
+    queryFn: () => dishRatingService.getDishAverageRating(dishId),
+    enabled: !!dishId,
+  });
+};
+
+export const useCreateDishRating = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CreateDishRatingRequest) => dishRatingService.createDishRating(data),
+    onSuccess: (data) => {
+      // Invalidate dish ratings
+      queryClient.invalidateQueries({ queryKey: ['dishRatings', data.dishId] });
+      queryClient.invalidateQueries({ queryKey: ['dishAverageRating', data.dishId] });
+      // Also invalidate restaurant ratings as dish ratings might affect overall ratings
+      queryClient.invalidateQueries({ queryKey: ['ratings', data.restaurantId] });
     },
   });
 };
