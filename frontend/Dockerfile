@@ -12,8 +12,12 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build the application
-RUN npm run build
+# ⬇️ 加入 ARG
+ARG BUILD_MODE=production
+ARG VITE_BASE_PATH=/
+
+# ⬇️ Vite build，帶入環境變數
+RUN VITE_BASE_PATH=$VITE_BASE_PATH npm run build -- --mode $BUILD_MODE
 
 # Production stage
 FROM nginx:alpine
@@ -29,3 +33,4 @@ EXPOSE 80
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
+

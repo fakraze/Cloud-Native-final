@@ -34,7 +34,21 @@ jobs:
 
       - name: Build & Push Frontend
         run: |
-          docker build -t ghcr.io/fakraze/cloud-meal-frontend:${{ env.IMAGE_TAG }} ./frontend
+          # 根據分支設定 VITE_BASE_PATH
+          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+            BASE_PATH="/"
+            BUILD_MODE="production"
+          else
+            BASE_PATH="/dev/frontend/"
+            BUILD_MODE="development"
+          fi
+
+          docker build \
+            --build-arg VITE_BASE_PATH=$BASE_PATH \
+            --build-arg BUILD_MODE=$BUILD_MODE \
+            -t ghcr.io/fakraze/cloud-meal-frontend:${{ env.IMAGE_TAG }} \
+            ./frontend
+
           docker push ghcr.io/fakraze/cloud-meal-frontend:${{ env.IMAGE_TAG }}
 
       - name: Build & Push Backend
