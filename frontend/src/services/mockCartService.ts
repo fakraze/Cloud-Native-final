@@ -4,7 +4,7 @@ import { Cart, CartItem } from '../types/restaurant';
 let mockCart: Cart | null = null;
 
 export const mockCartService = {
-  getCart: async (userId: string): Promise<Cart | null> => {
+  getCart: async (_userId: string): Promise<Cart | null> => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 300));
     
