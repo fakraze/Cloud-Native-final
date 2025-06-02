@@ -81,6 +81,11 @@ jobs:
 
             cd ~/Cloud-Native-final
             git fetch origin
+            
+            # 🔥 強制覆蓋本地所有變更
+            git reset --hard
+            git clean -fd
+
             git checkout $BRANCH_NAME
             git reset --hard origin/$BRANCH_NAME
 
