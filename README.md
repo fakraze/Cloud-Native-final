@@ -46,7 +46,6 @@ Test in Terminal
 npm run test
 ```
 
-
 ## Run k8s on yor own
 
 Install tools (run terminal use administrator)
