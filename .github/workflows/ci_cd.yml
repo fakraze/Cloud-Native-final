@@ -73,11 +73,11 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ec2-3-89-254-174.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+          ssh -i "ec2-k8s-key.pem" ubuntu@ec2-13-218-27-133.compute-1.amazonaws.com >> ~/.ssh/known_hosts
 
       - name: SSH and deploy to K3s
         run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@ec2-3-89-254-174.compute-1.amazonaws.com << 'EOF'
+          ssh -i "ec2-k8s-key.pem" ubuntu@ec2-13-218-27-133.compute-1.amazonaws.com << 'EOF'
             set -e
 
             BRANCH_NAME="${{ github.ref_name }}"
