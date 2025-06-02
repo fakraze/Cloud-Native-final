@@ -32,14 +32,17 @@ export class RestaurantController {
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateRestaurantDto: UpdateRestaurantDto): Promise<Restaurant | null> {
-    this.restaurantService.update(id, updateRestaurantDto).then((result) => {
-      if (!result || result === 0) {
-        throw new NotFoundException(`Restaurant with ID ${id} not found`);
-      }
-    });
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateRestaurantDto: UpdateRestaurantDto
+  ): Promise<Restaurant | null> {
+    const result = await this.restaurantService.update(id, updateRestaurantDto);
+    if (!result || result === 0) {
+      throw new NotFoundException(`Restaurant with ID ${id} not found`);
+    }
 
-    return this.restaurantService.findOne(id);
+    const restaurant = await this.restaurantService.findOne(id);
+    return restaurant;
   }
 
   @Delete(':id')
