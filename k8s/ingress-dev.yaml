@@ -10,14 +10,14 @@ spec:
   rules:
     - http:
         paths:
-          - path: /dev/frontend
+          - path: /dev/frontend/
             pathType: Prefix
             backend:
               service:
                 name: frontend
                 port:
                   number: 80
-          - path: /dev/backend
+          - path: /dev/backend/
             pathType: Prefix
             backend:
               service:
