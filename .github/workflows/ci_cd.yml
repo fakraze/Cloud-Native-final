@@ -9,7 +9,7 @@ jobs:
   build-and-push:
     name: CD - Build & Push Images
     runs-on: ubuntu-latest
-    if: ${{ (github.ref_name == 'main' || github.ref_name == 'develop' || github.ref_name == 'ci-cd')) }}
+    if: ${{ (github.ref_name == 'main' || github.ref_name == 'develop' || github.ref_name == 'ci-cd') }}
 
     steps:
       - name: Checkout
