@@ -14,11 +14,21 @@ const OrderHistory: React.FC = () => {
       </div>
     );
   }
-
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <p className="text-red-600">Failed to load order history. Please try again.</p>
+      <div className="max-w-6xl mx-auto">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-red-800 mb-2">Failed to load order history</h2>
+          <p className="text-red-600 mb-4">
+            {error instanceof Error ? error.message : 'An unexpected error occurred while loading your order history.'}
+          </p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="btn-primary"
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
@@ -77,13 +87,18 @@ const OrderHistory: React.FC = () => {
           {filteredOrders.map((order) => (
             <div key={order.id} className="card">
               <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-4 mb-3">
+                <div className="flex-1">                  <div className="flex items-center space-x-4 mb-3">
                     <h3 className="text-lg font-semibold text-gray-900">
                       Order #{order.id.slice(-8)}
                     </h3>
-                    <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
-                      {order.status}
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      order.status === 'completed' ? 'bg-green-100 text-green-800' :
+                      order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                      order.status === 'preparing' ? 'bg-orange-100 text-orange-800' :
+                      order.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
+                      'bg-gray-100 text-gray-800'
+                    }`}>
+                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                     </span>
                     {order.paymentStatus === 'paid' && (
                       <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
@@ -99,11 +114,10 @@ const OrderHistory: React.FC = () => {
                     <span className="mx-2">•</span>
                     <span>{order.deliveryType}</span>
                   </div>
-                  
-                  <div className="text-sm text-gray-600 mb-3">
+                    <div className="text-sm text-gray-600 mb-3">
                     <span className="font-medium">Items:</span>
                     <span className="ml-1">
-                      {order.items.map(item => `${item.quantity}x ${item.menuItemName}`).join(', ')}
+                      {order.items.map(item => `${item.quantity}x ${item.menuItemName || item.name || 'Unknown Item'}`).join(', ')}
                     </span>
                   </div>
                   

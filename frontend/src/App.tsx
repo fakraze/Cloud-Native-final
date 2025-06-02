@@ -19,6 +19,7 @@ import { RatePage } from './pages/RatePage';
 import { RestaurantRatings } from './pages/RestaurantRatings';
 import { PersonalPage } from './pages/PersonalPage';
 import Inbox from './pages/Inbox';
+import { Payment } from './pages/Payment';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { RestaurantManagement } from './pages/admin/RestaurantManagement';
 import { OrderManagement } from './pages/admin/OrderManagement';
@@ -57,6 +58,7 @@ function App() {
               <Route path="restaurant/:restaurantId/rate" element={<RestaurantRatings />} />
               <Route path="restaurant/:restaurantId/menu/:menuItemId" element={<MenuItemDetail />} />
               <Route path="cart" element={<Cart />} />
+              <Route path="payment" element={<Payment />} />
               <Route path="order" element={<OngoingOrders />} />
               <Route path="order/:orderId" element={<OrderDetail />} />
               <Route path="order-history" element={<OrderHistory />} />

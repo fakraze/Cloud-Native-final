@@ -16,3 +16,4 @@ cypress/videos/
 .env.local
 
 .vscode/
+dist/
