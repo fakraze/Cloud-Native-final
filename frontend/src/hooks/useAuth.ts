@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { authService } from '../services/authService';
 import { useAuthStore } from '../store/authStore';
 import { LoginRequest } from '../types/auth';
@@ -29,14 +29,14 @@ export const useLogout = () => {
   });
 };
 
-export const useCurrentUser = () => {
-  const { isAuthenticated } = useAuthStore();
+// export const useCurrentUser = () => {
+//   const { isAuthenticated } = useAuthStore();
 
-  return useQuery({
-    queryKey: ['user'],
-    queryFn: () => authService.getCurrentUser(),
-    enabled: isAuthenticated,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: false,
-  });
-};
+//   return useQuery({
+//     queryKey: ['user'],
+//     queryFn: () => authService.getCurrentUser(),
+//     enabled: isAuthenticated,
+//     staleTime: 5 * 60 * 1000, // 5 minutes
+//     retry: false,
+//   });
+// };

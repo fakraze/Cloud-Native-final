@@ -21,7 +21,9 @@ import { OrderHistory } from "./pages/OrderHistory";
 import { OngoingOrders } from "./pages/OngoingOrders";
 import { OrderDetail } from "./pages/OrderDetail";
 import { RatePage } from "./pages/RatePage";
+import { RestaurantRatings } from "./pages/RestaurantRatings";
 import { PersonalPage } from "./pages/PersonalPage";
+import Inbox from "./pages/Inbox";
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import { RestaurantManagement } from "./pages/admin/RestaurantManagement";
 import { OrderManagement } from "./pages/admin/OrderManagement";
@@ -66,6 +68,10 @@ function App() {
                 element={<RestaurantDetail />}
               />
               <Route
+                path="restaurant/:restaurantId/rate"
+                element={<RestaurantRatings />}
+              />
+              <Route
                 path="restaurant/:restaurantId/menu/:menuItemId"
                 element={<MenuItemDetail />}
               />
@@ -75,6 +81,7 @@ function App() {
               <Route path="order-history" element={<OrderHistory />} />
               <Route path="rate/:restaurantId" element={<RatePage />} />
               <Route path="personal" element={<PersonalPage />} />
+              <Route path="inbox" element={<Inbox />} />
 
               {/* Admin routes */}
               <Route

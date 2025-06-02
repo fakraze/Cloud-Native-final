@@ -17,3 +17,5 @@ cypress/videos/
 
 # Ignore build artifacts
 frontend/dist/
+
+.vscode/

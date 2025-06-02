@@ -111,6 +111,8 @@ jobs:
             echo "📦 注入正確 GHCR image tag ($IMAGE_TAG)"
             sed -i "s|image: cloud-meal-frontend:local|image: ghcr.io/fakraze/cloud-meal-frontend:$IMAGE_TAG|" k8s/frontend-deployment.yaml
             sed -i "s|image: cloud-meal-backend:local|image: ghcr.io/fakraze/cloud-meal-backend:$IMAGE_TAG|" k8s/backend-deployment.yaml
+            sed -i "s|image: cloud-meal-frontend:local|image: ghcr.io/fakraze/cloud-meal-frontend:$IMAGE_TAG|" k8s/frontend-deployment.yaml
+            sed -i "s|image: cloud-meal-backend:local|image: ghcr.io/fakraze/cloud-meal-backend:$IMAGE_TAG|" k8s/backend-deployment.yaml
 
             echo "🚀 Deploying to $NAMESPACE"
             
