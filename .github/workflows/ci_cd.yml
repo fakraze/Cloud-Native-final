@@ -43,6 +43,11 @@ jobs:
             BUILD_MODE="development"
           fi
 
+          echo "📦 Building with:"
+          echo "    VITE_BASE_PATH=$BASE_PATH"
+          echo "    BUILD_MODE=$BUILD_MODE"
+          echo "    IMAGE_TAG=${{ env.IMAGE_TAG }}"
+
           docker build \
             --build-arg VITE_BASE_PATH=$BASE_PATH \
             --build-arg BUILD_MODE=$BUILD_MODE \
