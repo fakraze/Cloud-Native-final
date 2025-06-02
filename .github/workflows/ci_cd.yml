@@ -25,7 +25,7 @@ jobs:
         run: |
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             echo "IMAGE_TAG=latest" >> $GITHUB_ENV
-          elif [[ "${GITHUB_REF_NAME}" == "develop" || github.ref_name == 'ci-cd' ]]; then
+          elif [[ "${GITHUB_REF_NAME}" == "develop" || "${GITHUB_REF_NAME}" == 'ci-cd' ]]; then
             echo "IMAGE_TAG=dev" >> $GITHUB_ENV
           else
             SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
