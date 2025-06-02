@@ -105,6 +105,38 @@ jobs:
             sudo k3s kubectl rollout restart deployment frontend -n $NAMESPACE
             sudo k3s kubectl rollout restart deployment backend -n $NAMESPACE
 
+            echo "🕐 等待 Pod 啟動中..."
+            ATTEMPTS=0
+            MAX_ATTEMPTS=20
+
+            while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
+              NOT_READY=$(sudo k3s kubectl get pods -n $NAMESPACE --no-headers | grep -v "Running" | wc -l)
+              if [ "$NOT_READY" -eq 0 ]; then
+                echo "✅ 所有 Pod 都已成功啟動！"
+                break
+              fi
+              echo "⌛ 尚有 $NOT_READY 個 Pod 未就緒，等待中..."
+              ATTEMPTS=$((ATTEMPTS+1))
+              sleep 5
+            done
+
+            if [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; then
+              echo "❌ 部署失敗：Pod 超時未啟動成功"              
+              echo "📦 當前 Pod 狀態："
+              sudo k3s kubectl get pods -n $NAMESPACE
+
+              echo "🩺 印出非 Running 的 Pod 詳細訊息："
+              for pod in $(sudo k3s kubectl get pods -n $NAMESPACE --no-headers | grep -v "Running" | awk '{print $1}'); do
+                echo "🔍 Logs for $pod:"
+                sudo k3s kubectl logs $pod -n $NAMESPACE || true
+
+                echo "🔎 Describe for $pod:"
+                sudo k3s kubectl describe pod $pod -n $NAMESPACE || true
+              done
+
+              exit 1
+            fi
+
             echo "✅ Done."
           EOF
 
