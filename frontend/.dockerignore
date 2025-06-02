@@ -1,0 +1,17 @@
+node_modules
+npm-debug.log
+dist
+.git
+.gitignore
+README.md
+README_NEW.md
+DEVELOPMENT.md
+DEPLOYMENT.md
+MANUAL_TESTING_GUIDE.md
+PROJECT_SUMMARY.md
+TESTING_REPORT.md
+test-frontend.js
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

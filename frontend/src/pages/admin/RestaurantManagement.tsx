@@ -1,0 +1,232 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  Plus, 
+  Edit2, 
+  Trash2, 
+  Search, 
+  Filter, 
+  Star, 
+  MapPin, 
+  Clock,
+  ToggleLeft,
+  ToggleRight 
+} from 'lucide-react';
+import { useRestaurants } from '../../hooks/useRestaurant';
+
+const RestaurantManagement: React.FC = () => {
+  const { data: restaurants, isLoading } = useRestaurants();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+
+  const filteredRestaurants = restaurants?.filter(restaurant => {
+    const matchesSearch = restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         restaurant.description.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesStatus = statusFilter === 'all' || 
+                         (statusFilter === 'active' && restaurant.isActive) ||
+                         (statusFilter === 'inactive' && !restaurant.isActive);
+    
+    return matchesSearch && matchesStatus;
+  }) || [];
+
+  const handleToggleStatus = (restaurantId: string, currentStatus: boolean) => {
+    // In a real app, this would call an API to update the restaurant status
+    console.log(`Toggling restaurant ${restaurantId} from ${currentStatus} to ${!currentStatus}`);
+  };
+
+  const handleDeleteRestaurant = (restaurantId: string) => {
+    if (window.confirm('Are you sure you want to delete this restaurant? This action cannot be undone.')) {
+      // In a real app, this would call an API to delete the restaurant
+      console.log(`Deleting restaurant ${restaurantId}`);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Restaurant Management</h1>
+          <p className="text-gray-600">Manage your restaurant listings and settings</p>
+        </div>
+        <button className="btn-primary inline-flex items-center space-x-2">
+          <Plus className="h-4 w-4" />
+          <span>Add Restaurant</span>
+        </button>
+      </div>
+
+      {/* Filters and Search */}
+      <div className="card">
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+          {/* Search */}
+          <div className="flex-1">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search restaurants..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="input-field pl-10"
+              />
+            </div>
+          </div>
+
+          {/* Status Filter */}
+          <div className="flex items-center space-x-2">
+            <Filter className="h-4 w-4 text-gray-500" />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
+              className="input-field w-auto"
+            >
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Results Count */}
+        <div className="mt-4 text-sm text-gray-600">
+          Showing {filteredRestaurants.length} of {restaurants?.length || 0} restaurants
+        </div>
+      </div>
+
+      {/* Restaurant Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredRestaurants.map((restaurant) => (
+          <div key={restaurant.id} className="card hover:shadow-lg transition-shadow duration-200">
+            {/* Restaurant Image */}
+            <div className="relative">
+              <img
+                src={restaurant.imageUrl || '/placeholder-restaurant.jpg'}
+                alt={restaurant.name}
+                className="w-full h-48 object-cover rounded-lg"
+              />
+              <div className="absolute top-2 right-2">
+                <button
+                  onClick={() => handleToggleStatus(restaurant.id, restaurant.isActive)}
+                  className={`p-1 rounded-full ${restaurant.isActive ? 'text-green-600' : 'text-gray-400'}`}
+                  title={restaurant.isActive ? 'Active - Click to deactivate' : 'Inactive - Click to activate'}
+                >
+                  {restaurant.isActive ? (
+                    <ToggleRight className="h-6 w-6" />
+                  ) : (
+                    <ToggleLeft className="h-6 w-6" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Restaurant Info */}
+            <div className="p-4">
+              <div className="flex items-start justify-between mb-2">
+                <h3 className="text-lg font-semibold text-gray-900">{restaurant.name}</h3>
+                <div className="flex items-center space-x-1">
+                  <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                  <span className="text-sm text-gray-600">{restaurant.rating.toFixed(1)}</span>
+                </div>
+              </div>
+
+              <p className="text-gray-600 text-sm mb-3 line-clamp-2">{restaurant.description}</p>
+
+              {/* Status Badge */}
+              <div className="flex items-center justify-between mb-4">
+                <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                  restaurant.isActive 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-red-100 text-red-800'
+                }`}>
+                  {restaurant.isActive ? 'Active' : 'Inactive'}
+                </span>
+
+                <div className="flex items-center space-x-2 text-xs text-gray-500">
+                  <Clock className="h-3 w-3" />
+                  <span>15-30 min</span>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center justify-between">
+                <Link
+                  to={`/restaurant/${restaurant.id}`}
+                  className="text-sm text-blue-600 hover:text-blue-800"
+                >
+                  View Details
+                </Link>
+
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => console.log(`Editing restaurant ${restaurant.id}`)}
+                    className="p-1 text-gray-500 hover:text-blue-600"
+                    title="Edit restaurant"
+                  >
+                    <Edit2 className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteRestaurant(restaurant.id)}
+                    className="p-1 text-gray-500 hover:text-red-600"
+                    title="Delete restaurant"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Empty State */}
+      {filteredRestaurants.length === 0 && (
+        <div className="text-center py-12">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <MapPin className="h-8 w-8 text-gray-400" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No restaurants found</h3>
+          <p className="text-gray-600 mb-6">
+            {searchTerm || statusFilter !== 'all' 
+              ? 'Try adjusting your search or filters' 
+              : 'Get started by adding your first restaurant'}
+          </p>
+          {!searchTerm && statusFilter === 'all' && (
+            <button className="btn-primary inline-flex items-center space-x-2">
+              <Plus className="h-4 w-4" />
+              <span>Add Restaurant</span>
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Bulk Actions (if needed) */}
+      {filteredRestaurants.length > 0 && (
+        <div className="card">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Bulk Actions</h3>
+          <div className="flex flex-wrap gap-3">
+            <button className="btn-secondary text-sm">
+              Export All Restaurants
+            </button>
+            <button className="btn-secondary text-sm">
+              Bulk Status Update
+            </button>
+            <button className="btn-secondary text-sm">
+              Generate Report
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export { RestaurantManagement };
