@@ -39,6 +39,8 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  console.log("🧭 React Router basename =", import.meta.env.BASE_URL);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Router basename={import.meta.env.BASE_URL}>
