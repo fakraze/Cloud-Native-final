@@ -16,8 +16,11 @@ COPY . .
 ARG BUILD_MODE=production
 ARG VITE_BASE_PATH=/
 
-# ⬇️ Vite build，帶入環境變數
-RUN VITE_BASE_PATH=$VITE_BASE_PATH npm run build -- --mode $BUILD_MODE
+# ⬇️ 設定為真正的環境變數（Vite 會用 process.env.VITE_BASE_PATH）
+ENV VITE_BASE_PATH=$VITE_BASE_PATH
+
+# ⬇️ Build 時會使用 ENV 變數
+RUN npm run build -- --mode $BUILD_MODE
 
 # Production stage
 FROM nginx:alpine
