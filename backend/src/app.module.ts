@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { RestaurantModule } from './restaurant/restaurant.module';
+import { Restaurant } from './restaurant/entities/restaurant.entity';
 
 require('dotenv').config();
 @Module({
@@ -14,8 +16,10 @@ require('dotenv').config();
       password: process.env.DB_PASSWORD!,
       database: process.env.DB_DATABASE!,
       entities: [],
-      synchronize: true,
+      autoLoadEntities: true,
+      synchronize: true, //Change to false in production
     }),
+    RestaurantModule,
   ],
   controllers: [AppController],
   providers: [AppService],
