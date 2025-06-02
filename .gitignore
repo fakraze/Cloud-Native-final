@@ -15,4 +15,7 @@ cypress/videos/
 .env
 .env.local
 
+# Ignore build artifacts
+frontend/dist/
+
 .vscode/
