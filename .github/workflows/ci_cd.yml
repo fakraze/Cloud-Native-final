@@ -37,11 +37,11 @@ jobs:
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             BASE_PATH="/"
             BUILD_MODE="production"
-            API_URL="${{ secrets.PROD_API_URL }}"
+            API_URL="http://13.218.27.133/backend/api"
           else
             BASE_PATH="/dev/frontend/"
             BUILD_MODE="development"
-            API_URL="${{ secrets.DEV_API_URL }}"
+            API_URL="http://13.218.27.133/dev/backend/api"
           fi
 
           echo "📦 Building with:"
