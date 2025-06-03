@@ -5,8 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
-import { IsNumber, IsString, IsArray, IsNotEmpty, IsOptional, Min, IsInt } from 'class-validator';
+import { User } from '../../user/entities/user.entity';
+import { JoinColumn } from 'typeorm';
 import { CartItem } from './cart-item.entity';
 
 @Entity()
@@ -14,8 +16,9 @@ export class Cart {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column('int')
-    userId: number;
+    @OneToOne(() => User)
+    @JoinColumn({ name: 'userId' })
+    user: User;
 
     @OneToMany(() => CartItem, (item) => item.cart, { eager: true })
     items: CartItem[];
