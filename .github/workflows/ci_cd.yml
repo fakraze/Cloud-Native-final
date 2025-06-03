@@ -58,7 +58,31 @@ jobs:
 
       - name: Build & Push Backend
         run: |
-          docker build -t ghcr.io/fakraze/cloud-meal-backend:${{ env.IMAGE_TAG }} ./backend
+          # Set backend environment variables based on branch
+          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+            NODE_ENV="production"
+            DB_HOST="mysql-service"
+          else
+            NODE_ENV="development"
+            DB_HOST="mysql-service"
+          fi
+
+          echo "📦 Building backend with:"
+          echo "    NODE_ENV=$NODE_ENV"
+          echo "    DB_HOST=$DB_HOST"
+          echo "    IMAGE_TAG=${{ env.IMAGE_TAG }}"
+
+          docker build \
+            --build-arg NODE_ENV=$NODE_ENV \
+            --build-arg DB_HOST=$DB_HOST \
+            --build-arg DB_PORT=3306 \
+            --build-arg DB_DATABASE=finaldb \
+            --build-arg DB_USERNAME=finaluser \
+            --build-arg DB_PASSWORD=finalpwd \
+            --build-arg BACKEND_PORT=3000 \
+            -t ghcr.io/fakraze/cloud-meal-backend:${{ env.IMAGE_TAG }} \
+            ./backend
+
           docker push ghcr.io/fakraze/cloud-meal-backend:${{ env.IMAGE_TAG }}
   deploy:
     name: CD - Deploy to K3s
