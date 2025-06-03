@@ -33,7 +33,7 @@ jobs:
           fi
 
       - name: Build & Push Frontend
-        run: |          # 根據分支設定環境變數
+        run: | # 根據分支設定環境變數
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             BASE_PATH="/"
             BUILD_MODE="production"
@@ -74,7 +74,7 @@ jobs:
           echo "    NODE_ENV=$NODE_ENV"
           echo "    DB_HOST=$DB_HOST"
           echo "    IMAGE_TAG=${{ env.IMAGE_TAG }}"          
-          
+
           docker build \
             --build-arg NODE_ENV=$NODE_ENV \
             --build-arg DB_HOST=$DB_HOST \
@@ -93,7 +93,8 @@ jobs:
     needs: build-and-push
     if: ${{ success() && (github.ref_name == 'main' || github.ref_name == 'develop' || github.ref_name == 'ci-cd') }}
 
-    steps:      - name: Set up SSH
+    steps:
+      - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
@@ -106,7 +107,7 @@ jobs:
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           MYSQL_USER: ${{ secrets.MYSQL_USER }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-        run: |          # Pass environment variables to SSH session
+        run: | # Pass environment variables to SSH session
           ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} \
             "export MYSQL_ROOT_PASSWORD='$MYSQL_ROOT_PASSWORD'; \
              export MYSQL_DATABASE='$MYSQL_DATABASE'; \
