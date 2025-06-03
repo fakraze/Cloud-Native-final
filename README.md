@@ -125,4 +125,3 @@ Clear
 kubectl delete all --all -n cloudnative
 kubectl delete ingress ingress-prod -n cloudnative
 ```
-
