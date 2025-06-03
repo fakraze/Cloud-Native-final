@@ -85,6 +85,12 @@ jobs:
             set -e
 
             BRANCH_NAME="${{ github.ref_name }}"
+            # ensure branch name is not empty
+            if [ -z "${BRANCH_NAME}" ]; then
+              echo "❌ BRANCH_NAME is empty; cannot continue."
+              exit 1
+            fi
+
             if [ "\$BRANCH_NAME" = "main" ]; then
               NAMESPACE="cloudnative"
               IMAGE_TAG="latest"
@@ -110,7 +116,7 @@ jobs:
             git clean -fd
 
             git checkout $BRANCH_NAME
-            git reset --hard origin/$BRANCH_NAME
+            git reset --hard "origin/${BRANCH_NAME}"
             
             # 🐳 取得 GHCR digest（需要 skopeo + jq）
             FRONTEND_IMAGE="ghcr.io/fakraze/cloud-meal-frontend"
@@ -182,7 +188,7 @@ jobs:
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-service.yaml
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-deployment.yaml
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-service.yaml
-            sudo k3s kubectl apply -f $INGRESS_FILE
+            sudo k3s kubectl apply -n $NAMESPACE -f $INGRESS_FILE
             
             echo "🔍 Frontend 正在使用的 image："
             sudo k3s kubectl get deployment frontend -n $NAMESPACE -o=jsonpath='{.spec.template.spec.containers[0].image}'
