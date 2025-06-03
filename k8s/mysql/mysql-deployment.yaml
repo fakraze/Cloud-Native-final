@@ -7,11 +7,11 @@ spec:
   selector:
     matchLabels:
       app: mysql
-  template:
-    metadata:
+  template:    metadata:
       labels:
         app: mysql
-    spec:      containers:
+    spec:
+      containers:
         - name: mysql
           image: mysql:8.4
           ports:
