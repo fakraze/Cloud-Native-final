@@ -67,13 +67,14 @@ jobs:
     needs: build-and-push
     if: ${{ success() && (github.ref_name == 'main' || github.ref_name == 'develop' || github.ref_name == 'ci-cd') }}
 
-    steps:
-      - name: Set up SSH
+    steps:      - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ec2-13-218-27-133.compute-1.amazonaws.com >> ~/.ssh/known_hosts      - name: SSH and deploy to K3s
+          ssh-keyscan -H ec2-13-218-27-133.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+
+      - name: SSH and deploy to K3s
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
@@ -122,16 +123,16 @@ jobs:
             echo "✅ Frontend Digest: $FRONTEND_DIGEST"
             echo "✅ Backend Digest:  $BACKEND_DIGEST"
 
-            echo "📦 注入正確 GHCR image digest"
-
-            # ⬇️ 使用 digest 取代原本的 image（更安全）            sed -i "s|image: .*cloud-meal-frontend.*|image: $FRONTEND_IMAGE@$FRONTEND_DIGEST|" k8s/frontend-deployment.yaml
+            echo "📦 注入正確 GHCR image digest"            # ⬇️ 使用 digest 取代原本的 image（更安全）
+            sed -i "s|image: .*cloud-meal-frontend.*|image: $FRONTEND_IMAGE@$FRONTEND_DIGEST|" k8s/frontend-deployment.yaml
             sed -i "s|image: .*cloud-meal-backend.*|image: $BACKEND_IMAGE@$BACKEND_DIGEST|" k8s/backend-deployment.yaml
             
             echo "🚀 Deploying to $NAMESPACE"
             sudo k3s kubectl apply -f $NAMESPACE_FILE
-              # Deploy MySQL Database first
-            echo "🔄 Deploying MySQL database..."
-              # Create base64 encoded secrets from GitHub secrets
+            
+            # Deploy MySQL Database first            echo "🔄 Deploying MySQL database..."
+            
+            # Create base64 encoded secrets from GitHub secrets
             MYSQL_ROOT_PASSWORD_BASE64=\$(echo -n "$MYSQL_ROOT_PASSWORD" | base64 -w 0)
             MYSQL_DATABASE_BASE64=\$(echo -n "$MYSQL_DATABASE" | base64 -w 0)
             MYSQL_USER_BASE64=\$(echo -n "$MYSQL_USER" | base64 -w 0)
