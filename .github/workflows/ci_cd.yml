@@ -123,10 +123,37 @@ jobs:
 
             # ⬇️ 使用 digest 取代原本的 image（更安全）
             sed -i "s|image: .*cloud-meal-frontend.*|image: $FRONTEND_IMAGE@$FRONTEND_DIGEST|" k8s/frontend-deployment.yaml
-            sed -i "s|image: .*cloud-meal-backend.*|image: $BACKEND_IMAGE@$BACKEND_DIGEST|" k8s/backend-deployment.yaml
-
-            echo "🚀 Deploying to $NAMESPACE"
+            sed -i "s|image: .*cloud-meal-backend.*|image: $BACKEND_IMAGE@$BACKEND_DIGEST|" k8s/backend-deployment.yaml            echo "🚀 Deploying to $NAMESPACE"
             sudo k3s kubectl apply -f $NAMESPACE_FILE
+            
+            # Deploy MySQL Database first
+            echo "🔄 Deploying MySQL database..."
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/mysql-pvc.yaml
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/mysql-deployment.yaml
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/mysql-service.yaml
+            
+            # Wait for MySQL to be ready before deploying backend
+            echo "⏳ Waiting for MySQL to be ready..."
+            MYSQL_READY=false
+            ATTEMPTS=0
+            MAX_ATTEMPTS=15
+            
+            while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
+              if sudo k3s kubectl get pods -n $NAMESPACE -l app=mysql --no-headers | grep "Running" > /dev/null; then
+                echo "✅ MySQL is running, checking readiness..."
+                if sudo k3s kubectl get pods -n $NAMESPACE -l app=mysql -o jsonpath='{.items[0].status.containerStatuses[0].ready}' | grep "true" > /dev/null; then
+                  echo "✅ MySQL is ready!"
+                  MYSQL_READY=true
+                  break
+                fi
+              fi
+              echo "⌛ MySQL not ready yet, waiting..."
+              ATTEMPTS=$((ATTEMPTS+1))
+              sleep 10
+            done
+            
+            # Deploy Backend and Frontend
+            echo "🔄 Deploying backend and frontend..."
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-deployment.yaml
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-service.yaml
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-deployment.yaml
