@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ProtectedRoute Component > should handle unauthenticated user 1`] = `null`;
+
+exports[`ProtectedRoute Component > should render children when user is authenticated and has access 1`] = `
+<div>
+  Protected Content
+</div>
+`;
+
+exports[`ProtectedRoute Component > should render with role restrictions 1`] = `
+<div>
+  Admin Only Content
+</div>
+`;
