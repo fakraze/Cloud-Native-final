@@ -14,12 +14,6 @@ const environments = {
   }
 };
 
-// Get environment from command line or default to dev
-const env = process.env.CYPRESS_ENV || 'dev';
-const config = environments[env] || environments.dev;
-
 module.exports = {
-  environments,
-  currentEnv: env,
-  config
+  environments
 };
