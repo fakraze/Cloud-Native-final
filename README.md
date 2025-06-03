@@ -46,6 +46,34 @@ Test in Terminal
 npm run test
 ```
 
+## Run Cypress Tests for Different Environments
+
+To run Cypress tests in different environments (`dev` or `prod`), you can use the following commands:
+
+### GUI Mode
+
+Run Cypress in GUI mode for the `dev` environment:
+```bash
+npm run cy:open -- --env CYPRESS_ENV=dev
+```
+
+Run Cypress in GUI mode for the `prod` environment:
+```bash
+npm run cy:open -- --env CYPRESS_ENV=prod
+```
+
+### Terminal Mode
+
+Run Cypress tests in the terminal for the `dev` environment:
+```bash
+npm run test -- --env CYPRESS_ENV=dev
+```
+
+Run Cypress tests in the terminal for the `prod` environment:
+```bash
+npm run test -- --env CYPRESS_ENV=prod
+```
+
 ## Run k8s on yor own
 
 Install tools (run terminal use administrator)
