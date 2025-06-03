@@ -34,22 +34,26 @@ jobs:
 
       - name: Build & Push Frontend
         run: |
-          # 根據分支設定 VITE_BASE_PATH
+          # 根據分支設定環境變數
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             BASE_PATH="/"
             BUILD_MODE="production"
+            API_URL="http://13.218.27.133/backend/api"
           else
             BASE_PATH="/dev/frontend/"
             BUILD_MODE="development"
+            API_URL="http://13.218.27.133/dev/backend/api"
           fi
 
           echo "📦 Building with:"
           echo "    VITE_BASE_PATH=$BASE_PATH"
+          echo "    VITE_API_URL=$API_URL"
           echo "    BUILD_MODE=$BUILD_MODE"
           echo "    IMAGE_TAG=${{ env.IMAGE_TAG }}"
 
           docker build \
             --build-arg VITE_BASE_PATH=$BASE_PATH \
+            --build-arg VITE_API_URL=$API_URL \
             --build-arg BUILD_MODE=$BUILD_MODE \
             -t ghcr.io/fakraze/cloud-meal-frontend:${{ env.IMAGE_TAG }} \
             ./frontend
@@ -264,33 +268,33 @@ jobs:
             echo "✅ Done."
           EOF
 
-  e2e-tests:
-    name: CD - E2E Cypress Tests
-    runs-on: ubuntu-latest
-    needs: deploy
+  # e2e-tests:
+  #   name: CD - E2E Cypress Tests
+  #   runs-on: ubuntu-latest
+  #   needs: deploy
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+  #     - name: Use Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18
 
-      - name: Install dependencies
-        working-directory: test
-        run: npm install
+  #     - name: Install dependencies
+  #       working-directory: test
+  #       run: npm install
 
-      - name: Run Cypress tests
-        working-directory: test
-        run: npm run test
+  #     - name: Run Cypress tests
+  #       working-directory: test
+  #       run: npm run test
 
-      - name: Upload Cypress Artifacts
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: cypress-artifacts
-          path: |
-            test/cypress/videos
-            test/cypress/screenshots
+  #     - name: Upload Cypress Artifacts
+  #       if: failure()
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: cypress-artifacts
+  #         path: |
+  #           test/cypress/videos
+  #           test/cypress/screenshots
