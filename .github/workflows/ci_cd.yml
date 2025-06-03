@@ -288,9 +288,75 @@ jobs:
               done              
               
               exit 1
-            fi
+            fi            
             
             echo "✅ All pods started successfully!"
+            
+            # Health check for API endpoint with restart retry logic
+            echo "🏥 Performing API health check with auto-restart (max 5 restarts)..."
+            
+            # Set API URL based on environment
+            if [ "\$BRANCH_NAME" = "main" ]; then
+              API_URL="http://13.218.27.133/backend/api/"
+            else
+              API_URL="http://13.218.27.133/dev/backend/api/"
+            fi
+            
+            echo "📡 Testing API endpoint: $API_URL"
+            
+            # Initial API test
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$API_URL" || echo "000")
+            
+            if [ "$HTTP_STATUS" = "200" ]; then
+              echo "✅ API health check passed! Status: $HTTP_STATUS"
+            else
+              echo "❌ Initial API health check failed! Status: $HTTP_STATUS"
+              
+              # Restart and retry logic: maximum 5 restart attempts
+              RESTART_SUCCESS=false
+              for restart_attempt in 1 2 3 4 5; do
+                echo "🔄 Restart attempt $restart_attempt/5..."
+                echo "🔄 Restarting deployments..."
+                
+                sudo k3s kubectl rollout restart deployment/frontend -n $NAMESPACE
+                sudo k3s kubectl rollout restart deployment/backend -n $NAMESPACE
+                
+                echo "⏳ Waiting for restart to complete..."
+                sudo k3s kubectl rollout status deployment/frontend -n $NAMESPACE --timeout=300s
+                sudo k3s kubectl rollout status deployment/backend -n $NAMESPACE --timeout=300s
+                
+                # Wait a bit for services to stabilize
+                echo "⏳ Waiting for services to stabilize..."
+                sleep 15
+                
+                # Test API after restart
+                echo "🔍 Testing API after restart attempt $restart_attempt..."
+                HTTP_STATUS_RETRY=$(curl -s -o /dev/null -w "%{http_code}" "$API_URL" || echo "000")
+                
+                if [ "$HTTP_STATUS_RETRY" = "200" ]; then
+                  echo "✅ API recovered after restart attempt $restart_attempt! Status: $HTTP_STATUS_RETRY"
+                  RESTART_SUCCESS=true
+                  break
+                else
+                  echo "❌ API still failing after restart attempt $restart_attempt. Status: $HTTP_STATUS_RETRY"
+                  if [ $restart_attempt -lt 5 ]; then
+                    echo "⏳ Waiting 5 seconds before next restart attempt..."
+                    sleep 5
+                  fi
+                fi
+              done
+              
+              # Final result
+              if [ "$RESTART_SUCCESS" = "false" ]; then
+                echo "💥 API failed to recover after 5 restart attempts!"
+                echo "⚠️  Manual investigation may be required."
+                echo "📦 Current pod status:"
+                sudo k3s kubectl get pods -n $NAMESPACE
+              else
+                echo "🎉 API successfully recovered!"
+              fi
+            fi
+            
             echo "✅ Done."
           EOF
 
