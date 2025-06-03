@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { RestaurantModule } from './restaurant/restaurant.module';
 import { MenuItemModule } from './menu-item/menu-item.module';
 import { CartModule } from './cart/cart.module';
+import { UserModule } from './user/user.module';
 
 require('dotenv').config();
 @Module({
@@ -23,6 +24,7 @@ require('dotenv').config();
     RestaurantModule,
     MenuItemModule,
     CartModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
