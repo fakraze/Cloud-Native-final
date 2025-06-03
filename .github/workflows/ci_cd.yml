@@ -60,7 +60,6 @@ jobs:
         run: |
           docker build -t ghcr.io/fakraze/cloud-meal-backend:${{ env.IMAGE_TAG }} ./backend
           docker push ghcr.io/fakraze/cloud-meal-backend:${{ env.IMAGE_TAG }}
-
   deploy:
     name: CD - Deploy to K3s
     runs-on: ubuntu-latest
@@ -73,7 +72,9 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ec2-13-218-27-133.compute-1.amazonaws.com >> ~/.ssh/known_hosts      - name: SSH and deploy to K3s
+          ssh-keyscan -H ec2-13-218-27-133.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+
+      - name: SSH and deploy to K3s
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
@@ -219,7 +220,8 @@ jobs:
               sleep 5
             done
 
-            if [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; then              echo "❌ 部署失敗：Pod 超時未啟動成功"
+            if [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; then
+              echo "❌ 部署失敗：Pod 超時未啟動成功"
               echo "📦 當前 Pod 狀態："
               sudo k3s kubectl get pods -n $NAMESPACE
 
