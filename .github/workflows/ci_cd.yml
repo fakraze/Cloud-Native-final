@@ -73,15 +73,18 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ec2-13-218-27-133.compute-1.amazonaws.com >> ~/.ssh/known_hosts
-
-      - name: SSH and deploy to K3s
+          ssh-keyscan -H ec2-13-218-27-133.compute-1.amazonaws.com >> ~/.ssh/known_hosts      - name: SSH and deploy to K3s
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@ec2-13-218-27-133.compute-1.amazonaws.com << 'EOF'
+          ssh -i ~/.ssh/id_rsa ubuntu@ec2-13-218-27-133.compute-1.amazonaws.com << EOF
             set -e
 
             BRANCH_NAME="${{ github.ref_name }}"
-            if [ "$BRANCH_NAME" = "main" ]; then
+            if [ "\$BRANCH_NAME" = "main" ]; then
               NAMESPACE="cloudnative"
               IMAGE_TAG="latest"
               NAMESPACE_FILE="k8s/namespace-prod.yaml"
@@ -121,16 +124,34 @@ jobs:
 
             echo "📦 注入正確 GHCR image digest"
 
-            # ⬇️ 使用 digest 取代原本的 image（更安全）
-            sed -i "s|image: .*cloud-meal-frontend.*|image: $FRONTEND_IMAGE@$FRONTEND_DIGEST|" k8s/frontend-deployment.yaml
-            sed -i "s|image: .*cloud-meal-backend.*|image: $BACKEND_IMAGE@$BACKEND_DIGEST|" k8s/backend-deployment.yaml            echo "🚀 Deploying to $NAMESPACE"
-            sudo k3s kubectl apply -f $NAMESPACE_FILE
+            # ⬇️ 使用 digest 取代原本的 image（更安全）            sed -i "s|image: .*cloud-meal-frontend.*|image: $FRONTEND_IMAGE@$FRONTEND_DIGEST|" k8s/frontend-deployment.yaml
+            sed -i "s|image: .*cloud-meal-backend.*|image: $BACKEND_IMAGE@$BACKEND_DIGEST|" k8s/backend-deployment.yaml
             
-            # Deploy MySQL Database first
+            echo "🚀 Deploying to $NAMESPACE"
+            sudo k3s kubectl apply -f $NAMESPACE_FILE
+              # Deploy MySQL Database first
             echo "🔄 Deploying MySQL database..."
-            sudo k3s kubectl apply -n $NAMESPACE -f k8s/mysql-pvc.yaml
-            sudo k3s kubectl apply -n $NAMESPACE -f k8s/mysql-deployment.yaml
-            sudo k3s kubectl apply -n $NAMESPACE -f k8s/mysql-service.yaml
+              # Create base64 encoded secrets from GitHub secrets
+            MYSQL_ROOT_PASSWORD_BASE64=\$(echo -n "$MYSQL_ROOT_PASSWORD" | base64 -w 0)
+            MYSQL_DATABASE_BASE64=\$(echo -n "$MYSQL_DATABASE" | base64 -w 0)
+            MYSQL_USER_BASE64=\$(echo -n "$MYSQL_USER" | base64 -w 0)
+            MYSQL_PASSWORD_BASE64=\$(echo -n "$MYSQL_PASSWORD" | base64 -w 0)
+            
+            # Create secret template
+            cat k8s/mysql/mysql-secrets.yaml | \
+              sed "s|\${MYSQL_ROOT_PASSWORD_BASE64}|$MYSQL_ROOT_PASSWORD_BASE64|g" | \
+              sed "s|\${MYSQL_DATABASE_BASE64}|$MYSQL_DATABASE_BASE64|g" | \
+              sed "s|\${MYSQL_USER_BASE64}|$MYSQL_USER_BASE64|g" | \
+              sed "s|\${MYSQL_PASSWORD_BASE64}|$MYSQL_PASSWORD_BASE64|g" \
+              > k8s/mysql/mysql-secrets-rendered.yaml
+            
+            # Apply secrets first
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/mysql/mysql-secrets-rendered.yaml
+            
+            # Apply MySQL resources
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/mysql/mysql-pvc.yaml
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/mysql/mysql-deployment.yaml
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/mysql/mysql-service.yaml
             
             # Wait for MySQL to be ready before deploying backend
             echo "⏳ Waiting for MySQL to be ready..."
