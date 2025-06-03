@@ -1,9 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -53,13 +48,9 @@ function App() {
   console.log("🧭 React Router basename =", import.meta.env.BASE_URL);
 
   console.log("🧭 React Router basename =", import.meta.env.BASE_URL);
-
   return (
     <QueryClientProvider client={queryClient}>
-      <Router
-        basename={import.meta.env.BASE_URL}
-        basename={import.meta.env.BASE_URL}
-      >
+      <Router basename={import.meta.env.BASE_URL}>
         <div className="min-h-screen bg-gray-50">
           <Routes>
             {/* Public routes */}
