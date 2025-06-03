@@ -112,13 +112,21 @@ export const cartService = {
       return mockCartService.getCart(userId);
     }
   },
-
-  addToCart: async (cartItem: Omit<CartItem, 'id'>): Promise<Cart> => {
+  addToCart: async (cartItem: Omit<CartItem, 'id'>, userId?: string): Promise<Cart> => {
     if (shouldUseMock()) {
       return mockCartService.addToCart(cartItem);
     }
     try {
-      const response = await api.post<Cart>('/cart', cartItem);
+      // Transform the cartItem to match the API specification
+      const apiRequest = {
+        userId: userId || '1', // Default to '1' if not provided, should be passed from auth context
+        menuItemId: cartItem.menuItem.id,
+        quantity: cartItem.quantity,
+        customizations: cartItem.customizations,
+        specialInstructions: cartItem.notes
+      };
+      
+      const response = await api.post<Cart>('/cart', apiRequest);
       return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data');
