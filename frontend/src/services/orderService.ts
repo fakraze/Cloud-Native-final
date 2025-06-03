@@ -1,7 +1,6 @@
 import api from './api';
 import { Order, CreateOrderRequest } from '../types/order';
 import { Cart, CartItem } from '../types/restaurant';
-import { ApiResponse } from '../types/common';
 import { mockOrderService } from './mockOrderService';
 import { mockCartService } from './mockCartService';
 
@@ -17,10 +16,9 @@ export const orderService = {
     if (shouldUseMock()) {
       return mockOrderService.getOngoingOrders();
     }
-    
     try {
-      const response = await api.get<ApiResponse<Order[]>>('/order/ongoing');
-      return response.data.data;
+      const response = await api.get<Order[]>('/order/ongoing');
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data');
       return mockOrderService.getOngoingOrders();
@@ -30,10 +28,9 @@ export const orderService = {
     if (shouldUseMock()) {
       return mockOrderService.getOrderHistory();
     }
-    
     try {
-      const response = await api.get<ApiResponse<Order[]>>('/order/history');
-      return response.data.data;
+      const response = await api.get<Order[]>('/order/history');
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data');
       return mockOrderService.getOrderHistory();
@@ -43,10 +40,9 @@ export const orderService = {
     if (shouldUseMock()) {
       return mockOrderService.getOrderById(orderId);
     }
-    
     try {
-      const response = await api.get<ApiResponse<Order>>(`/order/${orderId}`);
-      return response.data.data;
+      const response = await api.get<Order>(`/order/${orderId}`);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data');
       return mockOrderService.getOrderById(orderId);
@@ -56,15 +52,13 @@ export const orderService = {
     if (shouldUseMock()) {
       return mockOrderService.createOrder(orderData);
     }
-    
     try {
-      const response = await api.post<ApiResponse<Order>>('/order', orderData);
-      return response.data.data;
+      const response = await api.post<Order>('/order', orderData);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data');
       return mockOrderService.createOrder(orderData);
-    }
-  },
+    }  },
 
   cancelOrder: async (orderId: string): Promise<void> => {
     await api.delete(`/order/${orderId}`);
@@ -72,17 +66,16 @@ export const orderService = {
 
   // Admin endpoints
   getAllOrders: async (): Promise<Order[]> => {
-    const response = await api.get<ApiResponse<Order[]>>('/order/admin/all');
-    return response.data.data;
+    const response = await api.get<Order[]>('/order/admin/all');
+    return response.data;
   },
   updateOrderStatus: async (orderId: string, status: Order['status']): Promise<Order> => {
     if (shouldUseMock()) {
       return mockOrderService.updateOrderStatus(orderId, status);
     }
-    
     try {
-      const response = await api.put<ApiResponse<Order>>(`/order/${orderId}/status`, { status });
-      return response.data.data;
+      const response = await api.put<Order>(`/order/${orderId}/status`, { status });
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data');
       return mockOrderService.updateOrderStatus(orderId, status);
@@ -93,13 +86,12 @@ export const orderService = {
     if (shouldUseMock()) {
       return mockOrderService.updatePaymentStatus(orderId, paymentStatus, paymentMethod);
     }
-    
     try {
-      const response = await api.put<ApiResponse<Order>>(`/order/${orderId}/payment`, { 
+      const response = await api.put<Order>(`/order/${orderId}/payment`, { 
         paymentStatus, 
         paymentMethod 
       });
-      return response.data.data;
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data');
       return mockOrderService.updatePaymentStatus(orderId, paymentStatus, paymentMethod);
@@ -112,10 +104,9 @@ export const cartService = {
     if (shouldUseMock()) {
       return mockCartService.getCart(userId);
     }
-    
     try {
-      const response = await api.get<ApiResponse<Cart>>(`/cart/${userId}`);
-      return response.data.data;
+      const response = await api.get<Cart>(`/cart/${userId}`);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data');
       return mockCartService.getCart(userId);
@@ -126,10 +117,9 @@ export const cartService = {
     if (shouldUseMock()) {
       return mockCartService.addToCart(cartItem);
     }
-    
     try {
-      const response = await api.post<ApiResponse<Cart>>('/cart', cartItem);
-      return response.data.data;
+      const response = await api.post<Cart>('/cart', cartItem);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data');
       return mockCartService.addToCart(cartItem);
@@ -140,10 +130,9 @@ export const cartService = {
     if (shouldUseMock()) {
       return mockCartService.updateCartItem(cartItemId, updates);
     }
-    
     try {
-      const response = await api.put<ApiResponse<Cart>>(`/cart/${cartItemId}`, updates);
-      return response.data.data;
+      const response = await api.put<Cart>(`/cart/${cartItemId}`, updates);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data');
       return mockCartService.updateCartItem(cartItemId, updates);
@@ -154,10 +143,9 @@ export const cartService = {
     if (shouldUseMock()) {
       return mockCartService.removeFromCart(cartItemId);
     }
-    
     try {
-      const response = await api.delete<ApiResponse<Cart>>(`/cart/${cartItemId}`);
-      return response.data.data;
+      const response = await api.delete<Cart>(`/cart/${cartItemId}`);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data');
       return mockCartService.removeFromCart(cartItemId);

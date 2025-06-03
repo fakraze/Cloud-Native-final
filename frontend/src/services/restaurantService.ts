@@ -1,6 +1,5 @@
 import api from './api';
 import { Restaurant, MenuItem } from '../types/restaurant';
-import { ApiResponse } from '../types/common';
 import { mockRestaurantService } from './mockRestaurantService';
 
 // Check if we should use mock API
@@ -16,10 +15,9 @@ export const restaurantService = {
       const result = await mockRestaurantService.getRestaurants();
       return result.restaurants;
     }
-    
     try {
-      const response = await api.get<ApiResponse<Restaurant[]>>('/restaurant');
-      return response.data.data;
+      const response = await api.get<Restaurant[]>('/restaurant');
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data');
       const result = await mockRestaurantService.getRestaurants();
@@ -31,10 +29,9 @@ export const restaurantService = {
     if (shouldUseMock()) {
       return mockRestaurantService.getRestaurantById(id);
     }
-    
     try {
-      const response = await api.get<ApiResponse<Restaurant>>(`/restaurant/${id}`);
-      return response.data.data;
+      const response = await api.get<Restaurant>(`/restaurant/${id}`);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data');
       return mockRestaurantService.getRestaurantById(id);
@@ -45,10 +42,9 @@ export const restaurantService = {
     if (shouldUseMock()) {
       return mockRestaurantService.getMenuItems(restaurantId);
     }
-    
     try {
-      const response = await api.get<ApiResponse<MenuItem[]>>(`/restaurant/${restaurantId}/menu`);
-      return response.data.data;
+      const response = await api.get<MenuItem[]>(`/restaurant/${restaurantId}/menu`);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data');
       return mockRestaurantService.getMenuItems(restaurantId);
@@ -59,10 +55,9 @@ export const restaurantService = {
     if (shouldUseMock()) {
       return mockRestaurantService.getMenuItem(restaurantId, menuItemId);
     }
-    
     try {
-      const response = await api.get<ApiResponse<MenuItem>>(`/restaurant/${restaurantId}/menu/${menuItemId}`);
-      return response.data.data;
+      const response = await api.get<MenuItem>(`/restaurant/${restaurantId}/menu/${menuItemId}`);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data');
       return mockRestaurantService.getMenuItem(restaurantId, menuItemId);
@@ -74,10 +69,9 @@ export const restaurantService = {
     if (shouldUseMock()) {
       return mockRestaurantService.createRestaurant(restaurant);
     }
-    
     try {
-      const response = await api.post<ApiResponse<Restaurant>>('/restaurant', restaurant);
-      return response.data.data;
+      const response = await api.post<Restaurant>('/restaurant', restaurant);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock operation');
       return mockRestaurantService.createRestaurant(restaurant);
@@ -88,10 +82,9 @@ export const restaurantService = {
     if (shouldUseMock()) {
       return mockRestaurantService.updateRestaurant(id, restaurant);
     }
-    
     try {
-      const response = await api.put<ApiResponse<Restaurant>>(`/restaurant/${id}`, restaurant);
-      return response.data.data;
+      const response = await api.put<Restaurant>(`/restaurant/${id}`, restaurant);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock operation');
       return mockRestaurantService.updateRestaurant(id, restaurant);
@@ -114,10 +107,9 @@ export const restaurantService = {
     if (shouldUseMock()) {
       return mockRestaurantService.createMenuItem(restaurantId, menuItem);
     }
-    
     try {
-      const response = await api.post<ApiResponse<MenuItem>>(`/restaurant/${restaurantId}/menu`, menuItem);
-      return response.data.data;
+      const response = await api.post<MenuItem>(`/restaurant/${restaurantId}/menu`, menuItem);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock implementation');
       return mockRestaurantService.createMenuItem(restaurantId, menuItem);
@@ -127,10 +119,9 @@ export const restaurantService = {
     if (shouldUseMock()) {
       return mockRestaurantService.updateMenuItem(restaurantId, menuItemId, menuItem);
     }
-    
     try {
-      const response = await api.put<ApiResponse<MenuItem>>(`/restaurant/${restaurantId}/menu/${menuItemId}`, menuItem);
-      return response.data.data;
+      const response = await api.put<MenuItem>(`/restaurant/${restaurantId}/menu/${menuItemId}`, menuItem);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock implementation');
       return mockRestaurantService.updateMenuItem(restaurantId, menuItemId, menuItem);
