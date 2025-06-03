@@ -1,0 +1,284 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Sidebar Component > should render sidebar for customer user 1`] = `
+<aside
+  class="bg-white w-64 min-h-screen shadow-sm border-r border-gray-200"
+>
+  <div
+    class="p-6"
+  >
+    <div
+      class="flex items-center space-x-3 mb-8"
+    >
+      <div
+        class="bg-blue-600 rounded-lg p-2"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-utensils-crossed h-6 w-6 text-white"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"
+          />
+          <path
+            d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"
+          />
+          <path
+            d="m2.1 21.8 6.4-6.3"
+          />
+          <path
+            d="m19 5-7 7"
+          />
+        </svg>
+      </div>
+      <div>
+                    
+        <h2
+          class="text-lg font-semibold text-gray-900"
+        >
+          Order System
+        </h2>
+        <p
+          class="text-sm text-gray-500"
+        />
+      </div>
+    </div>
+    <nav
+      class="space-y-2"
+    >
+      <a
+        class="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors text-gray-700 hover:bg-gray-50"
+        data-discover="true"
+        href="/restaurant"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-store h-5 w-5"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"
+          />
+          <path
+            d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"
+          />
+          <path
+            d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"
+          />
+          <path
+            d="M2 7h20"
+          />
+          <path
+            d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"
+          />
+        </svg>
+        <span
+          class="font-medium"
+        >
+          Restaurants
+        </span>
+      </a>
+      <a
+        class="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors text-gray-700 hover:bg-gray-50"
+        data-discover="true"
+        href="/order"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-shopping-bag h-5 w-5"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"
+          />
+          <path
+            d="M3 6h18"
+          />
+          <path
+            d="M16 10a4 4 0 0 1-8 0"
+          />
+        </svg>
+        <span
+          class="font-medium"
+        >
+          Ongoing Orders
+        </span>
+      </a>
+      <a
+        class="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors text-gray-700 hover:bg-gray-50"
+        data-discover="true"
+        href="/order-history"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-history h-5 w-5"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"
+          />
+          <path
+            d="M3 3v5h5"
+          />
+          <path
+            d="M12 7v5l4 2"
+          />
+        </svg>
+        <span
+          class="font-medium"
+        >
+          Order History
+        </span>
+      </a>
+      <a
+        class="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors text-gray-700 hover:bg-gray-50"
+        data-discover="true"
+        href="/payment"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-credit-card h-5 w-5"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            height="14"
+            rx="2"
+            width="20"
+            x="2"
+            y="5"
+          />
+          <line
+            x1="2"
+            x2="22"
+            y1="10"
+            y2="10"
+          />
+        </svg>
+        <span
+          class="font-medium"
+        >
+          Payment
+        </span>
+      </a>
+      <a
+        class="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors text-gray-700 hover:bg-gray-50"
+        data-discover="true"
+        href="/personal"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-user h-5 w-5"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"
+          />
+          <circle
+            cx="12"
+            cy="7"
+            r="4"
+          />
+        </svg>
+        <span
+          class="font-medium"
+        >
+          Personal
+        </span>
+      </a>
+    </nav>
+            
+    <div
+      class="mt-8 pt-6 border-t border-gray-200"
+    >
+      <div
+        class="text-sm text-gray-500 mb-2"
+      >
+        Quick Actions
+      </div>
+      <a
+        class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+        data-discover="true"
+        href="/cart"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-shopping-bag h-5 w-5"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"
+          />
+          <path
+            d="M3 6h18"
+          />
+          <path
+            d="M16 10a4 4 0 0 1-8 0"
+          />
+        </svg>
+        <span
+          class="font-medium"
+        >
+          View Cart
+        </span>
+      </a>
+    </div>
+  </div>
+</aside>
+`;

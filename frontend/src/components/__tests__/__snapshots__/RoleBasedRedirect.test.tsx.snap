@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`RoleBasedRedirect Component > should redirect admin to admin dashboard 1`] = `null`;
+
+exports[`RoleBasedRedirect Component > should redirect customer to restaurants 1`] = `null`;
+
+exports[`RoleBasedRedirect Component > should redirect staff to staff dashboard 1`] = `null`;
+
+exports[`RoleBasedRedirect Component > should redirect to login when no user 1`] = `null`;
