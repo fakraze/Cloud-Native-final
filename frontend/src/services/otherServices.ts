@@ -1,7 +1,6 @@
 import api from './api';
 import { Rating, CreateRatingRequest, DishRating, CreateDishRatingRequest } from '../types/rating';
 import { InboxMessage } from '../types/common';
-import { ApiResponse } from '../types/common';
 import { mockRatingService } from './mockRatingService';
 import { mockInboxService } from './mockInboxService';
 
@@ -17,10 +16,9 @@ export const ratingService = {
     if (shouldUseMock()) {
       return mockRatingService.getRatings(restaurantId);
     }
-    
     try {
-      const response = await api.get<ApiResponse<Rating[]>>(`/rating/${restaurantId}`);
-      return response.data.data;
+      const response = await api.get<Rating[]>(`/rating/${restaurantId}`);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data for development');
       return mockRatingService.getRatings(restaurantId);
@@ -31,10 +29,9 @@ export const ratingService = {
     if (shouldUseMock()) {
       return mockRatingService.createRating(ratingData);
     }
-    
     try {
-      const response = await api.post<ApiResponse<Rating>>('/rating', ratingData);
-      return response.data.data;
+      const response = await api.post<Rating>('/rating', ratingData);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data for development');
       return mockRatingService.createRating(ratingData);
@@ -45,10 +42,9 @@ export const ratingService = {
     if (shouldUseMock()) {
       return mockRatingService.updateRating(ratingId, ratingData);
     }
-    
     try {
-      const response = await api.put<ApiResponse<Rating>>(`/rating/${ratingId}`, ratingData);
-      return response.data.data;
+      const response = await api.put<Rating>(`/rating/${ratingId}`, ratingData);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data for development');
       return mockRatingService.updateRating(ratingId, ratingData);
@@ -73,10 +69,9 @@ export const dishRatingService = {
     if (shouldUseMock()) {
       return mockRatingService.getDishRatings(dishId);
     }
-    
     try {
-      const response = await api.get<ApiResponse<DishRating[]>>(`/dish-rating/${dishId}`);
-      return response.data.data;
+      const response = await api.get<DishRating[]>(`/dish-rating/${dishId}`);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data for development');
       return mockRatingService.getDishRatings(dishId);
@@ -87,10 +82,9 @@ export const dishRatingService = {
     if (shouldUseMock()) {
       return mockRatingService.getDishAverageRating(dishId);
     }
-    
     try {
-      const response = await api.get<ApiResponse<{ rating: number; count: number }>>(`/dish-rating/${dishId}/average`);
-      return response.data.data;
+      const response = await api.get<{ rating: number; count: number }>(`/dish-rating/${dishId}/average`);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data for development');
       return mockRatingService.getDishAverageRating(dishId);
@@ -101,10 +95,9 @@ export const dishRatingService = {
     if (shouldUseMock()) {
       return mockRatingService.createDishRating(ratingData);
     }
-    
     try {
-      const response = await api.post<ApiResponse<DishRating>>('/dish-rating', ratingData);
-      return response.data.data;
+      const response = await api.post<DishRating>('/dish-rating', ratingData);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data for development');
       return mockRatingService.createDishRating(ratingData);
@@ -117,10 +110,9 @@ export const inboxService = {
     if (shouldUseMock()) {
       return mockInboxService.getMessages(userId);
     }
-    
     try {
-      const response = await api.get<ApiResponse<InboxMessage[]>>(`/inbox/${userId}`);
-      return response.data.data;
+      const response = await api.get<InboxMessage[]>(`/inbox/${userId}`);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data for development');
       return mockInboxService.getMessages(userId);
@@ -131,10 +123,9 @@ export const inboxService = {
     if (shouldUseMock()) {
       return mockInboxService.markAsRead(messageId);
     }
-    
     try {
-      const response = await api.put<ApiResponse<InboxMessage>>(`/inbox/${messageId}/read`);
-      return response.data.data;
+      const response = await api.put<InboxMessage>(`/inbox/${messageId}/read`);
+      return response.data;
     } catch (error) {
       console.warn('API call failed, falling back to mock data for development');
       return mockInboxService.markAsRead(messageId);
@@ -170,10 +161,9 @@ export const inboxService = {
     if (shouldUseMock()) {
       return mockInboxService.getUnreadCount(userId);
     }
-    
     try {
-      const response = await api.get<ApiResponse<{ count: number }>>(`/inbox/${userId}/unread-count`);
-      return response.data.data.count;
+      const response = await api.get<{ count: number }>(`/inbox/${userId}/unread-count`);
+      return response.data.count;
     } catch (error) {
       console.warn('API call failed, falling back to mock data for development');
       return mockInboxService.getUnreadCount(userId);
@@ -208,12 +198,11 @@ export const inboxService = {
   },
 };
 
-export const paymentService = {
-  processPayment: async (orderId: string, paymentMethod: string): Promise<{ success: boolean; transactionId: string }> => {
-    const response = await api.post<ApiResponse<{ success: boolean; transactionId: string }>>('/payment', {
+export const paymentService = {  processPayment: async (orderId: string, paymentMethod: string): Promise<{ success: boolean; transactionId: string }> => {
+    const response = await api.post<{ success: boolean; transactionId: string }>('/payment', {
       orderId,
       paymentMethod,
     });
-    return response.data.data;
+    return response.data;
   },
 };
