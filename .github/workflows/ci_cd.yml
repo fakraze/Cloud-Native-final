@@ -73,16 +73,20 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ec2-13-218-27-133.compute-1.amazonaws.com >> ~/.ssh/known_hosts
-
-      - name: SSH and deploy to K3s
+          ssh-keyscan -H ec2-13-218-27-133.compute-1.amazonaws.com >> ~/.ssh/known_hosts      - name: SSH and deploy to K3s
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           MYSQL_USER: ${{ secrets.MYSQL_USER }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@ec2-13-218-27-133.compute-1.amazonaws.com << 'EOF'
+          # Pass environment variables to SSH session
+          ssh -i ~/.ssh/id_rsa ubuntu@ec2-13-218-27-133.compute-1.amazonaws.com \
+            "export MYSQL_ROOT_PASSWORD='$MYSQL_ROOT_PASSWORD'; \
+             export MYSQL_DATABASE='$MYSQL_DATABASE'; \
+             export MYSQL_USER='$MYSQL_USER'; \
+             export MYSQL_PASSWORD='$MYSQL_PASSWORD'; \
+             bash -s" << 'EOF'
             set -e
 
             BRANCH_NAME="${{ github.ref_name }}"
