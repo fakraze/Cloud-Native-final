@@ -115,3 +115,59 @@ export const useUnreadCount = (userId: string) => {
 
   return { unreadCount, loading };
 };
+
+// Admin hooks for sending notifications
+export const useSendNotification = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [employees, setEmployees] = useState<any[]>([]);
+
+  // Fetch employees on mount
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const { getAllEmployees } = await import('../services/mockAuthService');
+        const employeeList = getAllEmployees();
+        setEmployees(employeeList);
+      } catch (err) {
+        console.error('Failed to fetch employees:', err);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
+  const sendToAllEmployees = useCallback(async (title: string, message: string, type: InboxMessage['type'] = 'info') => {
+    try {
+      setLoading(true);
+      setError(null);
+      await inboxService.sendNotificationToAllEmployees(title, message, type);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to send notification');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const sendToEmployee = useCallback(async (employeeId: string, title: string, message: string, type: InboxMessage['type'] = 'info') => {
+    try {
+      setLoading(true);
+      setError(null);
+      await inboxService.sendNotificationToEmployee(employeeId, title, message, type);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to send notification');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return {
+    sendToAllEmployees,
+    sendToEmployee,
+    employees,
+    isLoading: loading,
+    error,
+  };
+};

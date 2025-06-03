@@ -7,7 +7,8 @@ import {
   User, 
   BarChart3,
   UtensilsCrossed,
-  CreditCard
+  CreditCard,
+  Bell
 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 
@@ -23,12 +24,12 @@ const Sidebar: React.FC = () => {
     { name: 'Payment', path: '/payment', icon: CreditCard },
     { name: 'Personal', path: '/personal', icon: User },
   ];
-
   const adminNavItems = [
     { name: 'Dashboard', path: '/admin', icon: BarChart3 },
     { name: 'Restaurant Management', path: '/admin/restaurants', icon: UtensilsCrossed },
     { name: 'Order Management', path: '/admin/orders', icon: ShoppingBag },
     { name: 'POS Interface', path: '/admin/pos', icon: CreditCard },
+    { name: 'Send Notification', path: '/admin/send-notification', icon: Bell },
   ];
 
   const navItems = isAdmin ? adminNavItems : employeeNavItems;

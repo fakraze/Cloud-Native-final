@@ -8,11 +8,16 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
   const loginMutation = useLogin();
 
   if (isAuthenticated) {
-    return <Navigate to="/restaurant" replace />;
+    // Redirect based on user role
+    if (user?.role === 'admin') {
+      return <Navigate to="/admin" replace />;
+    } else {
+      return <Navigate to="/restaurant" replace />;
+    }
   }
 
   const handleSubmit = (e: React.FormEvent) => {

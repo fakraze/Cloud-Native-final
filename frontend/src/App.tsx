@@ -2,7 +2,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
 } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -10,6 +9,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 // Components
 import { Layout } from "./components/Layout";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { RoleBasedRedirect } from "./components/RoleBasedRedirect";
 
 // Pages
 import { Login } from './pages/Login';
@@ -27,8 +27,12 @@ import Inbox from './pages/Inbox';
 import { Payment } from './pages/Payment';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { RestaurantManagement } from './pages/admin/RestaurantManagement';
+import MenuManagement from './pages/admin/MenuManagement';
 import { OrderManagement } from './pages/admin/OrderManagement';
 import { POSInterface } from './pages/admin/POSInterface';
+import AdminInbox from './pages/admin/AdminInbox';
+import AdminPersonal from './pages/admin/AdminPersonal';
+import SendNotification from './pages/admin/SendNotification';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -62,7 +66,7 @@ function App() {
               }
             >
               {/* Employee routes */}
-              <Route index element={<Navigate to="/restaurant" replace />} />
+              <Route index element={<RoleBasedRedirect />} />
               <Route path="restaurant" element={<RestaurantList />} />
               <Route
                 path="restaurant/:restaurantId"
@@ -103,6 +107,14 @@ function App() {
                 }
               />
               <Route
+                path="admin/restaurants/:restaurantId/menu"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <MenuManagement />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="admin/orders"
                 element={
                   <ProtectedRoute requiredRole="admin">
@@ -118,10 +130,34 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="admin/send-notification"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <SendNotification />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin/inbox"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminInbox />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin/personal"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminPersonal />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
 
             {/* Catch all route */}
-            <Route path="*" element={<Navigate to="/restaurant" replace />} />
+            <Route path="*" element={<RoleBasedRedirect />} />
           </Routes>
         </div>
       </Router>

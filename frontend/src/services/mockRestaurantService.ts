@@ -414,5 +414,54 @@ export const mockRestaurantService = {
     }
     
     MOCK_RESTAURANTS.splice(index, 1);
+  },
+
+  // Menu item management methods
+  createMenuItem: async (restaurantId: string, menuItem: Omit<MenuItem, 'id' | 'restaurantId'>): Promise<MenuItem> => {
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    const newMenuItem: MenuItem = {
+      ...menuItem,
+      id: Date.now().toString(),
+      restaurantId
+    };
+    
+    if (!MOCK_MENU_ITEMS[restaurantId]) {
+      MOCK_MENU_ITEMS[restaurantId] = [];
+    }
+    
+    MOCK_MENU_ITEMS[restaurantId].push(newMenuItem);
+    return newMenuItem;
+  },
+
+  updateMenuItem: async (restaurantId: string, menuItemId: string, updates: Partial<MenuItem>): Promise<MenuItem> => {
+    await new Promise(resolve => setTimeout(resolve, 600));
+    
+    const items = MOCK_MENU_ITEMS[restaurantId] || [];
+    const itemIndex = items.findIndex(item => item.id === menuItemId);
+    
+    if (itemIndex === -1) {
+      throw new Error('Menu item not found');
+    }
+    
+    MOCK_MENU_ITEMS[restaurantId][itemIndex] = {
+      ...MOCK_MENU_ITEMS[restaurantId][itemIndex],
+      ...updates
+    };
+    
+    return MOCK_MENU_ITEMS[restaurantId][itemIndex];
+  },
+
+  deleteMenuItem: async (restaurantId: string, menuItemId: string): Promise<void> => {
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    const items = MOCK_MENU_ITEMS[restaurantId] || [];
+    const itemIndex = items.findIndex(item => item.id === menuItemId);
+    
+    if (itemIndex === -1) {
+      throw new Error('Menu item not found');
+    }
+    
+    MOCK_MENU_ITEMS[restaurantId].splice(itemIndex, 1);
   }
 };

@@ -41,11 +41,11 @@ const Header: React.FC = () => {
   const handleNotificationClick = () => {
     setShowNotifications(!showNotifications);
   };
-
   const handleMessageClick = async (messageId: string) => {
     try {
       await markAsRead(messageId);
-      navigate('/inbox');
+      const inboxPath = user?.role === 'admin' ? '/admin/inbox' : '/inbox';
+      navigate(inboxPath);
       setShowNotifications(false);
     } catch (error) {
       console.error('Failed to mark message as read:', error);
@@ -156,11 +156,11 @@ const Header: React.FC = () => {
                     ))
                   )}
                 </div>
-                
-                <div className="p-3 border-t border-gray-200">
+                  <div className="p-3 border-t border-gray-200">
                   <button
                     onClick={() => {
-                      navigate('/inbox');
+                      const inboxPath = user?.role === 'admin' ? '/admin/inbox' : '/inbox';
+                      navigate(inboxPath);
                       setShowNotifications(false);
                     }}
                     className="w-full text-sm text-blue-600 hover:text-blue-700 font-medium"
@@ -170,12 +170,10 @@ const Header: React.FC = () => {
                 </div>
               </div>
             )}
-          </div>
-
-          {/* User Menu */}
+          </div>          {/* User Menu */}
           <div className="flex items-center space-x-3">
             <Link
-              to="/personal"
+              to={user?.role === 'admin' ? '/admin/personal' : '/personal'}
               className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 transition-colors"
             >
               <User className="h-6 w-6" />
