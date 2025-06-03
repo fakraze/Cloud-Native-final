@@ -69,15 +69,17 @@ const MenuItemDetail: React.FC = () => {
       [customizationId]: value
     }));
   };
-
   const handleAddToCart = () => {
     if (!user) return;
 
     addToCartMutation.mutate({
-      menuItem,
-      quantity,
-      customizations,
-      notes: notes.trim() || undefined,
+      cartItem: {
+        menuItem,
+        quantity,
+        customizations,
+        notes: notes.trim() || undefined,
+      },
+      userId: user.id
     }, {
       onSuccess: () => {
         navigate(`/restaurant/${restaurantId}`);
