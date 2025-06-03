@@ -8,7 +8,12 @@ COPY . .
 
 ARG BUILD_MODE=production
 ARG VITE_BASE_PATH=/
+ARG VITE_API_BASE_URL=http://backend-service:3000/api
 ENV VITE_BASE_PATH=$VITE_BASE_PATH
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
+# 測試環境變數是否正確傳遞
+RUN node test-env.js
 
 RUN npm run build -- --mode $BUILD_MODE
 

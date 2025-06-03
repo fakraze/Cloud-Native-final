@@ -19,9 +19,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Login to GHCR
-        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u fakraze --password-stdin
-
-      - name: Set image tag
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u fakraze --password-stdin      - name: Set image tag
         run: |
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             echo "IMAGE_TAG=latest" >> $GITHUB_ENV
@@ -34,22 +32,26 @@ jobs:
 
       - name: Build & Push Frontend
         run: |
-          # 根據分支設定 VITE_BASE_PATH
+          # 根據分支設定 VITE_BASE_PATH 和 API_BASE_URL
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             BASE_PATH="/"
             BUILD_MODE="production"
+            API_BASE_URL="http://backend-service:3000/api"
           else
             BASE_PATH="/dev/frontend/"
             BUILD_MODE="development"
+            API_BASE_URL="http://backend-service:3000/api"
           fi
 
           echo "📦 Building with:"
           echo "    VITE_BASE_PATH=$BASE_PATH"
+          echo "    VITE_API_BASE_URL=$API_BASE_URL"
           echo "    BUILD_MODE=$BUILD_MODE"
           echo "    IMAGE_TAG=${{ env.IMAGE_TAG }}"
 
           docker build \
             --build-arg VITE_BASE_PATH=$BASE_PATH \
+            --build-arg VITE_API_BASE_URL=$API_BASE_URL \
             --build-arg BUILD_MODE=$BUILD_MODE \
             -t ghcr.io/fakraze/cloud-meal-frontend:${{ env.IMAGE_TAG }} \
             ./frontend
