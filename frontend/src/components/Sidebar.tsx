@@ -17,6 +17,8 @@ const Sidebar: React.FC = () => {
   const location = useLocation();
 
   const isAdmin = user?.role === 'admin';
+  const isStaff = user?.role === 'staff';
+  
   const employeeNavItems = [
     { name: 'Restaurants', path: '/restaurant', icon: Store },
     { name: 'Ongoing Orders', path: '/order', icon: ShoppingBag },
@@ -24,15 +26,20 @@ const Sidebar: React.FC = () => {
     { name: 'Payment', path: '/payment', icon: CreditCard },
     { name: 'Personal', path: '/personal', icon: User },
   ];
+  
   const adminNavItems = [
     { name: 'Dashboard', path: '/admin', icon: BarChart3 },
     { name: 'Restaurant Management', path: '/admin/restaurants', icon: UtensilsCrossed },
     { name: 'Order Management', path: '/admin/orders', icon: ShoppingBag },
-    { name: 'POS Interface', path: '/admin/pos', icon: CreditCard },
     { name: 'Send Notification', path: '/admin/send-notification', icon: Bell },
   ];
+  const staffNavItems = [
+    { name: 'Dashboard', path: '/staff', icon: BarChart3 },
+    { name: 'Order Management', path: '/staff/orders', icon: ShoppingBag },
+    { name: 'POS Interface', path: '/staff/pos', icon: CreditCard },
+  ];
 
-  const navItems = isAdmin ? adminNavItems : employeeNavItems;
+  const navItems = isAdmin ? adminNavItems : isStaff ? staffNavItems : employeeNavItems;
 
   return (
     <aside className="bg-white w-64 min-h-screen shadow-sm border-r border-gray-200">
@@ -41,9 +48,8 @@ const Sidebar: React.FC = () => {
           <div className="bg-blue-600 rounded-lg p-2">
             <UtensilsCrossed className="h-6 w-6 text-white" />
           </div>
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              {isAdmin ? 'Admin Panel' : 'Order System'}
+          <div>            <h2 className="text-lg font-semibold text-gray-900">
+              {isAdmin ? 'Admin Panel' : isStaff ? 'Staff Panel' : 'Order System'}
             </h2>
             <p className="text-sm text-gray-500">{user?.name}</p>
           </div>
@@ -69,9 +75,7 @@ const Sidebar: React.FC = () => {
               </Link>
             );
           })}
-        </nav>
-
-        {!isAdmin && (
+        </nav>        {!isAdmin && !isStaff && (
           <div className="mt-8 pt-6 border-t border-gray-200">
             <div className="text-sm text-gray-500 mb-2">Quick Actions</div>
             <Link

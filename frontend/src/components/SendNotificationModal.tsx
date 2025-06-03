@@ -24,7 +24,7 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
   const [type, setType] = useState<InboxMessage['type']>('info');
-  const { sendToAllEmployees, loading, error } = useSendNotification();
+  const { sendToAllEmployees, isLoading, error } = useSendNotification();
 
   const messageTypes = [
     { value: 'info', label: 'Information', icon: InformationCircleIcon, color: 'text-blue-500' },
@@ -211,10 +211,10 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
             </button>
             <button
               type="submit"
-              disabled={loading || !title.trim() || !message.trim()}
+              disabled={isLoading || !title.trim() || !message.trim()}
               className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {loading && (
+              {isLoading && (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
               )}
               Send to All Employees

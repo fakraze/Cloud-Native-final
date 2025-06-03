@@ -10,11 +10,12 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { isAuthenticated, user } = useAuthStore();
   const loginMutation = useLogin();
-
   if (isAuthenticated) {
     // Redirect based on user role
     if (user?.role === 'admin') {
       return <Navigate to="/admin" replace />;
+    } else if (user?.role === 'staff') {
+      return <Navigate to="/staff" replace />;
     } else {
       return <Navigate to="/restaurant" replace />;
     }
@@ -76,13 +77,19 @@ const Login: React.FC = () => {
                     <strong className="text-blue-800">Employee Access</strong>
                   </div>
                   <p className="font-mono text-xs">employee@test.com / password123</p>
-                </div>
-                <div className="bg-gradient-to-r from-indigo-50 to-purple-100 rounded-xl p-3 border border-indigo-200/50 hover:shadow-md transition-all duration-200">
+                </div>                <div className="bg-gradient-to-r from-indigo-50 to-purple-100 rounded-xl p-3 border border-indigo-200/50 hover:shadow-md transition-all duration-200">
                   <div className="flex items-center mb-1">
                     <div className="w-2 h-2 bg-indigo-500 rounded-full mr-2"></div>
                     <strong className="text-indigo-800">Admin Access</strong>
                   </div>
                   <p className="font-mono text-xs">admin@test.com / password123</p>
+                </div>
+                <div className="bg-gradient-to-r from-purple-50 to-pink-100 rounded-xl p-3 border border-purple-200/50 hover:shadow-md transition-all duration-200">
+                  <div className="flex items-center mb-1">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full mr-2"></div>
+                    <strong className="text-purple-800">Staff Access</strong>
+                  </div>
+                  <p className="font-mono text-xs">staff@test.com / password123</p>
                 </div>
               </div>
             </div>

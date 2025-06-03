@@ -29,10 +29,13 @@ import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { RestaurantManagement } from './pages/admin/RestaurantManagement';
 import MenuManagement from './pages/admin/MenuManagement';
 import { OrderManagement } from './pages/admin/OrderManagement';
-import { POSInterface } from './pages/admin/POSInterface';
 import AdminInbox from './pages/admin/AdminInbox';
 import AdminPersonal from './pages/admin/AdminPersonal';
 import SendNotification from './pages/admin/SendNotification';
+import StaffDashboard from './pages/staff/StaffDashboard';
+import StaffOrderManagement from './pages/staff/StaffOrderManagement';
+import StaffPOS from './pages/staff/StaffPOS';
+import StaffPersonal from './pages/staff/StaffPersonal';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -67,27 +70,102 @@ function App() {
             >
               {/* Employee routes */}
               <Route index element={<RoleBasedRedirect />} />
-              <Route path="restaurant" element={<RestaurantList />} />
+              <Route 
+                path="restaurant" 
+                element={
+                  <ProtectedRoute requiredRole="employee">
+                    <RestaurantList />
+                  </ProtectedRoute>
+                } 
+              />
               <Route
                 path="restaurant/:restaurantId"
-                element={<RestaurantDetail />}
+                element={
+                  <ProtectedRoute requiredRole="employee">
+                    <RestaurantDetail />
+                  </ProtectedRoute>
+                }
               />
               <Route
                 path="restaurant/:restaurantId/rate"
-                element={<RestaurantRatings />}
+                element={
+                  <ProtectedRoute requiredRole="employee">
+                    <RestaurantRatings />
+                  </ProtectedRoute>
+                }
               />
               <Route
                 path="restaurant/:restaurantId/menu/:menuItemId"
-                element={<MenuItemDetail />}
+                element={
+                  <ProtectedRoute requiredRole="employee">
+                    <MenuItemDetail />
+                  </ProtectedRoute>
+                }
               />
-              <Route path="cart" element={<Cart />} />
-              <Route path="payment" element={<Payment />} />
-              <Route path="order" element={<OngoingOrders />} />
-              <Route path="order/:orderId" element={<OrderDetail />} />
-              <Route path="order-history" element={<OrderHistory />} />
-              <Route path="rate/:restaurantId" element={<RatePage />} />
-              <Route path="personal" element={<PersonalPage />} />
-              <Route path="inbox" element={<Inbox />} />
+              <Route 
+                path="cart" 
+                element={
+                  <ProtectedRoute requiredRole="employee">
+                    <Cart />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="payment" 
+                element={
+                  <ProtectedRoute requiredRole="employee">
+                    <Payment />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="order" 
+                element={
+                  <ProtectedRoute requiredRole="employee">
+                    <OngoingOrders />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="order/:orderId" 
+                element={
+                  <ProtectedRoute allowedRoles={['employee', 'admin', 'staff']}>
+                    <OrderDetail />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="order-history" 
+                element={
+                  <ProtectedRoute requiredRole="employee">
+                    <OrderHistory />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="rate/:restaurantId" 
+                element={
+                  <ProtectedRoute requiredRole="employee">
+                    <RatePage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="personal" 
+                element={
+                  <ProtectedRoute requiredRole="employee">
+                    <PersonalPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="inbox" 
+                element={
+                  <ProtectedRoute requiredRole="employee">
+                    <Inbox />
+                  </ProtectedRoute>
+                } 
+              />
 
               {/* Admin routes */}
               <Route
@@ -123,14 +201,6 @@ function App() {
                 }
               />
               <Route
-                path="admin/pos"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <POSInterface />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
                 path="admin/send-notification"
                 element={
                   <ProtectedRoute requiredRole="admin">
@@ -151,6 +221,40 @@ function App() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <AdminPersonal />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Staff routes */}
+              <Route
+                path="staff"
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <StaffDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="staff/orders"
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <StaffOrderManagement />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="staff/pos"
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <StaffPOS />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="staff/personal"
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <StaffPersonal />
                   </ProtectedRoute>
                 }
               />

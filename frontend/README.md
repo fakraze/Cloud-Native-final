@@ -22,14 +22,18 @@ The development server will start on **http://localhost:5173** with hot module r
 
 ### Method 2: Docker Container (Production Build)
 
-If you have an older Node.js version or want to run the production build:
+If you have an older Node.js version or want to run the devlopment or production build:
 
 ```bash
 # Navigate to frontend directory
 cd frontend
 
+# Build tag
+BUILD_MODE=development
+# BUILD_MODE=production
+
 # Build Docker image
-docker build -t frontend-app .
+docker build --build-arg BUILD_MODE=$BUILD_MODE -t frontend-app .
 
 # Run container on port 3000
 docker run -p 3000:80 frontend-app
