@@ -64,10 +64,10 @@ jobs:
           # Set backend environment variables based on branch
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             NODE_ENV="production"
-            DB_HOST="mysql-service"
+            DB_HOST="mysql"
           else
             NODE_ENV="development"
-            DB_HOST="mysql-service"
+            DB_HOST="mysql"
           fi
 
           echo "📦 Building backend with:"
