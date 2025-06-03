@@ -54,6 +54,18 @@ export const useCancelOrder = () => {
   });
 };
 
+export const useUpdateOrderStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ orderId, status }: { orderId: string; status: string }) => 
+      orderService.updateOrderStatus(orderId, status as any),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
+    },
+  });
+};
+
 // Cart hooks
 export const useCart = (userId: string) => {
   const { setCart } = useCartStore();

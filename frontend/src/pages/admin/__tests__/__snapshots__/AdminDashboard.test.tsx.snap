@@ -1,0 +1,1673 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AdminDashboard Component > should render dashboard with empty arrays 1`] = `
+<div
+  class="space-y-6"
+>
+  <div>
+    <h1
+      class="text-3xl font-bold text-gray-900"
+    >
+      Admin Dashboard
+    </h1>
+    <p
+      class="text-gray-600"
+    >
+      Welcome back! Here's what's happening with your restaurant system.
+    </p>
+  </div>
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+  >
+    <div
+      class="card"
+    >
+      <div
+        class="flex items-center"
+      >
+        <div
+          class="p-3 rounded-lg bg-green-100"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-dollar-sign h-6 w-6 text-green-600"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line
+              x1="12"
+              x2="12"
+              y1="2"
+              y2="22"
+            />
+            <path
+              d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+            />
+          </svg>
+        </div>
+        <div
+          class="ml-4"
+        >
+          <p
+            class="text-sm font-medium text-gray-600"
+          >
+            Total Revenue
+          </p>
+          <p
+            class="text-2xl font-semibold text-gray-900"
+          >
+            $0.00
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card"
+    >
+      <div
+        class="flex items-center"
+      >
+        <div
+          class="p-3 rounded-lg bg-blue-100"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-shopping-bag h-6 w-6 text-blue-600"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"
+            />
+            <path
+              d="M3 6h18"
+            />
+            <path
+              d="M16 10a4 4 0 0 1-8 0"
+            />
+          </svg>
+        </div>
+        <div
+          class="ml-4"
+        >
+          <p
+            class="text-sm font-medium text-gray-600"
+          >
+            Total Orders
+          </p>
+          <p
+            class="text-2xl font-semibold text-gray-900"
+          >
+            0
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card"
+    >
+      <div
+        class="flex items-center"
+      >
+        <div
+          class="p-3 rounded-lg bg-orange-100"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-clock h-6 w-6 text-orange-600"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+            />
+            <polyline
+              points="12 6 12 12 16 14"
+            />
+          </svg>
+        </div>
+        <div
+          class="ml-4"
+        >
+          <p
+            class="text-sm font-medium text-gray-600"
+          >
+            Pending Orders
+          </p>
+          <p
+            class="text-2xl font-semibold text-gray-900"
+          >
+            0
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card"
+    >
+      <div
+        class="flex items-center"
+      >
+        <div
+          class="p-3 rounded-lg bg-purple-100"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-circle-check-big h-6 w-6 text-purple-600"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M21.801 10A10 10 0 1 1 17 3.335"
+            />
+            <path
+              d="m9 11 3 3L22 4"
+            />
+          </svg>
+        </div>
+        <div
+          class="ml-4"
+        >
+          <p
+            class="text-sm font-medium text-gray-600"
+          >
+            Completed Today
+          </p>
+          <p
+            class="text-2xl font-semibold text-gray-900"
+          >
+            0
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="card"
+  >
+    <h2
+      class="text-xl font-semibold text-gray-900 mb-6"
+    >
+      Quick Actions
+    </h2>
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 gap-6"
+    >
+      <a
+        class="group relative p-6 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200"
+        data-discover="true"
+        href="/admin/restaurants"
+      >
+        <div
+          class="flex items-center space-x-4"
+        >
+          <div
+            class="p-3 rounded-lg bg-blue-600"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-utensils-crossed h-6 w-6 text-white"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"
+              />
+              <path
+                d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"
+              />
+              <path
+                d="m2.1 21.8 6.4-6.3"
+              />
+              <path
+                d="m19 5-7 7"
+              />
+            </svg>
+          </div>
+          <div>
+            <h3
+              class="text-lg font-medium text-gray-900 group-hover:text-blue-600"
+            >
+              Manage Restaurants
+            </h3>
+            <p
+              class="text-sm text-gray-600"
+            >
+              Add, edit, or manage restaurant listings
+            </p>
+          </div>
+        </div>
+      </a>
+      <a
+        class="group relative p-6 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200"
+        data-discover="true"
+        href="/admin/orders"
+      >
+        <div
+          class="flex items-center space-x-4"
+        >
+          <div
+            class="p-3 rounded-lg bg-green-600"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-shopping-bag h-6 w-6 text-white"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"
+              />
+              <path
+                d="M3 6h18"
+              />
+              <path
+                d="M16 10a4 4 0 0 1-8 0"
+              />
+            </svg>
+          </div>
+          <div>
+            <h3
+              class="text-lg font-medium text-gray-900 group-hover:text-blue-600"
+            >
+              Order Management
+            </h3>
+            <p
+              class="text-sm text-gray-600"
+            >
+              View and manage all customer orders
+            </p>
+          </div>
+        </div>
+      </a>
+      <a
+        class="group relative p-6 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200"
+        data-discover="true"
+        href="/admin/pos"
+      >
+        <div
+          class="flex items-center space-x-4"
+        >
+          <div
+            class="p-3 rounded-lg bg-purple-600"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-chart-column h-6 w-6 text-white"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 3v16a2 2 0 0 0 2 2h16"
+              />
+              <path
+                d="M18 17V9"
+              />
+              <path
+                d="M13 17V5"
+              />
+              <path
+                d="M8 17v-3"
+              />
+            </svg>
+          </div>
+          <div>
+            <h3
+              class="text-lg font-medium text-gray-900 group-hover:text-blue-600"
+            >
+              POS Interface
+            </h3>
+            <p
+              class="text-sm text-gray-600"
+            >
+              Process in-store orders and payments
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div
+    class="grid grid-cols-1 lg:grid-cols-2 gap-6"
+  >
+    <div
+      class="card"
+    >
+      <h2
+        class="text-xl font-semibold text-gray-900 mb-4"
+      >
+        Restaurant Overview
+      </h2>
+      <div
+        class="space-y-4"
+      >
+        <div
+          class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+        >
+          <span
+            class="text-sm font-medium text-gray-700"
+          >
+            Total Restaurants
+          </span>
+          <span
+            class="text-lg font-semibold text-gray-900"
+          >
+            0
+          </span>
+        </div>
+        <div
+          class="flex items-center justify-between p-3 bg-green-50 rounded-lg"
+        >
+          <span
+            class="text-sm font-medium text-gray-700"
+          >
+            Active Restaurants
+          </span>
+          <span
+            class="text-lg font-semibold text-green-600"
+          >
+            0
+          </span>
+        </div>
+        <div
+          class="flex items-center justify-between p-3 bg-red-50 rounded-lg"
+        >
+          <span
+            class="text-sm font-medium text-gray-700"
+          >
+            Inactive Restaurants
+          </span>
+          <span
+            class="text-lg font-semibold text-red-600"
+          >
+            0
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card"
+    >
+      <div
+        class="flex items-center justify-between mb-4"
+      >
+        <h2
+          class="text-xl font-semibold text-gray-900"
+        >
+          Recent Orders
+        </h2>
+        <a
+          class="text-sm text-blue-600 hover:text-blue-800"
+          data-discover="true"
+          href="/admin/orders"
+        >
+          View all
+        </a>
+      </div>
+      <div
+        class="space-y-3"
+      >
+        <p
+          class="text-gray-500 text-center py-4"
+        >
+          No recent orders
+        </p>
+      </div>
+    </div>
+  </div>
+  <div
+    class="card"
+  >
+    <h2
+      class="text-xl font-semibold text-gray-900 mb-6"
+    >
+      Performance Metrics
+    </h2>
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 gap-6"
+    >
+      <div
+        class="text-center"
+      >
+        <div
+          class="text-3xl font-bold text-blue-600"
+        >
+          0.0
+          %
+        </div>
+        <div
+          class="text-sm text-gray-600"
+        >
+          Order Completion Rate
+        </div>
+      </div>
+      <div
+        class="text-center"
+      >
+        <div
+          class="text-3xl font-bold text-green-600"
+        >
+          $
+          0.00
+        </div>
+        <div
+          class="text-sm text-gray-600"
+        >
+          Average Order Value
+        </div>
+      </div>
+      <div
+        class="text-center"
+      >
+        <div
+          class="text-3xl font-bold text-purple-600"
+        >
+          0.0
+          %
+        </div>
+        <div
+          class="text-sm text-gray-600"
+        >
+          Restaurant Availability
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`AdminDashboard Component > should render dashboard with no data 1`] = `
+<div
+  class="space-y-6"
+>
+  <div>
+    <h1
+      class="text-3xl font-bold text-gray-900"
+    >
+      Admin Dashboard
+    </h1>
+    <p
+      class="text-gray-600"
+    >
+      Welcome back! Here's what's happening with your restaurant system.
+    </p>
+  </div>
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+  >
+    <div
+      class="card"
+    >
+      <div
+        class="flex items-center"
+      >
+        <div
+          class="p-3 rounded-lg bg-green-100"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-dollar-sign h-6 w-6 text-green-600"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line
+              x1="12"
+              x2="12"
+              y1="2"
+              y2="22"
+            />
+            <path
+              d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+            />
+          </svg>
+        </div>
+        <div
+          class="ml-4"
+        >
+          <p
+            class="text-sm font-medium text-gray-600"
+          >
+            Total Revenue
+          </p>
+          <p
+            class="text-2xl font-semibold text-gray-900"
+          >
+            $0.00
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card"
+    >
+      <div
+        class="flex items-center"
+      >
+        <div
+          class="p-3 rounded-lg bg-blue-100"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-shopping-bag h-6 w-6 text-blue-600"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"
+            />
+            <path
+              d="M3 6h18"
+            />
+            <path
+              d="M16 10a4 4 0 0 1-8 0"
+            />
+          </svg>
+        </div>
+        <div
+          class="ml-4"
+        >
+          <p
+            class="text-sm font-medium text-gray-600"
+          >
+            Total Orders
+          </p>
+          <p
+            class="text-2xl font-semibold text-gray-900"
+          >
+            0
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card"
+    >
+      <div
+        class="flex items-center"
+      >
+        <div
+          class="p-3 rounded-lg bg-orange-100"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-clock h-6 w-6 text-orange-600"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+            />
+            <polyline
+              points="12 6 12 12 16 14"
+            />
+          </svg>
+        </div>
+        <div
+          class="ml-4"
+        >
+          <p
+            class="text-sm font-medium text-gray-600"
+          >
+            Pending Orders
+          </p>
+          <p
+            class="text-2xl font-semibold text-gray-900"
+          >
+            0
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card"
+    >
+      <div
+        class="flex items-center"
+      >
+        <div
+          class="p-3 rounded-lg bg-purple-100"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-circle-check-big h-6 w-6 text-purple-600"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M21.801 10A10 10 0 1 1 17 3.335"
+            />
+            <path
+              d="m9 11 3 3L22 4"
+            />
+          </svg>
+        </div>
+        <div
+          class="ml-4"
+        >
+          <p
+            class="text-sm font-medium text-gray-600"
+          >
+            Completed Today
+          </p>
+          <p
+            class="text-2xl font-semibold text-gray-900"
+          >
+            0
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="card"
+  >
+    <h2
+      class="text-xl font-semibold text-gray-900 mb-6"
+    >
+      Quick Actions
+    </h2>
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 gap-6"
+    >
+      <a
+        class="group relative p-6 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200"
+        data-discover="true"
+        href="/admin/restaurants"
+      >
+        <div
+          class="flex items-center space-x-4"
+        >
+          <div
+            class="p-3 rounded-lg bg-blue-600"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-utensils-crossed h-6 w-6 text-white"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"
+              />
+              <path
+                d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"
+              />
+              <path
+                d="m2.1 21.8 6.4-6.3"
+              />
+              <path
+                d="m19 5-7 7"
+              />
+            </svg>
+          </div>
+          <div>
+            <h3
+              class="text-lg font-medium text-gray-900 group-hover:text-blue-600"
+            >
+              Manage Restaurants
+            </h3>
+            <p
+              class="text-sm text-gray-600"
+            >
+              Add, edit, or manage restaurant listings
+            </p>
+          </div>
+        </div>
+      </a>
+      <a
+        class="group relative p-6 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200"
+        data-discover="true"
+        href="/admin/orders"
+      >
+        <div
+          class="flex items-center space-x-4"
+        >
+          <div
+            class="p-3 rounded-lg bg-green-600"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-shopping-bag h-6 w-6 text-white"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"
+              />
+              <path
+                d="M3 6h18"
+              />
+              <path
+                d="M16 10a4 4 0 0 1-8 0"
+              />
+            </svg>
+          </div>
+          <div>
+            <h3
+              class="text-lg font-medium text-gray-900 group-hover:text-blue-600"
+            >
+              Order Management
+            </h3>
+            <p
+              class="text-sm text-gray-600"
+            >
+              View and manage all customer orders
+            </p>
+          </div>
+        </div>
+      </a>
+      <a
+        class="group relative p-6 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200"
+        data-discover="true"
+        href="/admin/pos"
+      >
+        <div
+          class="flex items-center space-x-4"
+        >
+          <div
+            class="p-3 rounded-lg bg-purple-600"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-chart-column h-6 w-6 text-white"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 3v16a2 2 0 0 0 2 2h16"
+              />
+              <path
+                d="M18 17V9"
+              />
+              <path
+                d="M13 17V5"
+              />
+              <path
+                d="M8 17v-3"
+              />
+            </svg>
+          </div>
+          <div>
+            <h3
+              class="text-lg font-medium text-gray-900 group-hover:text-blue-600"
+            >
+              POS Interface
+            </h3>
+            <p
+              class="text-sm text-gray-600"
+            >
+              Process in-store orders and payments
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div
+    class="grid grid-cols-1 lg:grid-cols-2 gap-6"
+  >
+    <div
+      class="card"
+    >
+      <h2
+        class="text-xl font-semibold text-gray-900 mb-4"
+      >
+        Restaurant Overview
+      </h2>
+      <div
+        class="space-y-4"
+      >
+        <div
+          class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+        >
+          <span
+            class="text-sm font-medium text-gray-700"
+          >
+            Total Restaurants
+          </span>
+          <span
+            class="text-lg font-semibold text-gray-900"
+          >
+            0
+          </span>
+        </div>
+        <div
+          class="flex items-center justify-between p-3 bg-green-50 rounded-lg"
+        >
+          <span
+            class="text-sm font-medium text-gray-700"
+          >
+            Active Restaurants
+          </span>
+          <span
+            class="text-lg font-semibold text-green-600"
+          >
+            0
+          </span>
+        </div>
+        <div
+          class="flex items-center justify-between p-3 bg-red-50 rounded-lg"
+        >
+          <span
+            class="text-sm font-medium text-gray-700"
+          >
+            Inactive Restaurants
+          </span>
+          <span
+            class="text-lg font-semibold text-red-600"
+          >
+            0
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card"
+    >
+      <div
+        class="flex items-center justify-between mb-4"
+      >
+        <h2
+          class="text-xl font-semibold text-gray-900"
+        >
+          Recent Orders
+        </h2>
+        <a
+          class="text-sm text-blue-600 hover:text-blue-800"
+          data-discover="true"
+          href="/admin/orders"
+        >
+          View all
+        </a>
+      </div>
+      <div
+        class="space-y-3"
+      >
+        <p
+          class="text-gray-500 text-center py-4"
+        >
+          No recent orders
+        </p>
+      </div>
+    </div>
+  </div>
+  <div
+    class="card"
+  >
+    <h2
+      class="text-xl font-semibold text-gray-900 mb-6"
+    >
+      Performance Metrics
+    </h2>
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 gap-6"
+    >
+      <div
+        class="text-center"
+      >
+        <div
+          class="text-3xl font-bold text-blue-600"
+        >
+          0.0
+          %
+        </div>
+        <div
+          class="text-sm text-gray-600"
+        >
+          Order Completion Rate
+        </div>
+      </div>
+      <div
+        class="text-center"
+      >
+        <div
+          class="text-3xl font-bold text-green-600"
+        >
+          $
+          0.00
+        </div>
+        <div
+          class="text-sm text-gray-600"
+        >
+          Average Order Value
+        </div>
+      </div>
+      <div
+        class="text-center"
+      >
+        <div
+          class="text-3xl font-bold text-purple-600"
+        >
+          0.0
+          %
+        </div>
+        <div
+          class="text-sm text-gray-600"
+        >
+          Restaurant Availability
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`AdminDashboard Component > should render dashboard with sample data 1`] = `
+<div
+  class="space-y-6"
+>
+  <div>
+    <h1
+      class="text-3xl font-bold text-gray-900"
+    >
+      Admin Dashboard
+    </h1>
+    <p
+      class="text-gray-600"
+    >
+      Welcome back! Here's what's happening with your restaurant system.
+    </p>
+  </div>
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+  >
+    <div
+      class="card"
+    >
+      <div
+        class="flex items-center"
+      >
+        <div
+          class="p-3 rounded-lg bg-green-100"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-dollar-sign h-6 w-6 text-green-600"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line
+              x1="12"
+              x2="12"
+              y1="2"
+              y2="22"
+            />
+            <path
+              d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+            />
+          </svg>
+        </div>
+        <div
+          class="ml-4"
+        >
+          <p
+            class="text-sm font-medium text-gray-600"
+          >
+            Total Revenue
+          </p>
+          <p
+            class="text-2xl font-semibold text-gray-900"
+          >
+            $77.24
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card"
+    >
+      <div
+        class="flex items-center"
+      >
+        <div
+          class="p-3 rounded-lg bg-blue-100"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-shopping-bag h-6 w-6 text-blue-600"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"
+            />
+            <path
+              d="M3 6h18"
+            />
+            <path
+              d="M16 10a4 4 0 0 1-8 0"
+            />
+          </svg>
+        </div>
+        <div
+          class="ml-4"
+        >
+          <p
+            class="text-sm font-medium text-gray-600"
+          >
+            Total Orders
+          </p>
+          <p
+            class="text-2xl font-semibold text-gray-900"
+          >
+            3
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card"
+    >
+      <div
+        class="flex items-center"
+      >
+        <div
+          class="p-3 rounded-lg bg-orange-100"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-clock h-6 w-6 text-orange-600"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+            />
+            <polyline
+              points="12 6 12 12 16 14"
+            />
+          </svg>
+        </div>
+        <div
+          class="ml-4"
+        >
+          <p
+            class="text-sm font-medium text-gray-600"
+          >
+            Pending Orders
+          </p>
+          <p
+            class="text-2xl font-semibold text-gray-900"
+          >
+            1
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card"
+    >
+      <div
+        class="flex items-center"
+      >
+        <div
+          class="p-3 rounded-lg bg-purple-100"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-circle-check-big h-6 w-6 text-purple-600"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M21.801 10A10 10 0 1 1 17 3.335"
+            />
+            <path
+              d="m9 11 3 3L22 4"
+            />
+          </svg>
+        </div>
+        <div
+          class="ml-4"
+        >
+          <p
+            class="text-sm font-medium text-gray-600"
+          >
+            Completed Today
+          </p>
+          <p
+            class="text-2xl font-semibold text-gray-900"
+          >
+            2
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="card"
+  >
+    <h2
+      class="text-xl font-semibold text-gray-900 mb-6"
+    >
+      Quick Actions
+    </h2>
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 gap-6"
+    >
+      <a
+        class="group relative p-6 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200"
+        data-discover="true"
+        href="/admin/restaurants"
+      >
+        <div
+          class="flex items-center space-x-4"
+        >
+          <div
+            class="p-3 rounded-lg bg-blue-600"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-utensils-crossed h-6 w-6 text-white"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"
+              />
+              <path
+                d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"
+              />
+              <path
+                d="m2.1 21.8 6.4-6.3"
+              />
+              <path
+                d="m19 5-7 7"
+              />
+            </svg>
+          </div>
+          <div>
+            <h3
+              class="text-lg font-medium text-gray-900 group-hover:text-blue-600"
+            >
+              Manage Restaurants
+            </h3>
+            <p
+              class="text-sm text-gray-600"
+            >
+              Add, edit, or manage restaurant listings
+            </p>
+          </div>
+        </div>
+      </a>
+      <a
+        class="group relative p-6 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200"
+        data-discover="true"
+        href="/admin/orders"
+      >
+        <div
+          class="flex items-center space-x-4"
+        >
+          <div
+            class="p-3 rounded-lg bg-green-600"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-shopping-bag h-6 w-6 text-white"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"
+              />
+              <path
+                d="M3 6h18"
+              />
+              <path
+                d="M16 10a4 4 0 0 1-8 0"
+              />
+            </svg>
+          </div>
+          <div>
+            <h3
+              class="text-lg font-medium text-gray-900 group-hover:text-blue-600"
+            >
+              Order Management
+            </h3>
+            <p
+              class="text-sm text-gray-600"
+            >
+              View and manage all customer orders
+            </p>
+          </div>
+        </div>
+      </a>
+      <a
+        class="group relative p-6 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200"
+        data-discover="true"
+        href="/admin/pos"
+      >
+        <div
+          class="flex items-center space-x-4"
+        >
+          <div
+            class="p-3 rounded-lg bg-purple-600"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-chart-column h-6 w-6 text-white"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 3v16a2 2 0 0 0 2 2h16"
+              />
+              <path
+                d="M18 17V9"
+              />
+              <path
+                d="M13 17V5"
+              />
+              <path
+                d="M8 17v-3"
+              />
+            </svg>
+          </div>
+          <div>
+            <h3
+              class="text-lg font-medium text-gray-900 group-hover:text-blue-600"
+            >
+              POS Interface
+            </h3>
+            <p
+              class="text-sm text-gray-600"
+            >
+              Process in-store orders and payments
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div
+    class="grid grid-cols-1 lg:grid-cols-2 gap-6"
+  >
+    <div
+      class="card"
+    >
+      <h2
+        class="text-xl font-semibold text-gray-900 mb-4"
+      >
+        Restaurant Overview
+      </h2>
+      <div
+        class="space-y-4"
+      >
+        <div
+          class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+        >
+          <span
+            class="text-sm font-medium text-gray-700"
+          >
+            Total Restaurants
+          </span>
+          <span
+            class="text-lg font-semibold text-gray-900"
+          >
+            3
+          </span>
+        </div>
+        <div
+          class="flex items-center justify-between p-3 bg-green-50 rounded-lg"
+        >
+          <span
+            class="text-sm font-medium text-gray-700"
+          >
+            Active Restaurants
+          </span>
+          <span
+            class="text-lg font-semibold text-green-600"
+          >
+            2
+          </span>
+        </div>
+        <div
+          class="flex items-center justify-between p-3 bg-red-50 rounded-lg"
+        >
+          <span
+            class="text-sm font-medium text-gray-700"
+          >
+            Inactive Restaurants
+          </span>
+          <span
+            class="text-lg font-semibold text-red-600"
+          >
+            1
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card"
+    >
+      <div
+        class="flex items-center justify-between mb-4"
+      >
+        <h2
+          class="text-xl font-semibold text-gray-900"
+        >
+          Recent Orders
+        </h2>
+        <a
+          class="text-sm text-blue-600 hover:text-blue-800"
+          data-discover="true"
+          href="/admin/orders"
+        >
+          View all
+        </a>
+      </div>
+      <div
+        class="space-y-3"
+      >
+        <div
+          class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+        >
+          <div>
+            <p
+              class="font-medium text-gray-900"
+            >
+              #
+              1
+            </p>
+            <p
+              class="text-sm text-gray-600"
+            >
+              Italiano Restaurant
+            </p>
+          </div>
+          <div
+            class="text-right"
+          >
+            <p
+              class="font-medium text-gray-900"
+            >
+              $
+              25.99
+            </p>
+            <span
+              class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800"
+            >
+              completed
+            </span>
+          </div>
+        </div>
+        <div
+          class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+        >
+          <div>
+            <p
+              class="font-medium text-gray-900"
+            >
+              #
+              2
+            </p>
+            <p
+              class="text-sm text-gray-600"
+            >
+              Burger House
+            </p>
+          </div>
+          <div
+            class="text-right"
+          >
+            <p
+              class="font-medium text-gray-900"
+            >
+              $
+              18.50
+            </p>
+            <span
+              class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800"
+            >
+              pending
+            </span>
+          </div>
+        </div>
+        <div
+          class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+        >
+          <div>
+            <p
+              class="font-medium text-gray-900"
+            >
+              #
+              3
+            </p>
+            <p
+              class="text-sm text-gray-600"
+            >
+              Sushi Palace
+            </p>
+          </div>
+          <div
+            class="text-right"
+          >
+            <p
+              class="font-medium text-gray-900"
+            >
+              $
+              32.75
+            </p>
+            <span
+              class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800"
+            >
+              completed
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="card"
+  >
+    <h2
+      class="text-xl font-semibold text-gray-900 mb-6"
+    >
+      Performance Metrics
+    </h2>
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 gap-6"
+    >
+      <div
+        class="text-center"
+      >
+        <div
+          class="text-3xl font-bold text-blue-600"
+        >
+          66.7
+          %
+        </div>
+        <div
+          class="text-sm text-gray-600"
+        >
+          Order Completion Rate
+        </div>
+      </div>
+      <div
+        class="text-center"
+      >
+        <div
+          class="text-3xl font-bold text-green-600"
+        >
+          $
+          25.75
+        </div>
+        <div
+          class="text-sm text-gray-600"
+        >
+          Average Order Value
+        </div>
+      </div>
+      <div
+        class="text-center"
+      >
+        <div
+          class="text-3xl font-bold text-purple-600"
+        >
+          66.7
+          %
+        </div>
+        <div
+          class="text-sm text-gray-600"
+        >
+          Restaurant Availability
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

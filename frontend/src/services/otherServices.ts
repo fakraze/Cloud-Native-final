@@ -166,7 +166,6 @@ export const inboxService = {
       return mockInboxService.deleteMessage(messageId);
     }
   },
-
   getUnreadCount: async (userId: string): Promise<number> => {
     if (shouldUseMock()) {
       return mockInboxService.getUnreadCount(userId);
@@ -178,6 +177,33 @@ export const inboxService = {
     } catch (error) {
       console.warn('API call failed, falling back to mock data for development');
       return mockInboxService.getUnreadCount(userId);
+    }
+  },
+
+  // Admin methods for sending notifications
+  sendNotificationToAllEmployees: async (title: string, message: string, type: InboxMessage['type'] = 'info'): Promise<void> => {
+    if (shouldUseMock()) {
+      return mockInboxService.sendNotificationToAllEmployees(title, message, type);
+    }
+    
+    try {
+      await api.post('/inbox/send-to-all-employees', { title, message, type });
+    } catch (error) {
+      console.warn('API call failed, falling back to mock data for development');
+      return mockInboxService.sendNotificationToAllEmployees(title, message, type);
+    }
+  },
+
+  sendNotificationToEmployee: async (employeeId: string, title: string, message: string, type: InboxMessage['type'] = 'info'): Promise<void> => {
+    if (shouldUseMock()) {
+      return mockInboxService.sendNotificationToEmployee(employeeId, title, message, type);
+    }
+    
+    try {
+      await api.post(`/inbox/send-to-employee/${employeeId}`, { title, message, type });
+    } catch (error) {
+      console.warn('API call failed, falling back to mock data for development');
+      return mockInboxService.sendNotificationToEmployee(employeeId, title, message, type);
     }
   },
 };

@@ -75,10 +75,18 @@ export const orderService = {
     const response = await api.get<ApiResponse<Order[]>>('/order/admin/all');
     return response.data.data;
   },
-
   updateOrderStatus: async (orderId: string, status: Order['status']): Promise<Order> => {
-    const response = await api.put<ApiResponse<Order>>(`/order/${orderId}/status`, { status });
-    return response.data.data;
+    if (shouldUseMock()) {
+      return mockOrderService.updateOrderStatus(orderId, status);
+    }
+    
+    try {
+      const response = await api.put<ApiResponse<Order>>(`/order/${orderId}/status`, { status });
+      return response.data.data;
+    } catch (error) {
+      console.warn('API call failed, falling back to mock data');
+      return mockOrderService.updateOrderStatus(orderId, status);
+    }
   },
 
   updatePaymentStatus: async (orderId: string, paymentStatus: 'pending' | 'paid' | 'failed', paymentMethod?: string): Promise<Order> => {

@@ -19,21 +19,20 @@ const MOCK_ORDERS: Order[] = [
       }
     ],
     totalAmount: 37.98,
-    status: 'completed' as OrderStatus,
+    status: 'preparing' as OrderStatus,
     paymentStatus: 'paid',
-    orderDate: '2025-05-28T18:30:00Z',
-    estimatedDeliveryTime: '2025-05-28T19:05:00Z',
-    actualDeliveryTime: '2025-05-28T19:02:00Z',
+    orderDate: '2025-06-03T18:30:00Z',
+    estimatedDeliveryTime: '2025-06-03T19:05:00Z',
     deliveryType: 'pickup',
     deliveryAddress: '789 User St, City',
     paymentMethod: 'credit_card',
     notes: 'Please ring doorbell',
-    createdAt: '2025-05-28T18:30:00Z',
-    updatedAt: '2025-05-28T19:02:00Z'
+    createdAt: '2025-06-03T18:30:00Z',
+    updatedAt: '2025-06-03T18:45:00Z'
   },
   {
     id: '2',
-    userId: '1',
+    userId: '2',
     restaurantId: '2',
     restaurantName: 'Burger Barn',
     items: [
@@ -53,21 +52,22 @@ const MOCK_ORDERS: Order[] = [
         quantity: 1,
         notes: ''
       }
-    ],    totalAmount: 21.98,
-    status: 'completed' as OrderStatus,
+    ],
+    totalAmount: 21.98,
+    status: 'pending' as OrderStatus,
     paymentStatus: 'pending',
-    orderDate: '2025-06-01T12:15:00Z',
-    estimatedDeliveryTime: '2025-06-01T12:45:00Z',
+    orderDate: '2025-06-03T12:15:00Z',
+    estimatedDeliveryTime: '2025-06-03T12:45:00Z',
     deliveryType: 'pickup',
     deliveryAddress: '789 User St, City',
     paymentMethod: 'credit_card',
     notes: '',
-    createdAt: '2025-06-01T12:15:00Z',
-    updatedAt: '2025-06-01T12:20:00Z'
+    createdAt: '2025-06-03T12:15:00Z',
+    updatedAt: '2025-06-03T12:20:00Z'
   },
   {
     id: '3',
-    userId: '1',
+    userId: '3',
     restaurantId: '3',
     restaurantName: 'Sushi Zen',
     items: [
@@ -79,17 +79,18 @@ const MOCK_ORDERS: Order[] = [
         quantity: 1,
         notes: 'Fresh wasabi on the side'
       }
-    ],    totalAmount: 24.99,
-    status: 'completed' as OrderStatus,
-    paymentStatus: 'pending',
-    orderDate: '2025-06-02T08:00:00Z',
-    estimatedDeliveryTime: '2025-06-02T08:40:00Z',
+    ],
+    totalAmount: 24.99,
+    status: 'confirmed' as OrderStatus,
+    paymentStatus: 'paid',
+    orderDate: '2025-06-03T08:00:00Z',
+    estimatedDeliveryTime: '2025-06-03T08:40:00Z',
     deliveryType: 'dine-in',
     deliveryAddress: '789 User St, City',
     paymentMethod: 'credit_card',
     notes: 'Call when arrived',
-    createdAt: '2025-06-02T08:00:00Z',
-    updatedAt: '2025-06-02T08:05:00Z'
+    createdAt: '2025-06-03T08:00:00Z',
+    updatedAt: '2025-06-03T08:05:00Z'
   },
   {
     id: '4',
@@ -107,17 +108,72 @@ const MOCK_ORDERS: Order[] = [
       }
     ],
     totalAmount: 21.99,
-    status: 'completed' as OrderStatus,
+    status: 'ready' as OrderStatus,
     paymentStatus: 'paid',
-    orderDate: '2025-05-25T19:30:00Z',
-    estimatedDeliveryTime: '2025-05-25T20:05:00Z',
-    actualDeliveryTime: '2025-05-25T20:00:00Z',
+    orderDate: '2025-06-02T19:30:00Z',
+    estimatedDeliveryTime: '2025-06-02T20:05:00Z',
+    actualDeliveryTime: '2025-06-02T20:00:00Z',
     deliveryType: 'pickup',
     deliveryAddress: '789 User St, City',
     paymentMethod: 'debit_card',
     notes: '',
-    createdAt: '2025-05-25T19:30:00Z',
-    updatedAt: '2025-05-25T20:00:00Z'
+    createdAt: '2025-06-02T19:30:00Z',
+    updatedAt: '2025-06-02T20:00:00Z'
+  },
+  {
+    id: '5',
+    userId: '2',
+    restaurantId: '2',
+    restaurantName: 'Burger Barn',
+    items: [
+      {
+        id: '6',
+        menuItemId: '6',
+        menuItemName: 'Veggie Burger',
+        price: 13.99,
+        quantity: 1,
+        notes: 'No mayo'
+      }
+    ],
+    totalAmount: 13.99,
+    status: 'completed' as OrderStatus,
+    paymentStatus: 'paid',
+    orderDate: '2025-06-01T16:20:00Z',
+    estimatedDeliveryTime: '2025-06-01T16:50:00Z',
+    actualDeliveryTime: '2025-06-01T16:45:00Z',
+    deliveryType: 'pickup',
+    deliveryAddress: '456 Customer Ave, City',
+    paymentMethod: 'credit_card',
+    notes: 'Leave at door',
+    createdAt: '2025-06-01T16:20:00Z',
+    updatedAt: '2025-06-01T16:45:00Z'
+  },
+  {
+    id: '6',
+    userId: '3',
+    restaurantId: '3',
+    restaurantName: 'Sushi Zen',
+    items: [
+      {
+        id: '7',
+        menuItemId: '7',
+        menuItemName: 'California Roll',
+        price: 12.99,
+        quantity: 2,
+        notes: ''
+      }
+    ],
+    totalAmount: 25.98,
+    status: 'cancelled' as OrderStatus,
+    paymentStatus: 'failed',
+    orderDate: '2025-05-31T14:10:00Z',
+    estimatedDeliveryTime: '2025-05-31T14:40:00Z',
+    deliveryType: 'pickup',
+    deliveryAddress: '123 Main St, City',
+    paymentMethod: 'credit_card',
+    notes: 'Customer requested cancellation',
+    createdAt: '2025-05-31T14:10:00Z',
+    updatedAt: '2025-05-31T14:15:00Z'
   }
 ];
 

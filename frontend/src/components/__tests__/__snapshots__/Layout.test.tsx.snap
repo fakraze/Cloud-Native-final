@@ -1,0 +1,49 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Layout Component > should have proper CSS structure 1`] = `
+<div
+  class="flex h-screen bg-gray-50"
+>
+  <div
+    data-testid="sidebar"
+  >
+    Sidebar Component
+  </div>
+  <div
+    class="flex-1 flex flex-col overflow-hidden"
+  >
+    <div
+      data-testid="header"
+    >
+      Header Component
+    </div>
+    <main
+      class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4"
+    />
+  </div>
+</div>
+`;
+
+exports[`Layout Component > should render layout with header and sidebar 1`] = `
+<div
+  class="flex h-screen bg-gray-50"
+>
+  <div
+    data-testid="sidebar"
+  >
+    Sidebar Component
+  </div>
+  <div
+    class="flex-1 flex flex-col overflow-hidden"
+  >
+    <div
+      data-testid="header"
+    >
+      Header Component
+    </div>
+    <main
+      class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4"
+    />
+  </div>
+</div>
+`;
