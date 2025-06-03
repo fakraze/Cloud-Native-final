@@ -1,9 +1,11 @@
 # Cloud-Native-final
-Meal Provider
+
+##  Meal Provider
 
 
 # Website
-http://3.89.254.174/
+http://13.218.27.133/  
+http://13.218.27.133/dev/frontend/
 
 # End-to-End Testing with Cypress
 

@@ -2,8 +2,15 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
+import { useAuthStore } from '../store/authStore';
+import { useCart } from '../hooks/useOrder';
 
 const Layout: React.FC = () => {
+  const { user } = useAuthStore();
+  
+  // Initialize cart when layout loads
+  useCart(user?.id || '1');
+
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar />

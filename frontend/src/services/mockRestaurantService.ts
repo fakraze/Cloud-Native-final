@@ -51,8 +51,7 @@ const MOCK_RESTAURANTS: Restaurant[] = [
 ];
 
 // Mock menu items
-const MOCK_MENU_ITEMS: { [restaurantId: string]: MenuItem[] } = {
-  '1': [
+const MOCK_MENU_ITEMS: { [restaurantId: string]: MenuItem[] } = {  '1': [
     {
       id: '1',
       restaurantId: '1',
@@ -69,7 +68,37 @@ const MOCK_MENU_ITEMS: { [restaurantId: string]: MenuItem[] } = {
         protein: 12,
         carbs: 35,
         fat: 14
-      }
+      },
+      customizations: [
+        {
+          id: 'size',
+          name: 'Pizza Size',
+          type: 'radio',
+          required: true,
+          options: ['Small (10")', 'Medium (12")', 'Large (14")', 'Extra Large (16")']
+        },
+        {
+          id: 'crust',
+          name: 'Crust Type',
+          type: 'radio',
+          required: true,
+          options: ['Thin Crust', 'Regular Crust', 'Thick Crust', 'Stuffed Crust']
+        },
+        {
+          id: 'extra_toppings',
+          name: 'Extra Toppings',
+          type: 'checkbox',
+          required: false,
+          options: ['Extra Cheese', 'Fresh Basil', 'Garlic', 'Olives', 'Cherry Tomatoes', 'Arugula']
+        },
+        {
+          id: 'spice_level',
+          name: 'Spice Level',
+          type: 'radio',
+          required: false,
+          options: ['Mild', 'Medium', 'Spicy', 'Extra Spicy']
+        }
+      ]
     },
     {
       id: '2',
@@ -87,11 +116,47 @@ const MOCK_MENU_ITEMS: { [restaurantId: string]: MenuItem[] } = {
         protein: 16,
         carbs: 36,
         fat: 18
-      }
+      },
+      customizations: [
+        {
+          id: 'size',
+          name: 'Pizza Size',
+          type: 'radio',
+          required: true,
+          options: ['Small (10")', 'Medium (12")', 'Large (14")', 'Extra Large (16")']
+        },
+        {
+          id: 'crust',
+          name: 'Crust Type',
+          type: 'radio',
+          required: true,
+          options: ['Thin Crust', 'Regular Crust', 'Thick Crust', 'Stuffed Crust']
+        },
+        {
+          id: 'pepperoni_amount',
+          name: 'Pepperoni Amount',
+          type: 'radio',
+          required: false,
+          options: ['Regular', 'Extra Pepperoni', 'Light Pepperoni']
+        },
+        {
+          id: 'extra_toppings',
+          name: 'Additional Toppings',
+          type: 'checkbox',
+          required: false,
+          options: ['Extra Cheese', 'Mushrooms', 'Bell Peppers', 'Onions', 'Black Olives', 'Jalapeños']
+        },
+        {
+          id: 'cheese_type',
+          name: 'Cheese Preference',
+          type: 'radio',
+          required: false,
+          options: ['Regular Mozzarella', 'Extra Cheese', 'Mixed Cheese', 'Vegan Cheese']
+        }
+      ]
     }
   ],
-  '2': [
-    {
+  '2': [    {
       id: '3',
       restaurantId: '2',
       name: 'Classic Cheeseburger',
@@ -107,9 +172,45 @@ const MOCK_MENU_ITEMS: { [restaurantId: string]: MenuItem[] } = {
         protein: 28,
         carbs: 42,
         fat: 26
-      }
-    },
-    {
+      },
+      customizations: [
+        {
+          id: 'patty_doneness',
+          name: 'How would you like your patty cooked?',
+          type: 'radio',
+          required: true,
+          options: ['Rare', 'Medium Rare', 'Medium', 'Medium Well', 'Well Done']
+        },
+        {
+          id: 'cheese_type',
+          name: 'Cheese Selection',
+          type: 'radio',
+          required: false,
+          options: ['Cheddar', 'Swiss', 'American', 'Pepper Jack', 'Blue Cheese', 'No Cheese']
+        },
+        {
+          id: 'extra_toppings',
+          name: 'Additional Toppings',
+          type: 'checkbox',
+          required: false,
+          options: ['Bacon', 'Avocado', 'Fried Onions', 'Pickles', 'Mushrooms', 'Extra Lettuce', 'Tomato']
+        },
+        {
+          id: 'sauce',
+          name: 'Sauce Options',
+          type: 'checkbox',
+          required: false,
+          options: ['Special Sauce', 'Ketchup', 'Mustard', 'Mayo', 'BBQ Sauce', 'Hot Sauce']
+        },
+        {
+          id: 'bun_type',
+          name: 'Bun Choice',
+          type: 'radio',
+          required: false,
+          options: ['Regular Sesame', 'Brioche', 'Whole Wheat', 'Gluten-Free', 'Lettuce Wrap']
+        }
+      ]
+    },    {
       id: '4',
       restaurantId: '2',
       name: 'Crispy Fries',
@@ -125,11 +226,40 @@ const MOCK_MENU_ITEMS: { [restaurantId: string]: MenuItem[] } = {
         protein: 4,
         carbs: 36,
         fat: 14
-      }
+      },
+      customizations: [
+        {
+          id: 'size',
+          name: 'Fries Size',
+          type: 'radio',
+          required: true,
+          options: ['Small', 'Medium', 'Large', 'Extra Large']
+        },
+        {
+          id: 'seasoning',
+          name: 'Seasoning Options',
+          type: 'checkbox',
+          required: false,
+          options: ['Sea Salt', 'Garlic Powder', 'Parmesan Cheese', 'Cajun Spice', 'Truffle Oil', 'Herbs']
+        },
+        {
+          id: 'cooking_style',
+          name: 'Cooking Preference',
+          type: 'radio',
+          required: false,
+          options: ['Regular Crispy', 'Extra Crispy', 'Light Golden', 'Well Done']
+        },
+        {
+          id: 'dipping_sauce',
+          name: 'Dipping Sauces',
+          type: 'checkbox',
+          required: false,
+          options: ['Ketchup', 'Mayo', 'BBQ Sauce', 'Ranch', 'Honey Mustard', 'Aioli']
+        }
+      ]
     }
   ],
-  '3': [
-    {
+  '3': [    {
       id: '5',
       restaurantId: '3',
       name: 'Salmon Sashimi',
@@ -145,7 +275,44 @@ const MOCK_MENU_ITEMS: { [restaurantId: string]: MenuItem[] } = {
         protein: 25,
         carbs: 0,
         fat: 8
-      }
+      },
+      customizations: [
+        {
+          id: 'portion_size',
+          name: 'Portion Size',
+          type: 'radio',
+          required: true,
+          options: ['Small (6 pieces)', 'Regular (8 pieces)', 'Large (12 pieces)', 'Deluxe (16 pieces)']
+        },
+        {
+          id: 'cut_style',
+          name: 'Cut Style',
+          type: 'radio',
+          required: false,
+          options: ['Traditional Thick', 'Thin Sliced', 'Cubed (Poke Style)', 'Butterfly Cut']
+        },
+        {
+          id: 'accompaniments',
+          name: 'Accompaniments',
+          type: 'checkbox',
+          required: false,
+          options: ['Wasabi', 'Pickled Ginger', 'Soy Sauce', 'Ponzu', 'Spicy Mayo', 'Sesame Seeds']
+        },
+        {
+          id: 'presentation',
+          name: 'Presentation Style',
+          type: 'radio',
+          required: false,
+          options: ['Traditional Plate', 'Wooden Board', 'Sushi Boat', 'Ice Bed']
+        },
+        {
+          id: 'freshness_preference',
+          name: 'Freshness Preference',
+          type: 'radio',
+          required: false,
+          options: ['Ultra Fresh (Today)', 'Standard Fresh', 'Slightly Aged (More Flavor)']
+        }
+      ]
     }
   ]
 };

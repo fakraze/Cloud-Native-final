@@ -7,8 +7,9 @@ on:
 
 jobs:
   build-and-push:
-    name: CI - Build & Push Images
+    name: CD - Build & Push Images
     runs-on: ubuntu-latest
+    if: ${{ (github.ref_name == 'main' || github.ref_name == 'develop' || github.ref_name == 'ci-cd') }}
 
     steps:
       - name: Checkout
@@ -24,7 +25,7 @@ jobs:
         run: |
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             echo "IMAGE_TAG=latest" >> $GITHUB_ENV
-          elif [[ "${GITHUB_REF_NAME}" == "develop" ]]; then
+          elif [[ "${GITHUB_REF_NAME}" == "develop" || "${GITHUB_REF_NAME}" == 'ci-cd' ]]; then
             echo "IMAGE_TAG=dev" >> $GITHUB_ENV
           else
             SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
@@ -33,7 +34,26 @@ jobs:
 
       - name: Build & Push Frontend
         run: |
-          docker build -t ghcr.io/fakraze/cloud-meal-frontend:${{ env.IMAGE_TAG }} ./frontend
+          # 根據分支設定 VITE_BASE_PATH
+          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+            BASE_PATH="/"
+            BUILD_MODE="production"
+          else
+            BASE_PATH="/dev/frontend/"
+            BUILD_MODE="development"
+          fi
+
+          echo "📦 Building with:"
+          echo "    VITE_BASE_PATH=$BASE_PATH"
+          echo "    BUILD_MODE=$BUILD_MODE"
+          echo "    IMAGE_TAG=${{ env.IMAGE_TAG }}"
+
+          docker build \
+            --build-arg VITE_BASE_PATH=$BASE_PATH \
+            --build-arg BUILD_MODE=$BUILD_MODE \
+            -t ghcr.io/fakraze/cloud-meal-frontend:${{ env.IMAGE_TAG }} \
+            ./frontend
+
           docker push ghcr.io/fakraze/cloud-meal-frontend:${{ env.IMAGE_TAG }}
 
       - name: Build & Push Backend
@@ -45,7 +65,7 @@ jobs:
     name: CD - Deploy to K3s
     runs-on: ubuntu-latest
     needs: build-and-push
-    if: ${{ success() && (github.ref_name == 'main' || github.ref_name == 'develop') }}
+    if: ${{ success() && (github.ref_name == 'main' || github.ref_name == 'develop' || github.ref_name == 'ci-cd') }}
 
     steps:
       - name: Set up SSH
@@ -53,11 +73,11 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ec2-3-89-254-174.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+          ssh-keyscan -H ec2-13-218-27-133.compute-1.amazonaws.com >> ~/.ssh/known_hosts
 
       - name: SSH and deploy to K3s
         run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@ec2-3-89-254-174.compute-1.amazonaws.com << 'EOF'
+          ssh -i ~/.ssh/id_rsa ubuntu@ec2-13-218-27-133.compute-1.amazonaws.com << 'EOF'
             set -e
 
             BRANCH_NAME="${{ github.ref_name }}"
@@ -80,20 +100,109 @@ jobs:
 
             cd ~/Cloud-Native-final
             git fetch origin
+            
+            # 🔥 強制覆蓋本地所有變更
+            git reset --hard
+            git clean -fd
+
             git checkout $BRANCH_NAME
             git reset --hard origin/$BRANCH_NAME
 
             echo "📦 注入正確 GHCR image tag ($IMAGE_TAG)"
-            sed -i "s|ghcr.io/fakraze/cloud-meal-frontend:.*|ghcr.io/fakraze/cloud-meal-frontend:$IMAGE_TAG|" k8s/frontend-deployment.yaml
-            sed -i "s|ghcr.io/fakraze/cloud-meal-backend:.*|ghcr.io/fakraze/cloud-meal-backend:$IMAGE_TAG|" k8s/backend-deployment.yaml
+            sed -i "s|image: cloud-meal-frontend:local|image: ghcr.io/fakraze/cloud-meal-frontend:$IMAGE_TAG|" k8s/frontend-deployment.yaml
+            sed -i "s|image: cloud-meal-backend:local|image: ghcr.io/fakraze/cloud-meal-backend:$IMAGE_TAG|" k8s/backend-deployment.yaml
+            sed -i "s|image: cloud-meal-frontend:local|image: ghcr.io/fakraze/cloud-meal-frontend:$IMAGE_TAG|" k8s/frontend-deployment.yaml
+            sed -i "s|image: cloud-meal-backend:local|image: ghcr.io/fakraze/cloud-meal-backend:$IMAGE_TAG|" k8s/backend-deployment.yaml
 
             echo "🚀 Deploying to $NAMESPACE"
+            
+            # ⬇️ 新增 middleware 套用（放 ingress 前）
+            if [ "$NAMESPACE" = "cloudnative-dev" ]; then
+                sudo k3s kubectl apply -f k8s/frontend-stripprefix.yaml
+            fi
+            
             sudo k3s kubectl apply -f $NAMESPACE_FILE
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-deployment.yaml
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-service.yaml
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-deployment.yaml
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-service.yaml
             sudo k3s kubectl apply -f $INGRESS_FILE
+            
+            # ✨ 強制 frontend 拉最新 image
+            sudo k3s kubectl rollout restart deployment frontend -n $NAMESPACE
+            sudo k3s kubectl rollout restart deployment backend -n $NAMESPACE
+            
+            echo "🔍 Frontend 正在使用的 image："
+            sudo k3s kubectl get deployment frontend -n $NAMESPACE -o=jsonpath='{.spec.template.spec.containers[0].image}'
+            echo
+
+            echo "🔍 Backend 正在使用的 image："
+            sudo k3s kubectl get deployment backend -n $NAMESPACE -o=jsonpath='{.spec.template.spec.containers[0].image}'
+            echo
+
+
+            echo "🕐 等待 Pod 啟動中..."
+            ATTEMPTS=0
+            MAX_ATTEMPTS=20
+
+            while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
+              NOT_READY=$(sudo k3s kubectl get pods -n $NAMESPACE --no-headers | grep -v "Running" | wc -l)
+              if [ "$NOT_READY" -eq 0 ]; then
+                echo "✅ 所有 Pod 都已成功啟動！"
+                break
+              fi
+              echo "⌛ 尚有 $NOT_READY 個 Pod 未就緒，等待中..."
+              ATTEMPTS=$((ATTEMPTS+1))
+              sleep 5
+            done
+
+            if [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; then
+              echo "❌ 部署失敗：Pod 超時未啟動成功"              
+              echo "📦 當前 Pod 狀態："
+              sudo k3s kubectl get pods -n $NAMESPACE
+
+              echo "🩺 印出非 Running 的 Pod 詳細訊息："
+              for pod in $(sudo k3s kubectl get pods -n $NAMESPACE --no-headers | grep -v "Running" | awk '{print $1}'); do
+                echo "🔍 Logs for $pod:"
+                sudo k3s kubectl logs $pod -n $NAMESPACE || true
+
+                echo "🔎 Describe for $pod:"
+                sudo k3s kubectl describe pod $pod -n $NAMESPACE || true
+              done
+
+              exit 1
+            fi
 
             echo "✅ Done."
           EOF
+
+  e2e-tests:
+    name: CD - E2E Cypress Tests
+    runs-on: ubuntu-latest
+    needs: deploy
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        working-directory: test
+        run: npm install
+
+      - name: Run Cypress tests
+        working-directory: test
+        run: npm run test
+
+      - name: Upload Cypress Artifacts
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-artifacts
+          path: |
+            test/cypress/videos
+            test/cypress/screenshots

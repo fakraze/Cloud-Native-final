@@ -16,11 +16,11 @@ const Sidebar: React.FC = () => {
   const location = useLocation();
 
   const isAdmin = user?.role === 'admin';
-
   const employeeNavItems = [
     { name: 'Restaurants', path: '/restaurant', icon: Store },
     { name: 'Ongoing Orders', path: '/order', icon: ShoppingBag },
     { name: 'Order History', path: '/order-history', icon: History },
+    { name: 'Payment', path: '/payment', icon: CreditCard },
     { name: 'Personal', path: '/personal', icon: User },
   ];
 

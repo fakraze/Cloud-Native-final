@@ -1,4 +1,3 @@
-# for develop
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -6,18 +5,19 @@ metadata:
   namespace: cloudnative-dev
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: cloudnative-dev-frontend-stripprefix@kubernetescrd
 spec:
   rules:
     - http:
         paths:
-          - path: /dev/frontend
+          - path: /dev/frontend/
             pathType: Prefix
             backend:
               service:
                 name: frontend
                 port:
                   number: 80
-          - path: /dev/backend
+          - path: /dev/backend/
             pathType: Prefix
             backend:
               service:
