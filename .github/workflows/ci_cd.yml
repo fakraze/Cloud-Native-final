@@ -219,11 +219,20 @@ jobs:
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-service.yaml
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-deployment.yaml
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-service.yaml
-            
-            # Apply stripprefix middlewares for dev environment
+              # Apply stripprefix middlewares for dev environment
             if [ "\$BRANCH_NAME" != "main" ]; then
-              sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-stripprefix.yaml
-              sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-stripprefix.yaml
+              echo "🔧 Applying stripprefix middlewares..."
+              if [ -f "k8s/frontend-stripprefix.yaml" ]; then
+                sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-stripprefix.yaml
+              else
+                echo "⚠️  frontend-stripprefix.yaml not found"
+              fi
+              
+              if [ -f "k8s/backend-stripprefix.yaml" ]; then
+                sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-stripprefix.yaml
+              else
+                echo "⚠️  backend-stripprefix.yaml not found"
+              fi
             fi
             
             sudo k3s kubectl apply -n $NAMESPACE -f $INGRESS_FILE

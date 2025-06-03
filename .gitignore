@@ -22,3 +22,5 @@ frontend/dist/
 
 .vscode/
 dist/
+
+*.pem
