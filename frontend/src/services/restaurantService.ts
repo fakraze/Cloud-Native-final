@@ -110,65 +110,42 @@ export const restaurantService = {
       return mockRestaurantService.deleteRestaurant(id);
     }
   },
-
   createMenuItem: async (restaurantId: string, menuItem: Omit<MenuItem, 'id' | 'restaurantId'>): Promise<MenuItem> => {
-    // Mock implementation for menu item creation
     if (shouldUseMock()) {
-      await new Promise(resolve => setTimeout(resolve, 800));
-      const newItem: MenuItem = {
-        ...menuItem,
-        id: Date.now().toString(),
-        restaurantId
-      };
-      return newItem;
+      return mockRestaurantService.createMenuItem(restaurantId, menuItem);
     }
     
     try {
       const response = await api.post<ApiResponse<MenuItem>>(`/restaurant/${restaurantId}/menu`, menuItem);
       return response.data.data;
     } catch (error) {
-      console.warn('API call failed, using mock implementation');
-      await new Promise(resolve => setTimeout(resolve, 800));
-      const newItem: MenuItem = {
-        ...menuItem,
-        id: Date.now().toString(),
-        restaurantId
-      };
-      return newItem;
+      console.warn('API call failed, falling back to mock implementation');
+      return mockRestaurantService.createMenuItem(restaurantId, menuItem);
     }
   },
-
   updateMenuItem: async (restaurantId: string, menuItemId: string, menuItem: Partial<MenuItem>): Promise<MenuItem> => {
-    // Mock implementation for menu item update
     if (shouldUseMock()) {
-      await new Promise(resolve => setTimeout(resolve, 600));
-      const existingItem = await mockRestaurantService.getMenuItem(restaurantId, menuItemId);
-      return { ...existingItem, ...menuItem };
+      return mockRestaurantService.updateMenuItem(restaurantId, menuItemId, menuItem);
     }
     
     try {
       const response = await api.put<ApiResponse<MenuItem>>(`/restaurant/${restaurantId}/menu/${menuItemId}`, menuItem);
       return response.data.data;
     } catch (error) {
-      console.warn('API call failed, using mock implementation');
-      await new Promise(resolve => setTimeout(resolve, 600));
-      const existingItem = await mockRestaurantService.getMenuItem(restaurantId, menuItemId);
-      return { ...existingItem, ...menuItem };
+      console.warn('API call failed, falling back to mock implementation');
+      return mockRestaurantService.updateMenuItem(restaurantId, menuItemId, menuItem);
     }
   },
-
   deleteMenuItem: async (restaurantId: string, menuItemId: string): Promise<void> => {
-    // Mock implementation for menu item deletion
     if (shouldUseMock()) {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      return;
+      return mockRestaurantService.deleteMenuItem(restaurantId, menuItemId);
     }
     
     try {
       await api.delete(`/restaurant/${restaurantId}/menu/${menuItemId}`);
     } catch (error) {
-      console.warn('API call failed, using mock implementation');
-      await new Promise(resolve => setTimeout(resolve, 500));
+      console.warn('API call failed, falling back to mock implementation');
+      return mockRestaurantService.deleteMenuItem(restaurantId, menuItemId);
     }
   },
 };

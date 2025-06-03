@@ -52,13 +52,12 @@ const PersonalPage: React.FC = () => {
         <div className="absolute -bottom-8 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
       </div>
 
-      <div className="relative max-w-6xl mx-auto p-6 space-y-8">
-        {/* Page Header */}
+      <div className="relative max-w-6xl mx-auto p-6 space-y-8">        {/* Page Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
             Personal Profile
           </h1>
-          <p className="text-gray-600">Manage your account and view your dining statistics</p>
+          <p className="text-gray-600">View your profile, dining statistics, and messages</p>
         </div>
 
         {/* Profile Header */}
@@ -243,74 +242,35 @@ const PersonalPage: React.FC = () => {
               </div>
             </div>
           </div>
-        )}
-
-        {/* Account Settings */}
+        )}        {/* Inbox */}
         <div className="glass-card card-hover">
-          <h3 className="section-title mb-6">⚙️ Account Settings</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button className="group p-6 border-2 border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition-all duration-300 text-left">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-blue-100 group-hover:bg-blue-200 rounded-lg flex items-center justify-center transition-colors duration-300">
-                  <Shield className="h-6 w-6 text-blue-600" />
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-900 group-hover:text-blue-900">Change Password</div>
-                  <div className="text-sm text-gray-600">Update your account security</div>
-                </div>
+          <h3 className="section-title mb-6">📧 Messages</h3>
+          <button 
+            onClick={() => navigate('/inbox')}
+            className="w-full group p-6 border-2 border-gray-200 rounded-xl hover:border-purple-300 hover:bg-purple-50 transition-all duration-300 text-left relative"
+          >
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-purple-100 group-hover:bg-purple-200 rounded-lg flex items-center justify-center transition-colors duration-300 relative">
+                <Bell className="h-6 w-6 text-purple-600" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
               </div>
-            </button>
-              <button 
-              onClick={() => navigate('/inbox')}
-              className="group p-6 border-2 border-gray-200 rounded-xl hover:border-purple-300 hover:bg-purple-50 transition-all duration-300 text-left relative"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-purple-100 group-hover:bg-purple-200 rounded-lg flex items-center justify-center transition-colors duration-300 relative">
-                  <Bell className="h-6 w-6 text-purple-600" />
+              <div>
+                <div className="font-semibold text-gray-900 group-hover:text-purple-900">
+                  Inbox
                   {unreadCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                      {unreadCount > 99 ? '99+' : unreadCount}
+                    <span className="ml-2 text-sm text-purple-600 font-normal">
+                      ({unreadCount} unread)
                     </span>
                   )}
                 </div>
-                <div>
-                  <div className="font-semibold text-gray-900 group-hover:text-purple-900">
-                    Inbox
-                    {unreadCount > 0 && (
-                      <span className="ml-2 text-sm text-purple-600 font-normal">
-                        ({unreadCount} unread)
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-sm text-gray-600">View your messages and notifications</div>
-                </div>
+                <div className="text-sm text-gray-600">View your messages and notifications</div>
               </div>
-            </button>
-            
-            <button className="group p-6 border-2 border-gray-200 rounded-xl hover:border-green-300 hover:bg-green-50 transition-all duration-300 text-left">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-green-100 group-hover:bg-green-200 rounded-lg flex items-center justify-center transition-colors duration-300">
-                  <User className="h-6 w-6 text-green-600" />
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-900 group-hover:text-green-900">Privacy Settings</div>
-                  <div className="text-sm text-gray-600">Control your data and privacy</div>
-                </div>
-              </div>
-            </button>
-            
-            <button className="group p-6 border-2 border-gray-200 rounded-xl hover:border-orange-300 hover:bg-orange-50 transition-all duration-300 text-left">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-orange-100 group-hover:bg-orange-200 rounded-lg flex items-center justify-center transition-colors duration-300">
-                  <Award className="h-6 w-6 text-orange-600" />
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-900 group-hover:text-orange-900">Loyalty Program</div>
-                  <div className="text-sm text-gray-600">View rewards and benefits</div>
-                </div>
-              </div>
-            </button>
-          </div>
+            </div>
+          </button>
         </div>
       </div>
     </div>

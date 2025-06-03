@@ -54,21 +54,43 @@ export const useCancelOrder = () => {
   });
 };
 
+export const useUpdateOrderStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ orderId, status }: { orderId: string; status: string }) => 
+      orderService.updateOrderStatus(orderId, status as any),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
+    },
+  });
+};
+
 // Cart hooks
 export const useCart = (userId: string) => {
+  const { setCart } = useCartStore();
+
   return useQuery({
     queryKey: ['cart', userId],
-    queryFn: () => cartService.getCart(userId),
+    queryFn: async () => {
+      const cart = await cartService.getCart(userId);
+      if (cart) {
+        setCart(cart);
+      }
+      return cart;
+    },
     enabled: !!userId,
   });
 };
 
 export const useAddToCart = () => {
   const queryClient = useQueryClient();
+  const { setCart } = useCartStore();
 
   return useMutation({
     mutationFn: (cartItem: Omit<CartItem, 'id'>) => cartService.addToCart(cartItem),
-    onSuccess: () => {
+    onSuccess: (updatedCart) => {
+      setCart(updatedCart);
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
   });
@@ -76,11 +98,13 @@ export const useAddToCart = () => {
 
 export const useUpdateCartItem = () => {
   const queryClient = useQueryClient();
+  const { setCart } = useCartStore();
 
   return useMutation({
     mutationFn: ({ cartItemId, updates }: { cartItemId: string; updates: Partial<CartItem> }) =>
       cartService.updateCartItem(cartItemId, updates),
-    onSuccess: () => {
+    onSuccess: (updatedCart) => {
+      setCart(updatedCart);
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
   });
@@ -88,10 +112,12 @@ export const useUpdateCartItem = () => {
 
 export const useRemoveFromCart = () => {
   const queryClient = useQueryClient();
+  const { setCart } = useCartStore();
 
   return useMutation({
     mutationFn: (cartItemId: string) => cartService.removeFromCart(cartItemId),
-    onSuccess: () => {
+    onSuccess: (updatedCart) => {
+      setCart(updatedCart);
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
   });

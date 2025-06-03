@@ -12,14 +12,25 @@ import {
   Download,
   RefreshCw
 } from 'lucide-react';
-import { useOrderHistory } from '../../hooks/useOrder';
+import { useOrderHistory, useUpdateOrderStatus } from '../../hooks/useOrder';
 import { Order } from '../../types/order';
 
 const OrderManagement: React.FC = () => {
   const { data: orders, isLoading, refetch } = useOrderHistory();
+  const updateOrderStatus = useUpdateOrderStatus();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | Order['status']>('all');
   const [dateFilter, setDateFilter] = useState<'today' | 'week' | 'month' | 'all'>('all');
+  const [notification, setNotification] = useState<{
+    type: 'success' | 'error';
+    message: string;
+  } | null>(null);
+
+  // Show notification
+  const showNotification = (type: 'success' | 'error', message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 5000);
+  };
 
   const filteredOrders = orders?.filter(order => {
     const matchesSearch = order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -80,15 +91,47 @@ const OrderManagement: React.FC = () => {
         return 'bg-gray-100 text-gray-800';
     }
   };
-
-  const handleUpdateOrderStatus = (orderId: string, newStatus: Order['status']) => {
-    // In a real app, this would call an API to update the order status
-    console.log(`Updating order ${orderId} to ${newStatus}`);
+  const handleUpdateOrderStatus = async (orderId: string, newStatus: Order['status']) => {
+    try {
+      await updateOrderStatus.mutateAsync({ orderId, status: newStatus });
+      showNotification('success', `Order status updated to ${newStatus}`);
+    } catch (error) {
+      showNotification('error', 'Failed to update order status');
+    }
   };
-
   const handleExportOrders = () => {
-    // In a real app, this would export the filtered orders to CSV/Excel
-    console.log('Exporting orders:', filteredOrders);
+    if (filteredOrders.length === 0) {
+      showNotification('error', 'No orders to export');
+      return;
+    }
+
+    // Create CSV content
+    const headers = ['Order ID', 'Restaurant', 'Customer', 'Date', 'Total', 'Status', 'Payment Status'];
+    const csvContent = [
+      headers.join(','),
+      ...filteredOrders.map(order => [
+        `"#${order.id.slice(-8)}"`,
+        `"${order.restaurantName}"`,
+        `"${order.userId || 'Guest'}"`,
+        `"${new Date(order.orderDate).toLocaleDateString()}"`,
+        `"$${order.totalAmount.toFixed(2)}"`,
+        `"${order.status}"`,
+        `"${order.paymentStatus || 'N/A'}"`
+      ].join(','))
+    ].join('\n');
+
+    // Create and download file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `orders_export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showNotification('success', `Exported ${filteredOrders.length} orders to CSV`);
   };
 
   if (isLoading) {
@@ -108,9 +151,24 @@ const OrderManagement: React.FC = () => {
     { value: 'completed', label: 'Completed' },
     { value: 'cancelled', label: 'Cancelled' },
   ];
-
   return (
     <div className="space-y-6">
+      {/* Notification */}
+      {notification && (
+        <div className={`p-4 rounded-md flex items-center space-x-2 ${
+          notification.type === 'success' 
+            ? 'bg-green-50 text-green-800 border border-green-200' 
+            : 'bg-red-50 text-red-800 border border-red-200'
+        }`}>
+          {notification.type === 'success' ? (
+            <CheckCircle className="h-5 w-5" />
+          ) : (
+            <AlertCircle className="h-5 w-5" />
+          )}
+          <span>{notification.message}</span>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
         <div>

@@ -1,4 +1,5 @@
 import { InboxMessage } from '../types/common';
+import { getAllEmployees } from './mockAuthService';
 
 // Mock inbox message data
 const mockInboxMessages: Record<string, InboxMessage[]> = {
@@ -175,5 +176,58 @@ export const mockInboxService = {
     
     const messages = getMessagesForUser(userId);
     return messages.filter(message => !message.isRead).length;
+  },
+
+  // Admin function to send notifications to all employees
+  sendNotificationToAllEmployees: async (title: string, message: string, type: InboxMessage['type'] = 'info'): Promise<void> => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    const employees = getAllEmployees();
+    const timestamp = new Date().toISOString();
+    
+    employees.forEach(employee => {
+      const newMessage: InboxMessage = {
+        id: `msg-${Date.now()}-${employee.id}`,
+        userId: employee.id,
+        title,
+        message,
+        type,
+        isRead: false,
+        createdAt: timestamp,
+      };
+      
+      // Initialize employee messages array if it doesn't exist
+      if (!mockInboxMessages[employee.id]) {
+        mockInboxMessages[employee.id] = [];
+      }
+      
+      // Add the new message
+      mockInboxMessages[employee.id].unshift(newMessage);
+    });
+  },
+
+  // Admin function to send notification to specific employee
+  sendNotificationToEmployee: async (employeeId: string, title: string, message: string, type: InboxMessage['type'] = 'info'): Promise<void> => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    const newMessage: InboxMessage = {
+      id: `msg-${Date.now()}-${employeeId}`,
+      userId: employeeId,
+      title,
+      message,
+      type,
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    };
+    
+    // Initialize employee messages array if it doesn't exist
+    if (!mockInboxMessages[employeeId]) {
+      mockInboxMessages[employeeId] = [];
+    }
+    
+    // Add the new message
+    mockInboxMessages[employeeId].unshift(newMessage);
   },
 };

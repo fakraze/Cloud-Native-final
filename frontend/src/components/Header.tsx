@@ -40,12 +40,19 @@ const Header: React.FC = () => {
 
   const handleNotificationClick = () => {
     setShowNotifications(!showNotifications);
-  };
-
-  const handleMessageClick = async (messageId: string) => {
+  };  const handleMessageClick = async (messageId: string) => {
     try {
       await markAsRead(messageId);
-      navigate('/inbox');
+      let inboxPath;
+      if (user?.role === 'admin') {
+        inboxPath = '/admin/inbox';
+      } else if (user?.role === 'staff') {
+        // Staff don't have inbox, redirect to dashboard
+        inboxPath = '/staff';
+      } else {
+        inboxPath = '/inbox';
+      }
+      navigate(inboxPath);
       setShowNotifications(false);
     } catch (error) {
       console.error('Failed to mark message as read:', error);
@@ -77,9 +84,8 @@ const Header: React.FC = () => {
           </h1>
         </div>
 
-        <div className="flex items-center space-x-4">
-          {/* Cart Icon */}
-          {!location.pathname.startsWith('/admin') && (
+        <div className="flex items-center space-x-4">          {/* Cart Icon */}
+          {!location.pathname.startsWith('/admin') && !location.pathname.startsWith('/staff') && (
             <Link
               to="/cart"
               className="relative p-2 text-gray-500 hover:text-gray-700 transition-colors"
@@ -91,7 +97,7 @@ const Header: React.FC = () => {
                 </span>
               )}
             </Link>
-          )}          {/* Notifications */}
+          )}{/* Notifications */}
           <div className="relative" ref={notificationRef}>
             <button 
               onClick={handleNotificationClick}
@@ -156,26 +162,36 @@ const Header: React.FC = () => {
                     ))
                   )}
                 </div>
-                
-                <div className="p-3 border-t border-gray-200">
-                  <button
+                  <div className="p-3 border-t border-gray-200">                  <button
                     onClick={() => {
-                      navigate('/inbox');
+                      let inboxPath;
+                      if (user?.role === 'admin') {
+                        inboxPath = '/admin/inbox';
+                      } else if (user?.role === 'staff') {
+                        // Staff don't have inbox, redirect to dashboard
+                        inboxPath = '/staff';
+                      } else {
+                        inboxPath = '/inbox';
+                      }
+                      navigate(inboxPath);
                       setShowNotifications(false);
                     }}
                     className="w-full text-sm text-blue-600 hover:text-blue-700 font-medium"
                   >
-                    View All Messages
+                    {user?.role === 'staff' ? 'Go to Dashboard' : 'View All Messages'}
                   </button>
                 </div>
               </div>
             )}
-          </div>
-
-          {/* User Menu */}
-          <div className="flex items-center space-x-3">
-            <Link
-              to="/personal"
+          </div>          {/* User Menu */}
+          <div className="flex items-center space-x-3">            <Link
+              to={
+                user?.role === 'admin' 
+                  ? '/admin/personal' 
+                  : user?.role === 'staff' 
+                    ? '/staff/personal' 
+                    : '/personal'
+              }
               className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 transition-colors"
             >
               <User className="h-6 w-6" />
