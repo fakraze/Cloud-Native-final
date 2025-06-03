@@ -33,16 +33,15 @@ jobs:
           fi
 
       - name: Build & Push Frontend
-        run: |
-          # 根據分支設定 VITE_BASE_PATH 和 API_BASE_URL
+        run: | # 根據分支設定 VITE_BASE_PATH 和 API_BASE_URL
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             BASE_PATH="/"
             BUILD_MODE="production"
-            API_BASE_URL="http://backend-service:3000/api"
+            API_BASE_URL="http://backend/api"
           else
             BASE_PATH="/dev/frontend/"
             BUILD_MODE="development"
-            API_BASE_URL="http://backend-service:3000/api"
+            API_BASE_URL="http://backend/api"
           fi
 
           echo "📦 Building with:"
