@@ -20,6 +20,9 @@ export class Cart {
     @JoinColumn({ name: 'userId' })
     user: User;
 
+    @Column()
+    userId: number;
+
     @OneToMany(() => CartItem, (item) => item.cart, { eager: true })
     items: CartItem[];
 
