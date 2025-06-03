@@ -107,15 +107,26 @@ jobs:
 
             git checkout $BRANCH_NAME
             git reset --hard origin/$BRANCH_NAME
+            
+            # 🐳 取得 GHCR digest（需要 skopeo + jq）
+            FRONTEND_IMAGE="ghcr.io/fakraze/cloud-meal-frontend"
+            BACKEND_IMAGE="ghcr.io/fakraze/cloud-meal-backend"
 
-            echo "📦 注入正確 GHCR image tag ($IMAGE_TAG)"
-            sed -i "s|image: cloud-meal-frontend:local|image: ghcr.io/fakraze/cloud-meal-frontend:$IMAGE_TAG|" k8s/frontend-deployment.yaml
-            sed -i "s|image: cloud-meal-backend:local|image: ghcr.io/fakraze/cloud-meal-backend:$IMAGE_TAG|" k8s/backend-deployment.yaml
-            sed -i "s|image: cloud-meal-frontend:local|image: ghcr.io/fakraze/cloud-meal-frontend:$IMAGE_TAG|" k8s/frontend-deployment.yaml
-            sed -i "s|image: cloud-meal-backend:local|image: ghcr.io/fakraze/cloud-meal-backend:$IMAGE_TAG|" k8s/backend-deployment.yaml
+            echo "🔍 抓取 digest..."
+            FRONTEND_DIGEST=$(skopeo inspect docker://$FRONTEND_IMAGE:$IMAGE_TAG | jq -r '.Digest')
+            BACKEND_DIGEST=$(skopeo inspect docker://$BACKEND_IMAGE:$IMAGE_TAG | jq -r '.Digest')
+            
+            echo "✅ Frontend Digest: $FRONTEND_DIGEST"
+            echo "✅ Backend Digest:  $BACKEND_DIGEST"
+
+            echo "📦 注入正確 GHCR image digest"
+
+            # ⬇️ 使用 digest 取代原本的 image（更安全）
+            sed -i "s|image: .*cloud-meal-frontend.*|image: $FRONTEND_IMAGE@$FRONTEND_DIGEST|" k8s/frontend-deployment.yaml
+            sed -i "s|image: .*cloud-meal-backend.*|image: $BACKEND_IMAGE@$BACKEND_DIGEST|" k8s/backend-deployment.yaml
 
             echo "🚀 Deploying to $NAMESPACE"
-            
+
             # ⬇️ 新增 middleware 套用（放 ingress 前）
             if [ "$NAMESPACE" = "cloudnative-dev" ]; then
                 sudo k3s kubectl apply -f k8s/frontend-stripprefix.yaml
@@ -127,10 +138,6 @@ jobs:
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-deployment.yaml
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-service.yaml
             sudo k3s kubectl apply -f $INGRESS_FILE
-            
-            # ✨ 強制 frontend 拉最新 image
-            sudo k3s kubectl rollout restart deployment frontend -n $NAMESPACE
-            sudo k3s kubectl rollout restart deployment backend -n $NAMESPACE
             
             echo "🔍 Frontend 正在使用的 image："
             sudo k3s kubectl get deployment frontend -n $NAMESPACE -o=jsonpath='{.spec.template.spec.containers[0].image}'
