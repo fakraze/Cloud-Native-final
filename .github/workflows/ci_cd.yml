@@ -285,7 +285,9 @@ jobs:
 
                 echo "🔎 Describe for $pod:"
                 sudo k3s kubectl describe pod $pod -n $NAMESPACE || true
-              done              exit 1
+              done              
+              
+              exit 1
             fi
             
             echo "✅ All pods started successfully!"
