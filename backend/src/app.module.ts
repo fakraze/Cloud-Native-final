@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RestaurantModule } from './restaurant/restaurant.module';
-import { Restaurant } from './restaurant/entities/restaurant.entity';
+import { MenuItemModule } from './menu-item/menu-item.module';
 
 require('dotenv').config();
 @Module({
@@ -20,6 +20,7 @@ require('dotenv').config();
       synchronize: true, //Change to false in production
     }),
     RestaurantModule,
+    MenuItemModule,
   ],
   controllers: [AppController],
   providers: [AppService],

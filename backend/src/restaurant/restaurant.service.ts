@@ -4,6 +4,7 @@ import { Repository, UpdateResult } from 'typeorm';
 import { Restaurant } from './entities/restaurant.entity';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
+import { QueryExpressionMap } from 'typeorm/query-builder/QueryExpressionMap';
 
 @Injectable()
 export class RestaurantService {
@@ -17,8 +18,8 @@ export class RestaurantService {
   }
 
   findAll(query?: any): Promise<Restaurant[]> {
-    const where: any = {};
-
+    const where: any = query ?? {};
+    // TODO: Add any additional filtering logic based on query parameters
     return this.restaurantRepository.find({ where });
   }
 
