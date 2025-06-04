@@ -1,19 +1,16 @@
+import { MenuItem, Restaurant } from "./restaurant";
+
 export interface Order {
   id: string;
   userId: string;
   restaurantId: string;
-  restaurantName: string;
+  restaurant?: Restaurant;
   items: OrderItem[];
   totalAmount: number;
   status: 'pending' | 'confirmed' | 'preparing' | 'ready' | 'completed' | 'cancelled' | 'delivered';
-  paymentStatus?: 'pending' | 'paid' | 'failed';
-  orderDate: string;
-  estimatedDeliveryTime?: string;
-  actualDeliveryTime?: string;
+  paymentStatus?: 'pending' | 'paid' | 'unpaid';
   notes?: string;
-  deliveryType?: 'pickup' | 'dine-in';
-  deliveryAddress?: string;
-  paymentMethod?: string;
+  deliveryType: 'pickup' | 'dine-in';
   updatedAt?: string;
   createdAt?: string;
 }
@@ -23,23 +20,18 @@ export type OrderStatus = 'pending' | 'confirmed' | 'preparing' | 'ready' | 'com
 export interface OrderItem {
   id?: string;
   menuItemId: string;
-  menuItemName?: string;
-  name?: string; // Alternative name field for compatibility
+  menuItem?: MenuItem;
   quantity: number;
   price: number;
   customizations?: Record<string, string | string[]>;
-  specialInstructions?: string;
   notes?: string;
 }
 
 export interface CreateOrderRequest {
   restaurantId: string;
-  restaurantName?: string;
-  userId?: string;
+  userId: string;
   items: OrderItem[];
-  totalAmount?: number;
-  deliveryAddress?: string;
-  paymentMethod?: string;
+  totalAmount: number;
   notes?: string;
-  deliveryType?: 'pickup' | 'dine-in';
+  deliveryType: 'pickup' | 'dine-in';
 }

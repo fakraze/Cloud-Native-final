@@ -105,17 +105,17 @@ const OngoingOrders: React.FC = () => {
                 <div className="flex-1">
                   <div className="flex items-center space-x-4 mb-3">
                     <h3 className="text-lg font-semibold text-gray-900">
-                      Order #{order.id.slice(-8)}
+                      Order #{order.id}
                     </h3>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
-                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                      {order.status.charAt(0).toUpperCase() + order.status}
                     </span>
                   </div>
                   
                   <div className="text-sm text-gray-600 mb-2">
-                    <span className="font-medium">{order.restaurantName}</span>
+                    <span className="font-medium">{order.restaurant!.name}</span>
                     <span className="mx-2">•</span>
-                    <span>{new Date(order.orderDate).toLocaleDateString()}</span>
+                    <span>{new Date(order.createdAt!).toLocaleDateString()}</span>
                     <span className="mx-2">•</span>
                     <span>{order.deliveryType}</span>
                   </div>
@@ -123,7 +123,7 @@ const OngoingOrders: React.FC = () => {
                   <div className="text-sm text-gray-600 mb-3">
                     <span className="font-medium">Items:</span>
                     <span className="ml-1">
-                      {order.items.map(item => `${item.quantity}x ${item.menuItemName}`).join(', ')}
+                      {order.items.map(item => `${item.quantity}x ${item.menuItem!.name}`).join(', ')}
                     </span>
                   </div>
                   

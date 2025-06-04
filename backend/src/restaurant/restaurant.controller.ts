@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
@@ -31,6 +31,7 @@ export class RestaurantController {
     return restaurant;
   }
 
+  @Put(':id')
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,

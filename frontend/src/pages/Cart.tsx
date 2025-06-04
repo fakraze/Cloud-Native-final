@@ -41,13 +41,10 @@ const Cart: React.FC = () => {
     removeFromCartMutation.mutate(itemId);
   };
   const handleCheckout = () => {
-    const orderData = {
-      restaurantId: cart.restaurantId,
-      restaurantName: cart.items[0]?.menuItem.restaurantId ? 
-        // Get restaurant name from first item - in a real app this would come from cart
-        (cart.restaurantId === '1' ? 'Pizza Palace' : 
-         cart.restaurantId === '2' ? 'Burger Barn' : 
-         cart.restaurantId === '3' ? 'Sushi Zen' : 'Unknown Restaurant') : 'Unknown Restaurant',
+    console.log(cart);
+    const orderData = {      
+      restaurantId: cart.items[0].menuItem.restaurantId,
+      userId: cart.userId,
       items: cart.items.map(item => ({
         menuItemId: item.menuItem.id,
         menuItemName: item.menuItem.name,

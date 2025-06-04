@@ -72,6 +72,7 @@ const MenuItemDetail: React.FC = () => {
   const handleAddToCart = () => {
     if (!user) return;
 
+    console.log(menuItem);
     addToCartMutation.mutate({
       cartItem: {
         menuItem,

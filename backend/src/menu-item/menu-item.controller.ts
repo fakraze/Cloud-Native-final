@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, NotFoundException, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Patch, Param, Delete, Query, NotFoundException, ParseIntPipe } from '@nestjs/common';
 import { MenuItemService } from './menu-item.service';
 import { CreateMenuItemDto } from './dto/create-menu-item.dto';
 import { UpdateMenuItemDto } from './dto/update-menu-item.dto';
@@ -38,6 +38,7 @@ export class MenuItemController {
     return menuItem;
   }
 
+  @Put(':id')
   @Patch(':id')
   async update(
     @Param('restaurantId', ParseIntPipe, RestaurantExistsPipe) restaurantId: number,
