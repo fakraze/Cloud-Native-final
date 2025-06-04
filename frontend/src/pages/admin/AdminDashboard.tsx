@@ -22,7 +22,7 @@ const AdminDashboard: React.FC = () => {
   const totalRevenue = orders?.reduce((sum, order) => sum + order.totalAmount, 0) || 0;
   const todayOrders = orders?.filter(order => {
     const today = new Date().toDateString();
-    return new Date(order.orderDate).toDateString() === today;
+    return new Date(order.createdAt!).toDateString() === today;
   }).length || 0;
 
   const activeRestaurants = restaurants?.filter(r => r.isActive).length || 0;
@@ -170,7 +170,7 @@ const AdminDashboard: React.FC = () => {
                 <div key={order.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <div>
                     <p className="font-medium text-gray-900">#{order.id.slice(-8)}</p>
-                    <p className="text-sm text-gray-600">{order.restaurantName}</p>
+                    <p className="text-sm text-gray-600">{order.restaurant!.name}</p>
                   </div>
                   <div className="text-right">
                     <p className="font-medium text-gray-900">${order.totalAmount.toFixed(2)}</p>

@@ -54,7 +54,7 @@ export class MenuItem {
     @Column('simple-array')
     @IsArray()
     @IsString({ each: true })
-    allergens: string[];
+    allergens: string[];    
 
     @Column('simple-json')
     @IsObject()
@@ -64,6 +64,10 @@ export class MenuItem {
         carbs: number;
         fat: number;
     };
+
+    @Column('simple-array')
+    @IsArray()
+    customizations: string[];
 
     @CreateDateColumn()
     createdAt: Date;

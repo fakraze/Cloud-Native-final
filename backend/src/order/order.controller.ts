@@ -39,7 +39,7 @@ export class OrderController {
 
   @Put(':id/payment')
   updatePaymentStatus(@Param('id', ParseIntPipe) id: number, @Body() statusJson: any) {
-    return this.orderService.updatePaymentStatus(id, statusJson.status);
+    return this.orderService.updatePaymentStatus(id, statusJson.paymentStatus);
   }
 
   @Delete(':id')
