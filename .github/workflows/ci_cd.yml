@@ -5,11 +5,85 @@ on:
     branches:
       - "**"
 
-jobs:
+jobs: 
+  ci-tests:
+    name: CI - Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # Backend Testing
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Run backend ESLint
+        working-directory: ./backend
+        run: npm run lint
+
+      - name: Run backend unit tests
+        working-directory: ./backend
+        run: npm run test
+
+      - name: Run backend test coverage
+        working-directory: ./backend
+        run: npm run test:cov
+
+      - name: Run backend e2e tests
+        working-directory: ./backend
+        run: npm run test:e2e
+
+      # Frontend Testing
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run frontend ESLint
+        working-directory: ./frontend
+        run: npm run lint
+
+      - name: Run frontend type checking
+        working-directory: ./frontend
+        run: npm run type-check
+
+      - name: Run frontend tests
+        working-directory: ./frontend
+        run: npm run test:run
+
+      - name: Run frontend test coverage
+        working-directory: ./frontend
+        run: npm run test:coverage
+
+      - name: Upload backend coverage
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./backend/coverage/lcov.info
+          flags: backend
+          name: backend-coverage
+          fail_ci_if_error: false
+
+      # upload
+      - name: Upload frontend coverage
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./frontend/coverage/lcov.info
+          flags: frontend
+          name: frontend-coverage
+          fail_ci_if_error: false
+
   build-and-push:
     name: CD - Build & Push Images
     runs-on: ubuntu-latest
-    if: ${{ (github.ref_name == 'main' || github.ref_name == 'develop' || github.ref_name == 'ci-cd') }}
+    needs: ci-tests
+    if: ${{ success() && (github.ref_name == 'main' || github.ref_name == 'develop' || github.ref_name == 'ci-cd') }}
 
     steps:
       - name: Checkout
@@ -376,7 +450,7 @@ jobs:
 
   #     - name: Install dependencies
   #       working-directory: test
-  #       run: npm install
+  #       run: npm ci
 
   #     - name: Run Cypress tests
   #       working-directory: test
