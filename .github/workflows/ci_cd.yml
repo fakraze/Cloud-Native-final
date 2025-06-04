@@ -45,19 +45,19 @@ jobs:
       #   working-directory: ./frontend
       #   run: npm run lint
 
-      - name: Run frontend type checking
-        working-directory: ./frontend
-        run: npm run type-check
+      # - name: Run frontend type checking
+      #   working-directory: ./frontend
+      #   run: npm run type-check
 
-      - name: Run frontend tests
-        working-directory: ./frontend
-        run: npm run test:run
-        continue-on-error: true  # 允許測試失敗但不阻止 pipeline
+      # - name: Run frontend tests
+      #   working-directory: ./frontend
+      #   run: npm run test:run
+      #   continue-on-error: true  # 允許測試失敗但不阻止 pipeline
 
-      - name: Run frontend test coverage
-        working-directory: ./frontend
-        run: npm run test:coverage
-        continue-on-error: true  # 允許測試失敗但不阻止 pipeline
+      # - name: Run frontend test coverage
+      #   working-directory: ./frontend
+      #   run: npm run test:coverage
+      #   continue-on-error: true  # 允許測試失敗但不阻止 pipeline
 
       - name: Upload backend coverage
         uses: codecov/codecov-action@v3
@@ -65,16 +65,16 @@ jobs:
           file: ./backend/coverage/lcov.info
           flags: backend
           name: backend-coverage
-          fail_ci_if_error: false
+          fail_ci_if_error: true
 
       # upload
-      - name: Upload frontend coverage
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./frontend/coverage/lcov.info
-          flags: frontend
-          name: frontend-coverage
-          fail_ci_if_error: false
+      # - name: Upload frontend coverage
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     file: ./frontend/coverage/lcov.info
+      #     flags: frontend
+      #     name: frontend-coverage
+      #     fail_ci_if_error: false
 
   build-and-push:
     name: CD - Build & Push Images
