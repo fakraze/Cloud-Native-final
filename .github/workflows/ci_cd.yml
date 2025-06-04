@@ -37,7 +37,7 @@ jobs:
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             BASE_PATH="/"
             BUILD_MODE="development"
-            API_URL="http://13.218.27.133/backend/api"
+            API_URL="http://localhost:3000/api"
           else
             BASE_PATH="/dev/frontend/"
             BUILD_MODE="development"
@@ -297,7 +297,7 @@ jobs:
             
             # Set API URL based on environment
             if [ "\$BRANCH_NAME" = "main" ]; then
-              API_URL="http://13.218.27.133/backend/api/"
+              API_URL="http://localhost:3000/api"
             else
               API_URL="http://13.218.27.133/dev/backend/api/"
             fi
