@@ -4,9 +4,9 @@ import { check } from 'k6';
 
 export const options = {
   stages: [
-    { duration: '20s', target: 100 },   // 快速加壓，初始探測
-    { duration: '1m',  target: 500 },   // 中壓穩定期
-    { duration: '2m',  target: 1500 },  // 高壓期：模擬尖峰
+    { duration: '20s', target: 50 },   // 快速加壓，初始探測
+    { duration: '1m',  target: 100 },   // 中壓穩定期
+    { duration: '2m',  target: 300 },  // 高壓期：模擬尖峰
     { duration: '30s', target: 0 },     // 降壓
   ],
   thresholds: {
@@ -24,11 +24,14 @@ export default function () {
 
   // 2. 後端 GET APIs（模擬餐廳列表）
   http.get(`http://13.218.27.133/dev/backend/api/`);
-  http.get(`http://13.218.27.133/dev/backend/api/restaurant`);
-  http.get(`http://13.218.27.133/dev/backend/api/restaurant/1`);
-  http.get(`http://13.218.27.133/dev/backend/api/restaurant/1/menu`);
+  http.get(`http://13.218.27.133/dev/backend/api/restaurant`);;
+
+    // const res = http.get('http://13.218.27.133/dev/backend/api/restaurant');
+    // if (__ITER < 20) {
+    //     console.log(`🔍 [Iteration ${__ITER}] /api/restaurant response status: ${res.status}`);
+    // }
 
 
-  // 每個使用者每 300ms 打完一輪請求
+  // 每個使用者每 200ms 打完一輪請求
   sleep(0.2);
 }
