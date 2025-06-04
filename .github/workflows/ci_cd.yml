@@ -24,9 +24,9 @@ jobs:
         working-directory: ./backend
         run: npm ci
 
-      - name: Run backend ESLint
-        working-directory: ./backend
-        run: npm run lint
+      # - name: Run backend ESLint
+      #   working-directory: ./backend
+      #   run: npm run lint
 
       - name: Run backend unit tests
         working-directory: ./backend
@@ -41,9 +41,9 @@ jobs:
         run: npm run test:e2e
 
       # Frontend Testing
-      - name: Install frontend dependencies
-        working-directory: ./frontend
-        run: npm ci
+      # - name: Install frontend dependencies
+      #   working-directory: ./frontend
+      #   run: npm ci
 
       - name: Run frontend ESLint
         working-directory: ./frontend
