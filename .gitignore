@@ -24,3 +24,6 @@ frontend/dist/
 dist/
 
 *.pem
+
+# Ignore test coverage reports
+coverage/
