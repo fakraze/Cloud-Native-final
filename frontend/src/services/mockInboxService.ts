@@ -67,6 +67,15 @@ const mockInboxMessages: Record<string, InboxMessage[]> = {
       isRead: true,
       createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 1 week ago
     },
+    {
+      id: '12',
+      userId: '1',
+      title: 'Monthly Payment Reminder',
+      message: 'Dear team member,\n\nThis is a friendly reminder that your monthly payment is due at the end of this month. Please ensure you have completed all necessary payment procedures.\n\nIf you have any questions or concerns, please don\'t hesitate to reach out to the admin team.\n\nThank you for your attention to this matter.\n\nBest regards,\nAdmin Team',
+      type: 'warning',
+      isRead: false,
+      createdAt: new Date(Date.now() - 1  * 60 * 1000).toISOString(), // 12 hours ago
+    },
   ],
   '2': [ // Admin user messages
     {

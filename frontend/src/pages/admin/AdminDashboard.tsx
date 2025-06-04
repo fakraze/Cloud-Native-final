@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  BarChart3, 
   UtensilsCrossed, 
   ShoppingBag, 
   DollarSign,
@@ -58,7 +57,6 @@ const AdminDashboard: React.FC = () => {
       bgColor: 'bg-purple-100',
     },
   ];
-
   const quickActions = [
     {
       name: 'Manage Restaurants',
@@ -73,13 +71,6 @@ const AdminDashboard: React.FC = () => {
       href: '/admin/orders',
       icon: ShoppingBag,
       color: 'bg-green-600',
-    },
-    {
-      name: 'POS Interface',
-      description: 'Process in-store orders and payments',
-      href: '/admin/pos',
-      icon: BarChart3,
-      color: 'bg-purple-600',
     },
   ];
 
