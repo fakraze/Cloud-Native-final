@@ -128,12 +128,7 @@
 <a name='L63'></a><a href='#L63'>63</a>
 <a name='L64'></a><a href='#L64'>64</a>
 <a name='L65'></a><a href='#L65'>65</a>
-<a name='L66'></a><a href='#L66'>66</a>
-<a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a>
-<a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L66'></a><a href='#L66'>66</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -149,7 +144,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -172,8 +166,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -203,7 +195,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import api from './api';<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
 import { LoginRequest, LoginResponse} from '../types/auth';
-import { ApiResponse } from '../types/common';
 <span class="cstat-no" title="statement not covered" >import { mockAuthService } from './mockAuthService';</span>
 &nbsp;
 // Check if we should use mock API (for development without backend)
@@ -218,10 +209,9 @@ import { ApiResponse } from '../types/common';
 <span class="cstat-no" title="statement not covered" >    if (shouldUseMock()) {</span>
 <span class="cstat-no" title="statement not covered" >      return mockAuthService.login(credentials);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-    
 <span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      const response = await api.post&lt;ApiResponse&lt;LoginResponse&gt;&gt;('/auth/login', credentials);</span>
-<span class="cstat-no" title="statement not covered" >      return response.data.data;</span>
+<span class="cstat-no" title="statement not covered" >      const response = await api.post&lt;LoginResponse&gt;('/auth/login', credentials);</span>
+<span class="cstat-no" title="statement not covered" >      return response.data;</span>
 <span class="cstat-no" title="statement not covered" >    } catch (error) {</span>
 <span class="cstat-no" title="statement not covered" >      console.warn('API call failed, falling back to mock data for development');</span>
 <span class="cstat-no" title="statement not covered" >      return mockAuthService.login(credentials);</span>
@@ -241,29 +231,27 @@ import { ApiResponse } from '../types/common';
 <span class="cstat-no" title="statement not covered" >      await mockAuthService.logout();</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >  },</span>
-&nbsp;
   // getCurrentUser: async (): Promise&lt;User&gt; =&gt; {
   //   if (shouldUseMock()) {
   //     return mockAuthService.getCurrentUser();
   //   }
     
   //   try {
-  //     const response = await api.get&lt;ApiResponse&lt;User&gt;&gt;('/auth/me');
-  //     return response.data.data;
+  //     const response = await api.get&lt;User&gt;('/auth/me');
+  //     return response.data;
   //   } catch (error) {
   //     console.warn('API call failed, falling back to mock user data');
   //     return mockAuthService.getCurrentUser();
   //   }
   // },
-&nbsp;
   // refreshToken: async (): Promise&lt;LoginResponse&gt; =&gt; {
   //   if (shouldUseMock()) {
   //     return mockAuthService.refreshToken();
   //   }
     
   //   try {
-  //     const response = await api.post&lt;ApiResponse&lt;LoginResponse&gt;&gt;('/auth/refresh');
-  //     return response.data.data;
+  //     const response = await api.post&lt;LoginResponse&gt;('/auth/refresh');
+  //     return response.data;
   //   } catch (error) {
   //     console.warn('API call failed, falling back to mock refresh');
   //     return mockAuthService.refreshToken();
@@ -277,7 +265,7 @@ import { ApiResponse } from '../types/common';
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-03T14:27:11.540Z
+                at 2025-06-03T16:41:50.784Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

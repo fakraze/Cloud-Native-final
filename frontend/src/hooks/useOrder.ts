@@ -88,7 +88,8 @@ export const useAddToCart = () => {
   const { setCart } = useCartStore();
 
   return useMutation({
-    mutationFn: (cartItem: Omit<CartItem, 'id'>) => cartService.addToCart(cartItem),
+    mutationFn: ({ cartItem, userId }: { cartItem: Omit<CartItem, 'id'>; userId: string }) => 
+      cartService.addToCart(cartItem, userId),
     onSuccess: (updatedCart) => {
       setCart(updatedCart);
       queryClient.invalidateQueries({ queryKey: ['cart'] });

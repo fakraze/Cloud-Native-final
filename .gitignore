@@ -8,6 +8,8 @@ node_modules/
 *.log
 
 # Ignore screenshots/videos (if recording during test)
+test/cypress/screenshots/
+test/cypress/videos/
 cypress/screenshots/
 cypress/videos/
 
@@ -15,5 +17,10 @@ cypress/videos/
 .env
 .env.local
 
+# Ignore build artifacts
+frontend/dist/
+
 .vscode/
 dist/
+
+*.pem

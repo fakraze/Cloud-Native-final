@@ -1,0 +1,9 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: backend-stripprefix
+  namespace: cloudnative-dev
+spec:
+  stripPrefix:
+    prefixes:
+      - /dev/backend
