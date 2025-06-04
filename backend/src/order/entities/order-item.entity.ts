@@ -1,4 +1,4 @@
-import { MenuItem } from 'src/menu-item/entities/menu-item.entity';
+import { MenuItem } from '../../menu-item/entities/menu-item.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 import { Order } from './order.entity';
 
