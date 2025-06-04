@@ -22,7 +22,7 @@ const PersonalPage: React.FC = () => {
   const completedOrders = orderHistory?.filter(order => order.status === 'completed').length || 0;
   const totalSpent = orderHistory?.reduce((sum, order) => sum + order.totalAmount, 0) || 0;
   const favoriteRestaurants = orderHistory?.reduce((acc, order) => {
-    acc[order.restaurantName] = (acc[order.restaurantName] || 0) + 1;
+    acc[order.restaurant!.name] = (acc[order.restaurant!.name] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
   

@@ -30,8 +30,8 @@ const StaffOrderManagement: React.FC = () => {
   };
 
   const filteredOrders = orders?.filter(order => {
-    const matchesSearch = order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         order.restaurantName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = order.id ||
+                         order.restaurant!.name.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
     
@@ -39,13 +39,13 @@ const StaffOrderManagement: React.FC = () => {
     let matchesDate = true;
     
     if (dateFilter === 'today') {
-      matchesDate = new Date(order.orderDate).toDateString() === now.toDateString();
+      matchesDate = new Date(order.createdAt!).toDateString() === now.toDateString();
     } else if (dateFilter === 'week') {
       const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      matchesDate = new Date(order.orderDate) >= weekAgo;
+      matchesDate = new Date(order.createdAt!) >= weekAgo;
     } else if (dateFilter === 'month') {
       const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-      matchesDate = new Date(order.orderDate) >= monthAgo;
+      matchesDate = new Date(order.createdAt!) >= monthAgo;
     }
     
     return matchesSearch && matchesStatus && matchesDate;
@@ -232,16 +232,16 @@ const StaffOrderManagement: React.FC = () => {
               {filteredOrders.map((order) => (
                 <tr key={order.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    #{order.id.slice(-8)}
+                    #{order.id}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {order.restaurantName}
+                    {order.restaurant!.name || 'Unknown Restaurant'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {order.userId || 'Guest'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(order.orderDate).toLocaleDateString()}
+                    {new Date(order.createdAt!).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     ${order.totalAmount.toFixed(2)}

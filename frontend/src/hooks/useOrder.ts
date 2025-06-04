@@ -5,6 +5,14 @@ import { CreateOrderRequest } from '../types/order';
 import { CartItem } from '../types/restaurant';
 
 // Order hooks
+export const useAllOrders = () => {
+  return useQuery({
+    queryKey: ['orders', 'all'],
+    queryFn: () => orderService.getAllOrders(),
+    refetchInterval: 30000,
+  });
+};
+
 export const useOngoingOrders = () => {
   return useQuery({
     queryKey: ['orders', 'ongoing'],
@@ -58,8 +66,21 @@ export const useUpdateOrderStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ orderId, status }: { orderId: string; status: string }) => 
+    mutationFn: ({ orderId, status }: { orderId: string; status: string }) =>
       orderService.updateOrderStatus(orderId, status as any),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
+    },
+  });
+};
+
+// New hook for updating order payment status
+export const useUpdatePaymentStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ orderId, paymentStatus }: { orderId: string; paymentStatus: string }) =>
+      orderService.updatePaymentStatus(orderId, paymentStatus as any),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
     },

@@ -104,8 +104,8 @@ const RatePage: React.FC = () => {
         <div className="bg-gray-50 rounded-lg p-4 mb-6">
           <h3 className="font-medium text-gray-900 mb-2">Order #{order.id.slice(-8)}</h3>
           <div className="text-sm text-gray-600">
-            <p>Date: {new Date(order.orderDate).toLocaleDateString()}</p>
-            <p>Items: {order.items.map(item => `${item.quantity}x ${item.menuItemName}`).join(', ')}</p>
+            <p>Date: {new Date(order.createdAt!).toLocaleDateString()}</p>
+            <p>Items: {order.items.map(item => `${item.quantity}x ${item.menuItem!.name}`).join(', ')}</p>
             <p>Total: ${order.totalAmount.toFixed(2)}</p>
           </div>
         </div>

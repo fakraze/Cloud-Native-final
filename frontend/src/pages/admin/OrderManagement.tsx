@@ -12,12 +12,13 @@ import {
   Download,
   RefreshCw
 } from 'lucide-react';
-import { useOrderHistory, useUpdateOrderStatus } from '../../hooks/useOrder';
+import { useAllOrders, useUpdateOrderStatus, useUpdatePaymentStatus } from '../../hooks/useOrder';  // <-- Added useUpdatePaymentStatus
 import { Order } from '../../types/order';
 
 const OrderManagement: React.FC = () => {
-  const { data: orders, isLoading, refetch } = useOrderHistory();
+  const { data: orders, isLoading, refetch } = useAllOrders();
   const updateOrderStatus = useUpdateOrderStatus();
+  const updatePaymentStatus = useUpdatePaymentStatus();  // <-- Added hook for payment status
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | Order['status']>('all');
   const [dateFilter, setDateFilter] = useState<'today' | 'week' | 'month' | 'all'>('all');
@@ -33,8 +34,8 @@ const OrderManagement: React.FC = () => {
   };
 
   const filteredOrders = orders?.filter(order => {
-    const matchesSearch = order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         order.restaurantName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = order.id ||
+                         order.restaurant!.name.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
     
@@ -42,13 +43,13 @@ const OrderManagement: React.FC = () => {
     let matchesDate = true;
     
     if (dateFilter === 'today') {
-      matchesDate = new Date(order.orderDate).toDateString() === now.toDateString();
+      matchesDate = new Date(order.createdAt!).toDateString() === now.toDateString();
     } else if (dateFilter === 'week') {
       const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      matchesDate = new Date(order.orderDate) >= weekAgo;
+      matchesDate = new Date(order.createdAt!) >= weekAgo;
     } else if (dateFilter === 'month') {
       const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-      matchesDate = new Date(order.orderDate) >= monthAgo;
+      matchesDate = new Date(order.createdAt!) >= monthAgo;
     }
     
     return matchesSearch && matchesStatus && matchesDate;
@@ -99,6 +100,17 @@ const OrderManagement: React.FC = () => {
       showNotification('error', 'Failed to update order status');
     }
   };
+
+  // New function for updating payment status
+  const handleUpdatePaymentStatus = async (orderId: string, newPaymentStatus: 'pending' | 'paid' | 'unpaid') => {
+    try {
+      await updatePaymentStatus.mutateAsync({ orderId, paymentStatus: newPaymentStatus });
+      showNotification('success', `Payment status updated to ${newPaymentStatus}`);
+    } catch (error) {
+      showNotification('error', 'Failed to update payment status');
+    }
+  };
+
   const handleExportOrders = () => {
     if (filteredOrders.length === 0) {
       showNotification('error', 'No orders to export');
@@ -111,9 +123,9 @@ const OrderManagement: React.FC = () => {
       headers.join(','),
       ...filteredOrders.map(order => [
         `"#${order.id.slice(-8)}"`,
-        `"${order.restaurantName}"`,
+        `"${order.restaurant!.name}"`,
         `"${order.userId || 'Guest'}"`,
-        `"${new Date(order.orderDate).toLocaleDateString()}"`,
+        `"${new Date(order.createdAt!).toLocaleDateString()}"`,
         `"$${order.totalAmount.toFixed(2)}"`,
         `"${order.status}"`,
         `"${order.paymentStatus || 'N/A'}"`
@@ -151,6 +163,7 @@ const OrderManagement: React.FC = () => {
     { value: 'completed', label: 'Completed' },
     { value: 'cancelled', label: 'Cancelled' },
   ];
+
   return (
     <div className="space-y-6">
       {/* Notification */}
@@ -281,16 +294,16 @@ const OrderManagement: React.FC = () => {
               {filteredOrders.map((order) => (
                 <tr key={order.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    #{order.id.slice(-8)}
+                    #{order.id}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {order.restaurantName}
+                    {order.restaurant!.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {order.userId || 'Guest'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(order.orderDate).toLocaleDateString()}
+                    {new Date(order.createdAt!).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     ${order.totalAmount.toFixed(2)}
@@ -313,20 +326,33 @@ const OrderManagement: React.FC = () => {
                     </Link>
                     
                     {order.status !== 'completed' && order.status !== 'cancelled' && (
-                      <div className="inline-block ml-2">
-                        <select
-                          value={order.status}
-                          onChange={(e) => handleUpdateOrderStatus(order.id, e.target.value as Order['status'])}
-                          className="text-xs border border-gray-300 rounded px-2 py-1"
-                        >
-                          <option value="pending">Pending</option>
-                          <option value="confirmed">Confirmed</option>
-                          <option value="preparing">Preparing</option>
-                          <option value="ready">Ready</option>
-                          <option value="completed">Completed</option>
-                          <option value="cancelled">Cancelled</option>
-                        </select>
-                      </div>
+                      <>
+                        <div className="inline-block ml-2">
+                          <select
+                            value={order.status}
+                            onChange={(e) => handleUpdateOrderStatus(order.id, e.target.value as Order['status'])}
+                            className="text-xs border border-gray-300 rounded px-2 py-1"
+                          >
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="preparing">Preparing</option>
+                            <option value="ready">Ready</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                          </select>
+                        </div>
+                        <div className="inline-block ml-2">
+                          <select
+                            value={order.paymentStatus || 'pending'}
+                            onChange={(e) => handleUpdatePaymentStatus(order.id, e.target.value as 'pending' | 'paid' | 'unpaid')}
+                            className="text-xs border border-gray-300 rounded px-2 py-1"
+                          >
+                            <option value="pending">Pending</option>
+                            <option value="paid">Paid</option>
+                            <option value="unpaid">Unpaid</option>
+                          </select>
+                        </div>
+                      </>
                     )}
                   </td>
                 </tr>

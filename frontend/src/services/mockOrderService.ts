@@ -2,7 +2,7 @@
 import { Order, OrderStatus, CreateOrderRequest } from '../types/order';
 
 // Mock orders data with recent dates
-const MOCK_ORDERS: Order[] = [
+const MOCK_ORDERS: any[] = [
   {
     id: '1',
     userId: '1',
@@ -226,18 +226,18 @@ export const mockOrderService = {
       customizations: item.customizations || {}
     }));
     
-    const newOrder: Order = {
+    const newOrder: any = {
       id: Date.now().toString(),
       userId: orderData.userId || '1', // Default to current user
       restaurantId: orderData.restaurantId,
-      restaurantName: orderData.restaurantName || 'Unknown Restaurant',
+      //restaurantName: orderData.restaurantName || 'Unknown Restaurant',
       items: itemsWithIds,      totalAmount: orderData.totalAmount || 0,
       status: 'pending' as OrderStatus,
       paymentStatus: 'pending', // Default to pending payment for employee orders
       orderDate: new Date().toISOString(),
       estimatedDeliveryTime: new Date(Date.now() + 30 * 60 * 1000).toISOString(), // 30 minutes from now
-      deliveryAddress: orderData.deliveryAddress,
-      paymentMethod: orderData.paymentMethod,
+      //deliveryAddress: orderData.deliveryAddress,
+      //paymentMethod: orderData.paymentMethod,
       notes: orderData.notes || '',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()

@@ -183,11 +183,11 @@ const Payment: React.FC = () => {
                         />
                         <div>
                           <h3 className="font-medium text-gray-900">Order #{order.id}</h3>
-                          <p className="text-sm text-gray-600">{order.restaurantName}</p>
+                          <p className="text-sm text-gray-600">{order.restaurant!.name}</p>
                           <div className="flex items-center space-x-4 mt-1">
                             <span className="text-xs text-gray-500 flex items-center">
                               <Calendar className="h-3 w-3 mr-1" />
-                              {new Date(order.orderDate).toLocaleDateString()}
+                              {new Date(order.createdAt!).toLocaleDateString()}
                             </span>
                             <span className={`text-xs px-2 py-1 rounded-full ${
                               order.status === 'completed' ? 'bg-green-100 text-green-700' :
@@ -210,7 +210,7 @@ const Payment: React.FC = () => {
                         {order.items.map((item, index) => (
                           <span key={item.id || index}>
                             {index > 0 && ', '}
-                            {item.quantity}x {item.menuItemName}
+                            {item.quantity}x {item.menuItem!.name}
                           </span>
                         ))}
                       </div>
