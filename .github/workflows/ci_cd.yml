@@ -36,7 +36,7 @@ jobs:
         run: | # 根據分支設定環境變數
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             BASE_PATH="/"
-            BUILD_MODE="production"
+            BUILD_MODE="development"
             API_URL="http://13.218.27.133/backend/api"
           else
             BASE_PATH="/dev/frontend/"
@@ -63,7 +63,7 @@ jobs:
         run: |
           # Set backend environment variables based on branch
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
-            NODE_ENV="production"
+            NODE_ENV="development"
             DB_HOST="mysql"
           else
             NODE_ENV="development"
