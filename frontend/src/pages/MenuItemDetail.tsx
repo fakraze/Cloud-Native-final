@@ -112,9 +112,8 @@ const MenuItemDetail: React.FC = () => {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Image Section */}
             <div className="lg:w-1/2">
-              <div className="relative group">
-                <img
-                  src={menuItem.imageUrl || '/placeholder-food.jpg'}
+              <div className="relative group">                <img
+                  src={menuItem.imageUrl || menuItem.image || '/placeholder-food.jpg'}
                   alt={menuItem.name}
                   className="w-full h-96 object-cover rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300"
                 />

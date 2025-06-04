@@ -90,7 +90,7 @@ const Cart: React.FC = () => {
             <div key={item.id} className="card">
               <div className="flex items-center space-x-4">
                 <img
-                  src={item.menuItem.imageUrl || '/placeholder-food.jpg'}
+                  src={item.menuItem.imageUrl || item.menuItem.image || '/placeholder-food.jpg'}
                   alt={item.menuItem.name}
                   className="w-20 h-20 object-cover rounded-lg"
                 />

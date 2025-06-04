@@ -2,11 +2,11 @@
 import { Restaurant, MenuItem, MenuCategory } from '../types/restaurant';
 
 // Mock restaurant data
-const MOCK_RESTAURANTS: Restaurant[] = [
-  {
+const MOCK_RESTAURANTS: Restaurant[] = [  {
     id: '1',
     name: 'Pizza Palace',
     description: 'Authentic Italian pizzas made with fresh ingredients',
+    imageUrl: 'https://images.unsplash.com/photo-1604382355076-af4b0eb60143?w=800&h=600&fit=crop&auto=format',
     cuisine: 'Italian',
     address: '123 Main St, Downtown',
     phone: '+1-555-0101',
@@ -22,6 +22,7 @@ const MOCK_RESTAURANTS: Restaurant[] = [
     id: '2',
     name: 'Burger Barn',
     description: 'Gourmet burgers and crispy fries',
+    imageUrl: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=800&h=600&fit=crop',
     cuisine: 'American',
     address: '456 Oak Ave, Midtown',
     phone: '+1-555-0102',
@@ -37,6 +38,7 @@ const MOCK_RESTAURANTS: Restaurant[] = [
     id: '3',
     name: 'Sushi Zen',
     description: 'Fresh sushi and Japanese cuisine',
+    imageUrl: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800&h=600&fit=crop',
     cuisine: 'Japanese',
     address: '789 Pine St, Uptown',
     phone: '+1-555-0103',
@@ -51,8 +53,7 @@ const MOCK_RESTAURANTS: Restaurant[] = [
 ];
 
 // Mock menu items
-const MOCK_MENU_ITEMS: { [restaurantId: string]: MenuItem[] } = {  '1': [
-    {
+const MOCK_MENU_ITEMS: { [restaurantId: string]: MenuItem[] } = {  '1': [    {
       id: '1',
       restaurantId: '1',
       name: 'Margherita Pizza',
@@ -61,7 +62,7 @@ const MOCK_MENU_ITEMS: { [restaurantId: string]: MenuItem[] } = {  '1': [
       category: 'pizza' as MenuCategory,
       isAvailable: true,
       preparationTime: 15,
-      image: 'https://images.unsplash.com/photo-1604382355076-af4b0eb60143?w=400',
+      imageUrl: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&h=300&fit=crop&auto=format',
       allergens: ['gluten', 'dairy'],
       nutritionInfo: {
         calories: 320,
@@ -99,8 +100,7 @@ const MOCK_MENU_ITEMS: { [restaurantId: string]: MenuItem[] } = {  '1': [
           options: ['Mild', 'Medium', 'Spicy', 'Extra Spicy']
         }
       ]
-    },
-    {
+    },    {
       id: '2',
       restaurantId: '1',
       name: 'Pepperoni Pizza',
@@ -109,7 +109,7 @@ const MOCK_MENU_ITEMS: { [restaurantId: string]: MenuItem[] } = {  '1': [
       category: 'pizza' as MenuCategory,
       isAvailable: true,
       preparationTime: 15,
-      image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400',
+      imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400&h=300&fit=crop&auto=format',
       allergens: ['gluten', 'dairy'],
       nutritionInfo: {
         calories: 380,
@@ -165,7 +165,7 @@ const MOCK_MENU_ITEMS: { [restaurantId: string]: MenuItem[] } = {  '1': [
       category: 'main' as MenuCategory,
       isAvailable: true,
       preparationTime: 12,
-      image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400',
+      imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop&auto=format',
       allergens: ['gluten', 'dairy'],
       nutritionInfo: {
         calories: 520,
@@ -212,14 +212,13 @@ const MOCK_MENU_ITEMS: { [restaurantId: string]: MenuItem[] } = {  '1': [
       ]
     },    {
       id: '4',
-      restaurantId: '2',
-      name: 'Crispy Fries',
+      restaurantId: '2',      name: 'Crispy Fries',
       description: 'Golden crispy french fries with sea salt',
       price: 6.99,
       category: 'side' as MenuCategory,
       isAvailable: true,
       preparationTime: 8,
-      image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400',
+      imageUrl: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&h=300&fit=crop&auto=format',
       allergens: [],
       nutritionInfo: {
         calories: 280,
@@ -263,12 +262,11 @@ const MOCK_MENU_ITEMS: { [restaurantId: string]: MenuItem[] } = {  '1': [
       id: '5',
       restaurantId: '3',
       name: 'Salmon Sashimi',
-      description: 'Fresh Norwegian salmon, expertly sliced',
-      price: 24.99,
+      description: 'Fresh Norwegian salmon, expertly sliced',      price: 24.99,
       category: 'main' as MenuCategory,
       isAvailable: true,
       preparationTime: 5,
-      image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400',
+      imageUrl: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop&auto=format',
       allergens: ['fish'],
       nutritionInfo: {
         calories: 180,
