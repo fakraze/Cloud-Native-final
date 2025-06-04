@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, Put } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { In } from 'typeorm';
 
 @Controller('order')
@@ -41,11 +40,6 @@ export class OrderController {
   @Put(':id/payment')
   updatePaymentStatus(@Param('id', ParseIntPipe) id: number, @Body() statusJson: any) {
     return this.orderService.updatePaymentStatus(id, statusJson.status);
-  }
-
-  @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.orderService.update(id, updateOrderDto);
   }
 
   @Delete(':id')

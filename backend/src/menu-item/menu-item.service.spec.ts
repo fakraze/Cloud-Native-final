@@ -26,6 +26,7 @@ describe('MenuItemService', () => {
       carbs: 35,
       fat: 10
     },
+    restaurantId: 1,
     restaurant: { id: 1 } as any,
     createdAt: new Date(),
     updatedAt: new Date()
@@ -78,7 +79,8 @@ describe('MenuItemService', () => {
           protein: 12,
           carbs: 35,
           fat: 10
-        }
+        },
+        restaurantId: 1
       };
       const restaurantId = 1;
 

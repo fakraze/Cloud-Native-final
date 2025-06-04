@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import { IsNotEmpty, IsNumber, IsInt, IsEnum, IsOptional, IsString, ValidateNested, IsArray } from 'class-validator';
 import { User } from '../../user/entities/user.entity';
-import { Restaurant } from 'src/restaurant/entities/restaurant.entity';
+import { Restaurant } from '../../restaurant/entities/restaurant.entity';
 import { OrderItem } from './order-item.entity';
 import { Type } from 'class-transformer';
 

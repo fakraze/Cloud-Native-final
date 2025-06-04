@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/order-item.entity';
 
@@ -67,36 +66,6 @@ export class OrderService {
     }
 
     return order;
-  }
-
-  async update(id: number, updateOrderDto: UpdateOrderDto): Promise<Order> {
-    const { items, ...orderData } = updateOrderDto;
-
-    // Check if order exists
-    const existingOrder = await this.findOne(id);
-
-    // Update order data
-    await this.orderRepository.update(id, orderData);
-
-    // Update items if provided
-    if (items) {
-      // Remove existing items
-      await this.orderItemRepository.delete({ order: { id } });
-
-      // Create new items
-      if (items.length > 0) {
-        const orderItems = items.map(item => 
-          this.orderItemRepository.create({
-            ...item,
-            order: existingOrder,
-          })
-        );
-        await this.orderItemRepository.save(orderItems);
-      }
-    }
-
-    // Return updated order
-    return this.findOne(id);
   }
 
   async remove(id: number): Promise<void> {
