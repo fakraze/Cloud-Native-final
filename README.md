@@ -46,6 +46,11 @@ Test in Terminal
 npm run test
 ```
 
+## load test
+```bash
+k6 run loadtest.js
+```
+
 ## Run Cypress Tests for Different Environments
 
 To run Cypress tests in different environments (`dev` or `prod`), you can use the following commands:
