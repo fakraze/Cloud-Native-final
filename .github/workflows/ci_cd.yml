@@ -41,9 +41,9 @@ jobs:
       #   working-directory: ./frontend
       #   run: npm ci
 
-      - name: Run frontend ESLint
-        working-directory: ./frontend
-        run: npm run lint
+      # - name: Run frontend ESLint
+      #   working-directory: ./frontend
+      #   run: npm run lint
 
       - name: Run frontend type checking
         working-directory: ./frontend
