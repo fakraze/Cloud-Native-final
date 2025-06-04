@@ -1,8 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToOne, JoinColumn, OneToMany } from 'typeorm';
-import { IsNotEmpty, IsNumber, IsInt, IsEnum, IsOptional, IsString, IsDateString, IsArray } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsInt, IsEnum, IsOptional, IsString, ValidateNested, IsArray } from 'class-validator';
 import { User } from '../../user/entities/user.entity';
 import { Restaurant } from 'src/restaurant/entities/restaurant.entity';
 import { OrderItem } from './order-item.entity';
+import { Type } from 'class-transformer';
 
 enum OrderStatus {
     pending = 'pending',
@@ -17,7 +18,7 @@ enum OrderStatus {
 enum PaymentStatus {
     pending = 'pending',
     paid = 'paid',
-    failed = 'failed',
+    unpaid = 'unpaid',
 }
 
 enum DeliveryType {
@@ -50,6 +51,8 @@ export class Order {
 
     @OneToMany(() => OrderItem, orderItem => orderItem.order)
     @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => OrderItem)
     items: OrderItem[];
 
     @Column('int')
@@ -84,11 +87,6 @@ export class Order {
     })
     @IsEnum(DeliveryType)
     deliveryType: DeliveryType;
-
-    @Column()
-    @IsNotEmpty()
-    @IsString()
-    paymentMethod: string;
 
     @UpdateDateColumn()
     updatedAt: Date;

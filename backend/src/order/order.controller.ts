@@ -25,7 +25,7 @@ export class OrderController {
 
   @Get('history')
   history() {
-    return this.orderService.findAll({ paymentStatus: In(['paid', 'failed']) });
+    return this.orderService.findAll({ paymentStatus: In(['paid', 'unpaid']) });
   }
 
   @Get(':id')

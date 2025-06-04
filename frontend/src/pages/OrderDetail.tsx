@@ -77,10 +77,10 @@ const OrderDetail: React.FC = () => {
       <div className="card mb-6">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-3xl font-bold text-gray-900">
-            Order #{order.id.slice(-8)}
+            Order #{order.id}
           </h1>
           <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
-            {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+            {order.status.charAt(0).toUpperCase() + order.status}
           </span>
         </div>
         
@@ -91,7 +91,7 @@ const OrderDetail: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
           <div className="flex items-center space-x-2 text-gray-600">
             <Clock className="h-4 w-4" />
-            <span>Ordered: {new Date(order.orderDate).toLocaleString()}</span>
+            <span>Ordered: {new Date(order.createdAt!).toLocaleString()}</span>
           </div>
           <div className="flex items-center space-x-2 text-gray-600">
             <MapPin className="h-4 w-4" />
@@ -115,7 +115,7 @@ const OrderDetail: React.FC = () => {
                 <div key={index} className="flex items-start space-x-4 pb-4 border-b border-gray-200 last:border-b-0">
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-medium text-gray-900">{item.menuItemName}</h3>
+                      <h3 className="font-medium text-gray-900">{item.menuItem!.name}</h3>
                       <span className="text-gray-600">x{item.quantity}</span>
                     </div>
                       {item.customizations && Object.keys(item.customizations).length > 0 && (
@@ -155,7 +155,7 @@ const OrderDetail: React.FC = () => {
           {/* Restaurant Info */}
           <div className="card">
             <h3 className="text-lg font-semibold text-gray-900 mb-3">Restaurant</h3>
-            <p className="font-medium text-gray-900">{order.restaurantName}</p>
+            <p className="font-medium text-gray-900">{order.restaurant!.name}</p>
             <div className="mt-3 flex items-center space-x-2 text-sm text-gray-600">
               <Phone className="h-4 w-4" />
               <span>Contact restaurant for updates</span>

@@ -12,6 +12,11 @@ export class MenuItem {
     restaurant: Restaurant;
 
     @Column()
+    @IsInt()
+    @IsNotEmpty()
+    restaurantId: number;
+
+    @Column()
     @IsString()
     @IsNotEmpty()    
     name: string;

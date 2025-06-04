@@ -20,11 +20,6 @@ export class CreateOrderDto extends OmitType(Order, [
     'paymentStatus',
     'updatedAt',
     'createdAt',
-    'items',
 ] as const) {
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => OrderItem)
-    items: OrderItem[];
 }
 
