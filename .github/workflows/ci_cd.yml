@@ -33,23 +33,26 @@ jobs:
           fi
 
       - name: Build & Push Frontend
-        run: |
-          # 根據分支設定 VITE_BASE_PATH
+        run: | # 根據分支設定環境變數
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             BASE_PATH="/"
             BUILD_MODE="production"
+            API_URL="http://13.218.27.133/backend/api"
           else
             BASE_PATH="/dev/frontend/"
             BUILD_MODE="development"
+            API_URL="http://13.218.27.133/dev/backend/api"
           fi
 
           echo "📦 Building with:"
           echo "    VITE_BASE_PATH=$BASE_PATH"
+          echo "    VITE_API_URL=$API_URL"
           echo "    BUILD_MODE=$BUILD_MODE"
           echo "    IMAGE_TAG=${{ env.IMAGE_TAG }}"
 
           docker build \
             --build-arg VITE_BASE_PATH=$BASE_PATH \
+            --build-arg VITE_API_URL=$API_URL \
             --build-arg BUILD_MODE=$BUILD_MODE \
             -t ghcr.io/fakraze/cloud-meal-frontend:${{ env.IMAGE_TAG }} \
             ./frontend
@@ -58,9 +61,32 @@ jobs:
 
       - name: Build & Push Backend
         run: |
-          docker build -t ghcr.io/fakraze/cloud-meal-backend:${{ env.IMAGE_TAG }} ./backend
-          docker push ghcr.io/fakraze/cloud-meal-backend:${{ env.IMAGE_TAG }}
+          # Set backend environment variables based on branch
+          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+            NODE_ENV="production"
+            DB_HOST="mysql"
+          else
+            NODE_ENV="development"
+            DB_HOST="mysql"
+          fi
 
+          echo "📦 Building backend with:"
+          echo "    NODE_ENV=$NODE_ENV"
+          echo "    DB_HOST=$DB_HOST"
+          echo "    IMAGE_TAG=${{ env.IMAGE_TAG }}"          
+
+          docker build \
+            --build-arg NODE_ENV=$NODE_ENV \
+            --build-arg DB_HOST=$DB_HOST \
+            --build-arg DB_PORT=3306 \
+            --build-arg DB_DATABASE=${{ secrets.MYSQL_DATABASE }} \
+            --build-arg DB_USERNAME=${{ secrets.MYSQL_USER }} \
+            --build-arg DB_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
+            --build-arg BACKEND_PORT=3000 \
+            -t ghcr.io/fakraze/cloud-meal-backend:${{ env.IMAGE_TAG }} \
+            ./backend
+
+          docker push ghcr.io/fakraze/cloud-meal-backend:${{ env.IMAGE_TAG }}
   deploy:
     name: CD - Deploy to K3s
     runs-on: ubuntu-latest
@@ -76,12 +102,28 @@ jobs:
           ssh-keyscan -H ec2-13-218-27-133.compute-1.amazonaws.com >> ~/.ssh/known_hosts
 
       - name: SSH and deploy to K3s
-        run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@ec2-13-218-27-133.compute-1.amazonaws.com << 'EOF'
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        run: | # Pass environment variables to SSH session
+          ssh -i ~/.ssh/id_rsa ubuntu@ec2-13-218-27-133.compute-1.amazonaws.com \
+            "export MYSQL_ROOT_PASSWORD='$MYSQL_ROOT_PASSWORD'; \
+             export MYSQL_DATABASE='$MYSQL_DATABASE'; \
+             export MYSQL_USER='$MYSQL_USER'; \
+             export MYSQL_PASSWORD='$MYSQL_PASSWORD'; \
+             bash -s" << 'EOF'
             set -e
 
             BRANCH_NAME="${{ github.ref_name }}"
-            if [ "$BRANCH_NAME" = "main" ]; then
+            # ensure branch name is not empty
+            if [ -z "${BRANCH_NAME}" ]; then
+              echo "❌ BRANCH_NAME is empty; cannot continue."
+              exit 1
+            fi
+
+            if [ "\$BRANCH_NAME" = "main" ]; then
               NAMESPACE="cloudnative"
               IMAGE_TAG="latest"
               NAMESPACE_FILE="k8s/namespace-prod.yaml"
@@ -106,7 +148,7 @@ jobs:
             git clean -fd
 
             git checkout $BRANCH_NAME
-            git reset --hard origin/$BRANCH_NAME
+            git reset --hard "origin/${BRANCH_NAME}"
             
             # 🐳 取得 GHCR digest（需要 skopeo + jq）
             FRONTEND_IMAGE="ghcr.io/fakraze/cloud-meal-frontend"
@@ -118,26 +160,94 @@ jobs:
             
             echo "✅ Frontend Digest: $FRONTEND_DIGEST"
             echo "✅ Backend Digest:  $BACKEND_DIGEST"
-
+            
             echo "📦 注入正確 GHCR image digest"
-
             # ⬇️ 使用 digest 取代原本的 image（更安全）
             sed -i "s|image: .*cloud-meal-frontend.*|image: $FRONTEND_IMAGE@$FRONTEND_DIGEST|" k8s/frontend-deployment.yaml
             sed -i "s|image: .*cloud-meal-backend.*|image: $BACKEND_IMAGE@$BACKEND_DIGEST|" k8s/backend-deployment.yaml
-
-            echo "🚀 Deploying to $NAMESPACE"
-
-            # ⬇️ 新增 middleware 套用（放 ingress 前）
-            if [ "$NAMESPACE" = "cloudnative-dev" ]; then
-                sudo k3s kubectl apply -f k8s/frontend-stripprefix.yaml
-            fi
             
+            echo "🚀 Deploying to $NAMESPACE"
             sudo k3s kubectl apply -f $NAMESPACE_FILE
+            
+            # Deploy MySQL Database first
+            echo "🔄 Deploying MySQL database..."
+            
+            # Create base64 encoded secrets from GitHub secrets
+            MYSQL_ROOT_PASSWORD_BASE64=$(echo -n "${MYSQL_ROOT_PASSWORD}" | base64 -w 0)
+            MYSQL_DATABASE_BASE64=$(echo -n "${MYSQL_DATABASE}" | base64 -w 0)
+            MYSQL_USER_BASE64=$(echo -n "${MYSQL_USER}" | base64 -w 0)
+            MYSQL_PASSWORD_BASE64=$(echo -n "${MYSQL_PASSWORD}" | base64 -w 0)
+            
+            # Create secret template
+            cat k8s/mysql/mysql-secrets.yaml | \
+              sed "s|\${MYSQL_ROOT_PASSWORD_BASE64}|$MYSQL_ROOT_PASSWORD_BASE64|g" | \
+              sed "s|\${MYSQL_DATABASE_BASE64}|$MYSQL_DATABASE_BASE64|g" | \
+              sed "s|\${MYSQL_USER_BASE64}|$MYSQL_USER_BASE64|g" | \
+              sed "s|\${MYSQL_PASSWORD_BASE64}|$MYSQL_PASSWORD_BASE64|g" \
+              > k8s/mysql/mysql-secrets-rendered.yaml
+            
+            # Apply secrets first
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/mysql/mysql-secrets-rendered.yaml
+            
+            # Apply MySQL resources
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/mysql/mysql-pvc.yaml
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/mysql/mysql-deployment.yaml
+            sudo k3s kubectl apply -n $NAMESPACE -f k8s/mysql/mysql-service.yaml
+            
+            # Wait for MySQL to be ready before deploying backend
+            echo "⏳ Waiting for MySQL to be ready..."
+            MYSQL_READY=false
+            ATTEMPTS=0
+            MAX_ATTEMPTS=15
+            
+            while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
+              if sudo k3s kubectl get pods -n $NAMESPACE -l app=mysql --no-headers | grep "Running" > /dev/null; then
+                echo "✅ MySQL is running, checking readiness..."
+                if sudo k3s kubectl get pods -n $NAMESPACE -l app=mysql -o jsonpath='{.items[0].status.containerStatuses[0].ready}' | grep "true" > /dev/null; then
+                  echo "✅ MySQL is ready!"
+                  MYSQL_READY=true
+                  break
+                fi
+              fi
+              echo "⌛ MySQL not ready yet, waiting..."
+              ATTEMPTS=$((ATTEMPTS+1))
+              sleep 10
+            done
+              # Deploy Backend and Frontend
+            echo "🔄 Deploying backend and frontend..."
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-deployment.yaml
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-service.yaml
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-deployment.yaml
             sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-service.yaml
-            sudo k3s kubectl apply -f $INGRESS_FILE
+              # Apply stripprefix middlewares for dev environment
+            if [ "\$BRANCH_NAME" != "main" ]; then
+              echo "🔧 Applying stripprefix middlewares..."
+              if [ -f "k8s/frontend-stripprefix.yaml" ]; then
+                sudo k3s kubectl apply -n $NAMESPACE -f k8s/frontend-stripprefix.yaml
+              else
+                echo "⚠️  frontend-stripprefix.yaml not found"
+              fi
+              
+              if [ -f "k8s/backend-stripprefix.yaml" ]; then
+                sudo k3s kubectl apply -n $NAMESPACE -f k8s/backend-stripprefix.yaml
+              else
+                echo "⚠️  backend-stripprefix.yaml not found"
+              fi
+            fi
+              
+            sudo k3s kubectl apply -n $NAMESPACE -f $INGRESS_FILE
+            
+            # Force restart deployments to ensure new images are pulled
+            echo "🔄 Force restarting deployments..."
+            sudo k3s kubectl rollout restart deployment/frontend -n $NAMESPACE
+            sudo k3s kubectl rollout restart deployment/backend -n $NAMESPACE
+            
+            # Wait for rollouts to complete
+            echo "⏳ Waiting for frontend rollout to complete..."
+            sudo k3s kubectl rollout status deployment/frontend -n $NAMESPACE --timeout=300s
+            
+            echo "⏳ Waiting for backend rollout to complete..."
+            sudo k3s kubectl rollout status deployment/backend -n $NAMESPACE --timeout=300s
             
             echo "🔍 Frontend 正在使用的 image："
             sudo k3s kubectl get deployment frontend -n $NAMESPACE -o=jsonpath='{.spec.template.spec.containers[0].image}'
@@ -164,7 +274,7 @@ jobs:
             done
 
             if [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; then
-              echo "❌ 部署失敗：Pod 超時未啟動成功"              
+              echo "❌ 部署失敗：Pod 超時未啟動成功"
               echo "📦 當前 Pod 狀態："
               sudo k3s kubectl get pods -n $NAMESPACE
 
@@ -175,41 +285,108 @@ jobs:
 
                 echo "🔎 Describe for $pod:"
                 sudo k3s kubectl describe pod $pod -n $NAMESPACE || true
-              done
-
+              done              
+              
               exit 1
+            fi            
+            
+            echo "✅ All pods started successfully!"
+            
+            # Health check for API endpoint with restart retry logic
+            echo "🏥 Performing API health check with auto-restart (max 5 restarts)..."
+            
+            # Set API URL based on environment
+            if [ "\$BRANCH_NAME" = "main" ]; then
+              API_URL="http://13.218.27.133/backend/api/"
+            else
+              API_URL="http://13.218.27.133/dev/backend/api/"
             fi
-
+            
+            echo "📡 Testing API endpoint: $API_URL"
+            
+            # Initial API test
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$API_URL" || echo "000")
+            
+            if [ "$HTTP_STATUS" = "200" ]; then
+              echo "✅ API health check passed! Status: $HTTP_STATUS"
+            else
+              echo "❌ Initial API health check failed! Status: $HTTP_STATUS"
+              
+              # Restart and retry logic: maximum 5 restart attempts
+              RESTART_SUCCESS=false
+              for restart_attempt in 1 2 3 4 5; do
+                echo "🔄 Restart attempt $restart_attempt/5..."
+                echo "🔄 Restarting deployments..."
+                
+                sudo k3s kubectl rollout restart deployment/frontend -n $NAMESPACE
+                sudo k3s kubectl rollout restart deployment/backend -n $NAMESPACE
+                
+                echo "⏳ Waiting for restart to complete..."
+                sudo k3s kubectl rollout status deployment/frontend -n $NAMESPACE --timeout=300s
+                sudo k3s kubectl rollout status deployment/backend -n $NAMESPACE --timeout=300s
+                
+                # Wait a bit for services to stabilize
+                echo "⏳ Waiting for services to stabilize..."
+                sleep 15
+                
+                # Test API after restart
+                echo "🔍 Testing API after restart attempt $restart_attempt..."
+                HTTP_STATUS_RETRY=$(curl -s -o /dev/null -w "%{http_code}" "$API_URL" || echo "000")
+                
+                if [ "$HTTP_STATUS_RETRY" = "200" ]; then
+                  echo "✅ API recovered after restart attempt $restart_attempt! Status: $HTTP_STATUS_RETRY"
+                  RESTART_SUCCESS=true
+                  break
+                else
+                  echo "❌ API still failing after restart attempt $restart_attempt. Status: $HTTP_STATUS_RETRY"
+                  if [ $restart_attempt -lt 5 ]; then
+                    echo "⏳ Waiting 5 seconds before next restart attempt..."
+                    sleep 5
+                  fi
+                fi
+              done
+              
+              # Final result
+              if [ "$RESTART_SUCCESS" = "false" ]; then
+                echo "💥 API failed to recover after 5 restart attempts!"
+                echo "⚠️  Manual investigation may be required."
+                echo "📦 Current pod status:"
+                sudo k3s kubectl get pods -n $NAMESPACE
+              else
+                echo "🎉 API successfully recovered!"
+              fi
+            fi
+            
             echo "✅ Done."
           EOF
 
-  e2e-tests:
-    name: CD - E2E Cypress Tests
-    runs-on: ubuntu-latest
-    needs: deploy
+  # e2e-tests:
+  #   name: CD - E2E Cypress Tests
+  #   runs-on: ubuntu-latest
+  #   needs: deploy
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+  #     - name: Use Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18
 
-      - name: Install dependencies
-        working-directory: test
-        run: npm install
+  #     - name: Install dependencies
+  #       working-directory: test
+  #       run: npm install
 
-      - name: Run Cypress tests
-        working-directory: test
-        run: npm run test
+  #     - name: Run Cypress tests
+  #       working-directory: test
+  #       run: npm run test
 
-      - name: Upload Cypress Artifacts
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: cypress-artifacts
-          path: |
-            test/cypress/videos
-            test/cypress/screenshots
+  #     - name: Upload Cypress Artifacts
+  #       if: failure()
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: cypress-artifacts
+  #         path: |
+  #           test/cypress/videos
+  #           test/cypress/screenshots

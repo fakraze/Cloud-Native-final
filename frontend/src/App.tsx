@@ -1,8 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -12,30 +8,30 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { RoleBasedRedirect } from "./components/RoleBasedRedirect";
 
 // Pages
-import { Login } from './pages/Login';
-import { RestaurantList } from './pages/RestaurantList';
-import { RestaurantDetail } from './pages/RestaurantDetail';
-import { MenuItemDetail } from './pages/MenuItemDetail';
-import { Cart } from './pages/Cart';
-import { OrderHistory } from './pages/OrderHistory';
-import { OngoingOrders } from './pages/OngoingOrders';
-import { OrderDetail } from './pages/OrderDetail';
-import { RatePage } from './pages/RatePage';
-import { RestaurantRatings } from './pages/RestaurantRatings';
-import { PersonalPage } from './pages/PersonalPage';
-import Inbox from './pages/Inbox';
-import { Payment } from './pages/Payment';
-import { AdminDashboard } from './pages/admin/AdminDashboard';
-import { RestaurantManagement } from './pages/admin/RestaurantManagement';
-import MenuManagement from './pages/admin/MenuManagement';
-import { OrderManagement } from './pages/admin/OrderManagement';
-import AdminInbox from './pages/admin/AdminInbox';
-import AdminPersonal from './pages/admin/AdminPersonal';
-import SendNotification from './pages/admin/SendNotification';
-import StaffDashboard from './pages/staff/StaffDashboard';
-import StaffOrderManagement from './pages/staff/StaffOrderManagement';
-import StaffPOS from './pages/staff/StaffPOS';
-import StaffPersonal from './pages/staff/StaffPersonal';
+import { Login } from "./pages/Login";
+import { RestaurantList } from "./pages/RestaurantList";
+import { RestaurantDetail } from "./pages/RestaurantDetail";
+import { MenuItemDetail } from "./pages/MenuItemDetail";
+import { Cart } from "./pages/Cart";
+import { OrderHistory } from "./pages/OrderHistory";
+import { OngoingOrders } from "./pages/OngoingOrders";
+import { OrderDetail } from "./pages/OrderDetail";
+import { RatePage } from "./pages/RatePage";
+import { RestaurantRatings } from "./pages/RestaurantRatings";
+import { PersonalPage } from "./pages/PersonalPage";
+import Inbox from "./pages/Inbox";
+import { Payment } from "./pages/Payment";
+import { AdminDashboard } from "./pages/admin/AdminDashboard";
+import { RestaurantManagement } from "./pages/admin/RestaurantManagement";
+import MenuManagement from "./pages/admin/MenuManagement";
+import { OrderManagement } from "./pages/admin/OrderManagement";
+import AdminInbox from "./pages/admin/AdminInbox";
+import AdminPersonal from "./pages/admin/AdminPersonal";
+import SendNotification from "./pages/admin/SendNotification";
+import StaffDashboard from "./pages/staff/StaffDashboard";
+import StaffOrderManagement from "./pages/staff/StaffOrderManagement";
+import StaffPOS from "./pages/staff/StaffPOS";
+import StaffPersonal from "./pages/staff/StaffPersonal";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -51,6 +47,7 @@ const queryClient = new QueryClient({
 function App() {
   console.log("🧭 React Router basename =", import.meta.env.BASE_URL);
 
+  console.log("🧭 React Router basename =", import.meta.env.BASE_URL);
   return (
     <QueryClientProvider client={queryClient}>
       <Router basename={import.meta.env.BASE_URL}>
@@ -70,13 +67,13 @@ function App() {
             >
               {/* Employee routes */}
               <Route index element={<RoleBasedRedirect />} />
-              <Route 
-                path="restaurant" 
+              <Route
+                path="restaurant"
                 element={
                   <ProtectedRoute requiredRole="employee">
                     <RestaurantList />
                   </ProtectedRoute>
-                } 
+                }
               />
               <Route
                 path="restaurant/:restaurantId"
@@ -102,69 +99,69 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route 
-                path="cart" 
+              <Route
+                path="cart"
                 element={
                   <ProtectedRoute requiredRole="employee">
                     <Cart />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="payment" 
+              <Route
+                path="payment"
                 element={
                   <ProtectedRoute requiredRole="employee">
                     <Payment />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="order" 
+              <Route
+                path="order"
                 element={
                   <ProtectedRoute requiredRole="employee">
                     <OngoingOrders />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="order/:orderId" 
+              <Route
+                path="order/:orderId"
                 element={
-                  <ProtectedRoute allowedRoles={['employee', 'admin', 'staff']}>
+                  <ProtectedRoute allowedRoles={["employee", "admin", "staff"]}>
                     <OrderDetail />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="order-history" 
+              <Route
+                path="order-history"
                 element={
                   <ProtectedRoute requiredRole="employee">
                     <OrderHistory />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="rate/:restaurantId" 
+              <Route
+                path="rate/:restaurantId"
                 element={
                   <ProtectedRoute requiredRole="employee">
                     <RatePage />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="personal" 
+              <Route
+                path="personal"
                 element={
                   <ProtectedRoute requiredRole="employee">
                     <PersonalPage />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="inbox" 
+              <Route
+                path="inbox"
                 element={
                   <ProtectedRoute requiredRole="employee">
                     <Inbox />
                   </ProtectedRoute>
-                } 
+                }
               />
 
               {/* Admin routes */}

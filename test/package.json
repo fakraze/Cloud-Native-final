@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "cypress run",
-    "cy:open": "cypress open"
+    "test:dev": "cypress run --env CYPRESS_ENV=dev",
+    "test:prod": "cypress run --env CYPRESS_ENV=prod",
+    "cy:open": "cypress open",
+    "cy:open:dev": "cypress open --env CYPRESS_ENV=dev",
+    "cy:open:prod": "cypress open --env CYPRESS_ENV=prod"
   },
   "keywords": [],
   "author": "",
