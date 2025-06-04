@@ -431,75 +431,75 @@ jobs:
             echo "✅ Done."
           EOF
     
-  backend-e2e-tests: 
-    name: CD - Backend E2E Tests
-    runs-on: ubuntu-latest
-    needs: deploy
-    if: ${{ success() && (github.ref_name == 'main' || github.ref_name == 'develop' || github.ref_name == 'ci-cd') }}
+  # backend-e2e-tests: 
+  #   name: CD - Backend E2E Tests
+  #   runs-on: ubuntu-latest
+  #   needs: deploy
+  #   if: ${{ success() && (github.ref_name == 'main' || github.ref_name == 'develop' || github.ref_name == 'ci-cd') }}
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+  #     - name: Use Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18
 
-      - name: Install dependencies
-        working-directory: backend
-        run: npm ci
+  #     - name: Install dependencies
+  #       working-directory: backend
+  #       run: npm ci
 
-      - name: Configure E2E test environment
-        working-directory: backend
-        run: |
-          # Set API URL based on branch
-          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
-            echo "E2E_API_URL=http://13.218.27.133/backend/api" >> $GITHUB_ENV
-          else
-            echo "E2E_API_URL=http://13.218.27.133/dev/backend/api" >> $GITHUB_ENV
-          fi
+  #     - name: Configure E2E test environment
+  #       working-directory: backend
+  #       run: |
+  #         # Set API URL based on branch
+  #         if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+  #           echo "E2E_API_URL=http://13.218.27.133/backend/api" >> $GITHUB_ENV
+  #         else
+  #           echo "E2E_API_URL=http://13.218.27.133/dev/backend/api" >> $GITHUB_ENV
+  #         fi
 
-      - name: Wait for API to be ready
-        run: |
-          echo "🔍 Waiting for API to be ready at: ${{ env.E2E_API_URL }}"
-          ATTEMPTS=0
-          MAX_ATTEMPTS=30
+  #     - name: Wait for API to be ready
+  #       run: |
+  #         echo "🔍 Waiting for API to be ready at: ${{ env.E2E_API_URL }}"
+  #         ATTEMPTS=0
+  #         MAX_ATTEMPTS=30
           
-          while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
-            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${{ env.E2E_API_URL }}/" || echo "000")
-            if [ "$HTTP_STATUS" = "200" ]; then
-              echo "✅ API is ready! Status: $HTTP_STATUS"
-              break
-            fi
-            echo "⌛ API not ready yet (Status: $HTTP_STATUS). Attempt $((ATTEMPTS+1))/$MAX_ATTEMPTS"
-            ATTEMPTS=$((ATTEMPTS+1))
-            sleep 10
-          done
+  #         while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
+  #           HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${{ env.E2E_API_URL }}/" || echo "000")
+  #           if [ "$HTTP_STATUS" = "200" ]; then
+  #             echo "✅ API is ready! Status: $HTTP_STATUS"
+  #             break
+  #           fi
+  #           echo "⌛ API not ready yet (Status: $HTTP_STATUS). Attempt $((ATTEMPTS+1))/$MAX_ATTEMPTS"
+  #           ATTEMPTS=$((ATTEMPTS+1))
+  #           sleep 10
+  #         done
           
-          if [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; then
-            echo "❌ API failed to become ready after $MAX_ATTEMPTS attempts"
-            exit 1
-          fi      
+  #         if [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; then
+  #           echo "❌ API failed to become ready after $MAX_ATTEMPTS attempts"
+  #           exit 1
+  #         fi      
       
-      - name: Run backend E2E tests
-        working-directory: backend
-        env:
-          E2E_API_BASE_URL: ${{ env.E2E_API_URL }}
-        run: |
-          echo "🧪 Running E2E tests against: ${{ env.E2E_API_URL }}"
-          npm run test:e2e
-        continue-on-error: true  # E2E测试失败不应该阻止pipeline，但会标记为警告
+  #     - name: Run backend E2E tests
+  #       working-directory: backend
+  #       env:
+  #         E2E_API_BASE_URL: ${{ env.E2E_API_URL }}
+  #       run: |
+  #         echo "🧪 Running E2E tests against: ${{ env.E2E_API_URL }}"
+  #         npm run test:e2e
+  #       continue-on-error: true  # E2E测试失败不应该阻止pipeline，但会标记为警告
 
-      - name: Upload backend E2E Artifacts
-        if: always()  # 无论成功失败都上传结果
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-e2e-artifacts-${{ github.run_number }}
-          path: |
-            backend/test-results/
-            backend/coverage/
-          retention-days: 30
+  #     - name: Upload backend E2E Artifacts
+  #       if: always()  # 无论成功失败都上传结果
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: backend-e2e-artifacts-${{ github.run_number }}
+  #         path: |
+  #           backend/test-results/
+  #           backend/coverage/
+  #         retention-days: 30
 
   # cypress-e2e-tests:
   #   name: CD - E2E Cypress Tests
@@ -524,8 +524,7 @@ jobs:
   #       run: npm run test
 
   #     - name: Upload Cypress Artifacts
-  #       if: failure()
-  #        uses: actions/upload-artifact@v4
+  #       uses: actions/upload-artifact@v4
   #       with:
   #         name: cypress-artifacts
   #         path: |

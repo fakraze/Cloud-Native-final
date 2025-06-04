@@ -27,3 +27,5 @@ dist/
 
 # Ignore test coverage reports
 coverage/
+
+*.zip
