@@ -11,7 +11,7 @@ ARG BUILD_MODE=production
 ARG VITE_BASE_PATH=/dev/frontend/
 ARG VITE_API_URL=http://13.218.27.133/dev/backend/api
 ARG VITE_NODE_ENV=production
-ARG VITE_USE_MOCK_API=false
+ARG VITE_USE_MOCK_API=true
 
 # Set environment variables for build
 ENV VITE_BASE_PATH=$VITE_BASE_PATH
