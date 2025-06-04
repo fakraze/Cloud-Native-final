@@ -37,9 +37,9 @@ jobs:
         run: npm run test:cov
       
       # Frontend Testing
-      # - name: Install frontend dependencies
-      #   working-directory: ./frontend
-      #   run: npm ci
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
 
       # - name: Run frontend ESLint
       #   working-directory: ./frontend
