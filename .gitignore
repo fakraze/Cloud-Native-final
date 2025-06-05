@@ -24,3 +24,11 @@ frontend/dist/
 dist/
 
 *.pem
+
+# Ignore build artifacts
+frontend/dist/
+
+.vscode/
+dist/
+
+*.zip
