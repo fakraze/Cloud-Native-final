@@ -7,10 +7,6 @@
 http://13.218.27.133/  
 http://13.218.27.133/dev/frontend/
 
-# End-to-End Testing with Cypress
-
-本專案使用 [Cypress](https://www.cypress.io/) 作為 End-to-End (E2E) 測試框架，所有測試檔案與設定均集中在 `test/` 資料夾中，方便團隊開發與維護。
-
 ---
 
 ## Dir
